@@ -1,0 +1,16 @@
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\bin\Debug\Sample.exe.config
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\bin\Debug\Sample.exe
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\bin\Debug\Sample.pdb
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\obj\Debug\Sample.csprojResolveAssemblyReference.cache
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\obj\Debug\Sample.Properties.Resources.resources
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\obj\Debug\Sample.csproj.GenerateResource.Cache
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\obj\Debug\Sample.exe
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\obj\Debug\Sample.pdb
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\obj\Debug\Sample.MainForm.resources
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\obj\Debug\Sample.frmOrderType.resources
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\obj\Debug\Sample.frmOperator.resources
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\obj\Debug\Sample.frmSupplier.resources
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\obj\Debug\Sample.frmPlantType.resources
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\bin\Debug\Newtonsoft.Json.dll
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\bin\Debug\Newtonsoft.Json.xml
+E:\WorkSpaces\MyWork\WmsApiWinformSample\Sample\Sample\Sample\obj\Debug\Sample.frmMaterial.resources

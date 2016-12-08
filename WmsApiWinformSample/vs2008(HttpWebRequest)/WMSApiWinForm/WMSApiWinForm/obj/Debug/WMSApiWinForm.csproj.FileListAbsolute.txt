@@ -1,0 +1,11 @@
+C:\Users\chengwm\Desktop\testadonet\WMSApiWinForm\WMSApiWinForm\bin\Debug\WMSApiWinForm.exe
+C:\Users\chengwm\Desktop\testadonet\WMSApiWinForm\WMSApiWinForm\bin\Debug\WMSApiWinForm.pdb
+C:\Users\chengwm\Desktop\testadonet\WMSApiWinForm\WMSApiWinForm\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\chengwm\Desktop\testadonet\WMSApiWinForm\WMSApiWinForm\obj\Debug\WMSApiWinForm.Form1.resources
+C:\Users\chengwm\Desktop\testadonet\WMSApiWinForm\WMSApiWinForm\obj\Debug\WMSApiWinForm.Properties.Resources.resources
+C:\Users\chengwm\Desktop\testadonet\WMSApiWinForm\WMSApiWinForm\obj\Debug\WMSApiWinForm.csproj.GenerateResource.Cache
+C:\Users\chengwm\Desktop\testadonet\WMSApiWinForm\WMSApiWinForm\obj\Debug\WMSApiWinForm.exe
+C:\Users\chengwm\Desktop\testadonet\WMSApiWinForm\WMSApiWinForm\obj\Debug\WMSApiWinForm.pdb
+C:\Users\chengwm\Desktop\testadonet\WMSApiWinForm\WMSApiWinForm\bin\Debug\Newtonsoft.Json.dll
+E:\WorkSpaces\MyWork\WmsApiWinformSample\vs2008(HttpWebRequest)\WMSApiWinForm\WMSApiWinForm\obj\Debug\WMSApiWinForm.exe
+E:\WorkSpaces\MyWork\WmsApiWinformSample\vs2008(HttpWebRequest)\WMSApiWinForm\WMSApiWinForm\obj\Debug\WMSApiWinForm.pdb

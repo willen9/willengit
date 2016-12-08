@@ -1,0 +1,17 @@
+c:\users\chengwm\documents\visual studio 2015\Projects\wmsapiTestwinform\wmsapiTestwinform\bin\Debug\wmsapiTestwinform.exe.config
+c:\users\chengwm\documents\visual studio 2015\Projects\wmsapiTestwinform\wmsapiTestwinform\bin\Debug\wmsapiTestwinform.exe
+c:\users\chengwm\documents\visual studio 2015\Projects\wmsapiTestwinform\wmsapiTestwinform\bin\Debug\wmsapiTestwinform.pdb
+c:\users\chengwm\documents\visual studio 2015\Projects\wmsapiTestwinform\wmsapiTestwinform\bin\Debug\Fluent-Json.NET-Configuration.dll
+c:\users\chengwm\documents\visual studio 2015\Projects\wmsapiTestwinform\wmsapiTestwinform\bin\Debug\Json.NET.Web.dll
+c:\users\chengwm\documents\visual studio 2015\Projects\wmsapiTestwinform\wmsapiTestwinform\bin\Debug\Newtonsoft.Json.dll
+c:\users\chengwm\documents\visual studio 2015\Projects\wmsapiTestwinform\wmsapiTestwinform\bin\Debug\Fluent-Json.NET-Configuration.pdb
+c:\users\chengwm\documents\visual studio 2015\Projects\wmsapiTestwinform\wmsapiTestwinform\bin\Debug\Newtonsoft.Json.xml
+c:\users\chengwm\documents\visual studio 2015\Projects\wmsapiTestwinform\wmsapiTestwinform\obj\Debug\wmsapiTestwinform.csprojResolveAssemblyReference.cache
+c:\users\chengwm\documents\visual studio 2015\Projects\wmsapiTestwinform\wmsapiTestwinform\obj\Debug\wmsapiTestwinform.Form1.resources
+c:\users\chengwm\documents\visual studio 2015\Projects\wmsapiTestwinform\wmsapiTestwinform\obj\Debug\wmsapiTestwinform.Properties.Resources.resources
+c:\users\chengwm\documents\visual studio 2015\Projects\wmsapiTestwinform\wmsapiTestwinform\obj\Debug\wmsapiTestwinform.csproj.GenerateResource.Cache
+c:\users\chengwm\documents\visual studio 2015\Projects\wmsapiTestwinform\wmsapiTestwinform\obj\Debug\wmsapiTestwinform.exe
+c:\users\chengwm\documents\visual studio 2015\Projects\wmsapiTestwinform\wmsapiTestwinform\obj\Debug\wmsapiTestwinform.pdb
+E:\WorkSpaces\MyWork\WmsApiWinformSample\vs2015(HttpClient)\wmsapiTestwinform\wmsapiTestwinform\bin\Debug\wmsapiTestwinform.exe.config
+E:\WorkSpaces\MyWork\WmsApiWinformSample\vs2015(HttpClient)\wmsapiTestwinform\wmsapiTestwinform\obj\Debug\wmsapiTestwinform.exe
+E:\WorkSpaces\MyWork\WmsApiWinformSample\vs2015(HttpClient)\wmsapiTestwinform\wmsapiTestwinform\obj\Debug\wmsapiTestwinform.pdb
