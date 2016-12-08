@@ -1,0 +1,43 @@
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+[Route("transactions")]
+[HttpPost]
+public HttpResponseMessage Process([FromBody]JObject json)
+{
+	string transaction_type = json["transaction_type"].ToString();
+	
+	transaction objTransaction = json.ToObject<transaction>();
+	objTransaction.transaction_type;
+	objTransaction.subtotal;
+}
+
+public class transaction
+{
+    public string transaction_type { get; set; }
+    public string cashier { get; set; }
+    public string machine { get; set; }
+    public decimal subtotal { get; set; }
+    public decimal discount_amount { get; set; }
+    public decimal tax_amount { get; set; }
+    public decimal net_amount { get; set; }
+    public decimal total_amount { get; set; }
+    public string data_source { get; set; }
+    public details[] details { get; set; }
+    public payments[] payments { get; set; }
+}
+
+public class details
+{
+    public string product_id { get; set; }
+    public string product_name { get; set; }
+    public int quantity { get; set; }
+    public decimal unit_price { get; set; }
+    public decimal sales_price { get; set; }
+    public decimal discount_amount { get; set; }
+    public decimal sales_net_price { get; set; }
+    public decimal sales_amount { get; set; }
+    public string invoice { get; set; }
+    public string sales_period_from { get; set; }
+    public string sales_period_to { get; set; }
+}
