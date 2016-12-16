@@ -1,0 +1,16 @@
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\bin\Debug\RegalPlatForm.exe.config
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\bin\Debug\RegalPlatForm.exe
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\bin\Debug\RegalPlatForm.pdb
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\bin\Debug\DataAccess.dll
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\obj\Debug\ResolveAssemblyReference.cache
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\obj\Debug\RegalPlatForm.exe
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\obj\Debug\RegalPlatForm.pdb
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\bin\Debug\ICSharpCode.SharpZipLib.dll
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\bin\Debug\NPOI.dll
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\bin\Debug\NPOI.OOXML.dll
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\bin\Debug\NPOI.OpenXml4Net.dll
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\bin\Debug\NPOI.OpenXmlFormats.dll
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\bin\Debug\Rebex.Net.Ftp.dll
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\bin\Debug\Rebex.Net.ProxySocket.dll
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\bin\Debug\Rebex.Net.SecureSocket.dll
+E:\WorkSpaces\MyWork\P16049(雙鴻)\P1604901(PC)\V 1.00.00\RegalPlatForm\RegalPlatForm\bin\Debug\Rebex.Security.dll
