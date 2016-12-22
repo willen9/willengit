@@ -1,0 +1,391 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{80662718-EF83-41F8-9ABC-BB2A99CD2EB6}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>P1618401</RootNamespace>
+    <AssemblyName>P1618401</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkSubset>
+    </TargetFrameworkSubset>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <ApplicationIcon>RegalSoft%28C#%29.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="CrystalDecisions.Enterprise.Framework, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="CrystalDecisions.Enterprise.InfoStore, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="CrystalDecisions.Shared, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="DataAccess, Version=1.4.0.19997, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLL\DataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="RingPrinter, Version=1.0.1.27148, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLL\RingPrinter.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataSet\DataSet1.cs">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DataSet\DataSet1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="FrmScreen09.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmScreen09.Designer.cs">
+      <DependentUpon>FrmScreen09.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmScreen08.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmScreen08.Designer.cs">
+      <DependentUpon>FrmScreen08.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmScreen07.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmScreen07.Designer.cs">
+      <DependentUpon>FrmScreen07.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmScreen06.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmScreen06.Designer.cs">
+      <DependentUpon>FrmScreen06.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmScreen05.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmScreen05.Designer.cs">
+      <DependentUpon>FrmScreen05.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmScreen04.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmScreen04.Designer.cs">
+      <DependentUpon>FrmScreen04.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmScreen03.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmScreen03.Designer.cs">
+      <DependentUpon>FrmScreen03.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmScreen02.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmScreen02.Designer.cs">
+      <DependentUpon>FrmScreen02.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmMain.Designer.cs">
+      <DependentUpon>FrmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmScreen01.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmScreen01.Designer.cs">
+      <DependentUpon>FrmScreen01.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Ini.cs" />
+    <Compile Include="Messages.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FrmScreen09.resx">
+      <DependentUpon>FrmScreen09.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmScreen08.resx">
+      <DependentUpon>FrmScreen08.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmScreen07.resx">
+      <DependentUpon>FrmScreen07.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmScreen06.resx">
+      <DependentUpon>FrmScreen06.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmScreen05.resx">
+      <DependentUpon>FrmScreen05.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmScreen04.resx">
+      <DependentUpon>FrmScreen04.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmScreen03.resx">
+      <DependentUpon>FrmScreen03.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmScreen02.resx">
+      <DependentUpon>FrmScreen02.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmMain.resx">
+      <DependentUpon>FrmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmScreen01.resx">
+      <DependentUpon>FrmScreen01.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFrm\frm06.resx">
+      <DependentUpon>frm06.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFrm\frm04.resx">
+      <DependentUpon>frm04.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFrm\frm07.resx">
+      <DependentUpon>frm07.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFrm\frm09.resx">
+      <DependentUpon>frm09.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFrm\frm0202.resx">
+      <DependentUpon>frm0202.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFrm\frm0201.resx">
+      <DependentUpon>frm0201.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFrm\frm03.resx">
+      <DependentUpon>frm03.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Report0201.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Report0202.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Report03.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Report04.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Report06.rdlc" />
+    <EmbeddedResource Include="Report\Report07.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\Report09.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="ReportFrm\frm06.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportFrm\frm06.Designer.cs">
+      <DependentUpon>frm06.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFrm\frm04.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportFrm\frm04.Designer.cs">
+      <DependentUpon>frm04.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFrm\frm07.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportFrm\frm07.Designer.cs">
+      <DependentUpon>frm07.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFrm\frm09.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportFrm\frm09.Designer.cs">
+      <DependentUpon>frm09.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFrm\frm0202.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportFrm\frm0202.Designer.cs">
+      <DependentUpon>frm0202.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFrm\frm0201.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportFrm\frm0201.Designer.cs">
+      <DependentUpon>frm0201.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFrm\frm03.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportFrm\frm03.Designer.cs">
+      <DependentUpon>frm03.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Share.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bt_add02.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bt_cancelt02.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bt_delete02.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bt_edit02.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bt_exc-export02.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bt_import02.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bt_save02.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bt_serch02.png.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\print-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1479735022_Revert.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1479735191_restart-1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1479735258_go-back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="DataSet\DataSet1.xsc">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+    </None>
+    <None Include="DataSet\DataSet1.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DataSet\DataSet1.xss">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+    </None>
+    <None Include="Resources\1479735425_back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{967B4E0D-AD0C-4609-AB67-0FA40C0206D8}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Regal-畫面-2.jpg" />
+    <Content Include="RegalSoft%28C#%29.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

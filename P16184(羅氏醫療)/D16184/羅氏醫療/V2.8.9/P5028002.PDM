@@ -1,0 +1,181 @@
+[Root]
+Most Recent Package=標準安裝封裝 1
+
+
+[Package|標準安裝封裝 1|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=D:\Christine\Project\羅氏\Packega
+
+[Package|標準安裝封裝 1|Configure DAO ISAMs]
+Applicable=No
+
+[Package|標準安裝封裝 1|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|標準安裝封裝 1|Files Found]
+REGAL.INI=D:\00_Work\羅氏\羅氏_V2.7.1\REGAL.INI
+
+[Package|標準安裝封裝 1|Files Released]
+
+[Package|標準安裝封裝 1|Missing Dependency Information]
+C:\Program Files\Common Files\System\ado\msado25.tlb=
+C:\WINNT\system32\FM20.DLL=
+C:\WINDOWS\system32\FM20.DLL=
+C:\WINDOWS\system32\msderun.dll=
+
+[Package|標準安裝封裝 1|Out-of-Date Dependency Information]
+C:\WINNT\system32\MSCOMCTL.OCX=
+C:\WINNT\system32\scrrun.dll=
+C:\WINNT\system32\MSSTDFMT.DLL=
+C:\WINDOWS\system32\mscomctl.ocx=
+C:\WINDOWS\system32\scrrun.dll=
+
+[Package|標準安裝封裝 1|Files Added]
+d:\christine\project\羅氏\v2.8.8\rgsn.mdb=
+d:\christine\project\羅氏\v2.8.8\regal.ini=
+
+[Package|標準安裝封裝 1|Files Removed]
+
+[Package|標準安裝封裝 1|Files In Project]
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\Program Files\Common Files\System\ado\msado25.tlb=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+D:\Christine\Project\羅氏\V2.8.8\P5028002.exe=Yes
+C:\WINDOWS\system32\msvbvm60.dll=Yes
+C:\WINDOWS\system32\Vb6cht.dll=Yes
+C:\WINDOWS\system32\msstdfmt.dll=Yes
+C:\WINDOWS\system32\STDFTCHT.DLL=Yes
+C:\WINDOWS\system32\msderun.dll=Yes
+C:\WINDOWS\system32\msbind.dll=Yes
+C:\WINDOWS\system32\scrrun.dll=Yes
+C:\WINDOWS\system32\msvcrt.dll=Yes
+C:\WINDOWS\system32\scrrncht.dll=Yes
+C:\WINDOWS\system32\MSDBRPTR.DLL=Yes
+C:\WINDOWS\system32\DBRPRCHT.DLL=Yes
+C:\WINDOWS\system32\MSDATGRD.OCX=Yes
+C:\WINDOWS\system32\DATGDCHT.DLL=Yes
+C:\WINDOWS\system32\mscomctl.ocx=Yes
+C:\WINDOWS\system32\MSCMCCHT.DLL=Yes
+C:\WINDOWS\system32\msadodc.ocx=Yes
+C:\WINDOWS\system32\ADODCCHT.DLL=Yes
+C:\WINDOWS\system32\MSCOMM32.OCX=Yes
+C:\WINDOWS\system32\MSCOMCHT.DLL=Yes
+C:\WINDOWS\system32\FM20.DLL=Yes
+C:\WINDOWS\system32\VB6STKIT.DLL=Yes
+D:\Christine\Project\羅氏\V2.8.8\RGSN.mdb=Yes
+D:\Christine\Project\羅氏\V2.8.8\REGAL.INI=Yes
+
+[Package|標準安裝封裝 1|Configure Registry Files]
+Applicable=No
+
+[Package|標準安裝封裝 1|Configure Remote Servers]
+Applicable=No
+
+[Package|標準安裝封裝 1|Install Locations]
+D:\Project\P5028(帛宏羅氏)\P5028002(PC)\V2.5\P5028002.exe=$(AppPath)
+C:\WINNT\system32\MSVBVM60.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\WINNT\system32\Vb6cht.dll=$(WinSysPath)
+C:\WINNT\system32\MSSTDFMT.DLL=$(WinSysPath)
+C:\WINNT\system32\STDFTCHT.DLL=$(WinSysPath)
+C:\Program Files\Common Files\Designer\MSDERUN.DLL=$(CommonFiles)\designer
+C:\WINNT\system32\MSBIND.DLL=$(WinSysPath)
+C:\WINNT\system32\scrrun.dll=$(WinSysPath)
+C:\WINNT\system32\msvcrt.dll=$(WinSysPathSysFile)
+C:\WINNT\system32\scrrncht.dll=$(WinSysPath)
+C:\Program Files\Common Files\System\ado\msado25.tlb=$(WinSysPath)
+C:\WINNT\system32\MSDBRPTR.DLL=$(WinSysPath)
+C:\WINNT\system32\DBRPRCHT.DLL=$(WinSysPath)
+C:\WINNT\system32\MSDATGRD.OCX=$(WinSysPath)
+C:\WINNT\system32\DATGDCHT.DLL=$(WinSysPath)
+C:\WINNT\system32\MSCOMCTL.OCX=$(WinSysPath)
+C:\WINNT\system32\MSCMCCHT.DLL=$(WinSysPath)
+C:\WINNT\system32\MSADODC.OCX=$(WinSysPath)
+C:\WINNT\system32\ADODCCHT.DLL=$(WinSysPath)
+C:\WINNT\system32\mscomm32.ocx=$(WinSysPath)
+C:\WINNT\system32\MSCOMCHT.DLL=$(WinSysPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\WINNT\system32\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+D:\Project\P5028(帛宏羅氏)\P5028002(PC)\V2.5\RGSN.mdb=$(AppPath)
+D:\Project\P5028(帛宏羅氏)\P5028002(PC)\V2.5\REGAL.INI=$(AppPath)
+D:\00_Work\羅氏\羅氏_V2.7.1\P5028002.exe=$(AppPath)
+C:\WINNT\system32\FM20.DLL=$(WinSysPath)
+D:\00_Work\羅氏\羅氏_V2.7.1\RGSN.mdb=$(AppPath)
+D:\00_Work\羅氏\羅氏_V2.7.1\REGAL.INI=$(AppPath)
+D:\Christine\Project\羅氏\V2.8.8\P5028002.exe=$(AppPath)
+C:\WINDOWS\system32\msvbvm60.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\Vb6cht.dll=$(WinSysPath)
+C:\WINDOWS\system32\msstdfmt.dll=$(WinSysPath)
+C:\WINDOWS\system32\STDFTCHT.DLL=$(WinSysPath)
+C:\WINDOWS\system32\msderun.dll=$(WinSysPath)
+C:\WINDOWS\system32\msbind.dll=$(WinSysPath)
+C:\WINDOWS\system32\scrrun.dll=$(WinSysPath)
+C:\WINDOWS\system32\msvcrt.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\scrrncht.dll=$(WinSysPath)
+C:\WINDOWS\system32\MSDBRPTR.DLL=$(WinSysPath)
+C:\WINDOWS\system32\DBRPRCHT.DLL=$(WinSysPath)
+C:\WINDOWS\system32\MSDATGRD.OCX=$(WinSysPath)
+C:\WINDOWS\system32\DATGDCHT.DLL=$(WinSysPath)
+C:\WINDOWS\system32\mscomctl.ocx=$(WinSysPath)
+C:\WINDOWS\system32\MSCMCCHT.DLL=$(WinSysPath)
+C:\WINDOWS\system32\msadodc.ocx=$(WinSysPath)
+C:\WINDOWS\system32\ADODCCHT.DLL=$(WinSysPath)
+C:\WINDOWS\system32\MSCOMM32.OCX=$(WinSysPath)
+C:\WINDOWS\system32\MSCOMCHT.DLL=$(WinSysPath)
+C:\WINDOWS\system32\FM20.DLL=$(WinSysPath)
+C:\WINDOWS\system32\VB6STKIT.DLL=$(WinSysPathSysFile)
+D:\Christine\Project\羅氏\V2.8.8\RGSN.mdb=$(AppPath)
+D:\Christine\Project\羅氏\V2.8.8\REGAL.INI=$(AppPath)
+
+[Package|標準安裝封裝 1|Configure Shared Files]
+Applicable=Yes
+D:\Project\P5028(帛宏羅氏)\P5028002(PC)\V2.5\P5028002.exe=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=Yes
+D:\Project\P5028(帛宏羅氏)\P5028002(PC)\V2.5\RGSN.mdb=Yes
+D:\Project\P5028(帛宏羅氏)\P5028002(PC)\V2.5\REGAL.INI=Yes
+D:\00_Work\羅氏\羅氏_V2.7.1\P5028002.exe=No
+D:\00_Work\羅氏\羅氏_V2.7.1\RGSN.mdb=No
+D:\00_Work\羅氏\羅氏_V2.7.1\REGAL.INI=No
+D:\Christine\Project\羅氏\V2.8.8\P5028002.exe=No
+D:\Christine\Project\羅氏\V2.8.8\RGSN.mdb=No
+D:\Christine\Project\羅氏\V2.8.8\REGAL.INI=No
+
+[Package|標準安裝封裝 1|Distribution]
+Type=single
+Size=
+Title=羅氏WMS管理程式
+
+[Package|標準安裝封裝 1|IconGroups]
+Group0=羅氏WMS管理程式
+PrivateGroup0=False
+Parent0=$(Programs)
+
+[Package|標準安裝封裝 1|羅氏WMS管理程式]
+Icon1=P5028002.exe
+Title1=羅氏WMS管理程式
+StartIn1=$(AppPath)
+Key1=Icon1
+
+[Package|標準安裝封裝 1|Package]
+PackageFolder=D:\Christine\Project\羅氏\Packega
+ProjectFolder=D:\Christine\Project\羅氏\V2.8.8
+ServerSideCab=
+File1=D:\Christine\Project\羅氏\Packega\setup.exe
+File2=D:\Christine\Project\羅氏\Packega\Setup.Lst
+File3=D:\Christine\Project\羅氏\Packega\P5028002.CAB
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz

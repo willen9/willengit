@@ -1,0 +1,14 @@
+<HTTrans>
+  <SYSTEMSET>
+    <ComPort>1</ComPort>
+    <BaudRate>115200</BaudRate>
+    <Protocol>2</Protocol>
+    <HTApp>0</HTApp>
+  </SYSTEMSET>
+  <FilePath>
+    <RecvPath>C:\Regal Trans\RECV</RecvPath>
+    <SendPath>C:\Regal Trans\SEND</SendPath>
+    <HTAppFile>C:\Regal Trans\HTPD</HTAppFile>
+    <Filename>P0000000.PD4</Filename>
+  </FilePath>
+</HTTrans>
