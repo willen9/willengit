@@ -1,0 +1,35 @@
+﻿<section class="content-header">
+    <h1>使用者權限維護</h1>
+</section>
+<section class="content">
+    <div class="toolbar-container">
+        <button type="submit" class="btn btn-primary" id="btnAdd" name="action" value="btnAdd" aria-label="Left Align">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
+        </button>
+    </div>
+    <div class="basic-search-container form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-24">
+                <label for="id_EmployeeNo" class="control-label">員工代號</label>
+                <select class="form-control" style="width: 100px; display: inline;" id="selectCondition" name="selectCondition"></select>
+                <input type="text" class="form-control" id="EmployeeNo" name="EmployeeNo" maxlength="6" value="@ViewBag.EmployeeNo" style=" display:inline-block; width:200px;" />
+                <label for="id_Employee" class="control-label">員工姓名</label>
+                <select class="form-control" style="width: 100px; display: inline;" id="selectCondition" name="selectCondition"></select>
+                <input type="text" class="form-control" id="Employee" name="Employee" maxlength="6" value="@ViewBag.Employee" style="display: inline-block; width: 200px;" />
+                <button type="submit" class="btn btn-default" id="btnSearch" name="action" value="btnSearch" aria-label="Left Align" style="display: inline-block;">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </button>
+                <button class="btn btn-link" aria-label="Left Align" data-toggle="modal" data-target=".advanced-search-modal" style="display: inline-block;">
+                    進階查詢
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @RenderPage("~/Areas/ADMI03/Views/Shared/advanced-search-modal.cshtml")
+</section>
+@RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")
+
+@using REGAL.MVC.UI.Bootstrap;
+@(Html.REGAL().FileUpload(name: "imageUploader", description: "The maximum file upload size is 500 KB.", cssClass: "modal-vertical-center"))
+

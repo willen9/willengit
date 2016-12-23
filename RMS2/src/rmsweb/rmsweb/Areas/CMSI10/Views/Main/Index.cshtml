@@ -1,0 +1,296 @@
+﻿@using System.Security.Policy;
+@using BusinessLayer.Models;
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.delete_Vendor').on('click', function () {
+            if (confirm("是否確定刪除" + $(this).parent().parent().children('td').eq(2).find($("a")).html() + "廠商？")) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+    })
+</script>
+
+<section class="content-header">
+    <h1>廠商基本資料維護</h1>
+</section>
+<section class="content">
+@Html.Raw(ViewBag.js)
+@using (Ajax.BeginForm("Index", "Main", new AjaxOptions {HttpMethod = "POST"}))
+{
+    <div class="toolbar-container">
+        <button type="submit" class="btn btn-primary" id="btnAdd" name="action" value="btnAdd" aria-label="Left Align">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
+        </button>
+        <button type="button" class="btn btn-primary" aria-label="Left Align" data-toggle="modal" data-target="#importSelect1">
+            <span class="glyphicon glyphicon-import" aria-hidden="true"></span> 匯入
+        </button>
+        <button type="submit" class="btn btn-primary" id="btnExport" name="action" value="btnExport" aria-label="Left Align">
+            <span class="glyphicon glyphicon-export" aria-hidden="true"></span> 匯出
+        </button>
+    </div>
+}
+
+<div class="basic-search-container form-horizontal">
+<div class="form-group">
+<div class="col-sm-24">
+@using (Ajax.BeginForm("Index", "Main", new AjaxOptions {HttpMethod = "POST"}, new {@style = "display: inline-block;"}))
+{
+    <label for="id_vendorId" class="control-label">廠商代號</label>
+    <select class="form-control" style="width: 100px; display: inline;" id="selectCondition1" name="selectCondition1">
+        @if (ViewBag.SelectCondition1 == ">")
+        {
+            <option value="=">=</option>
+            <option value=">" selected="selected">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3">%like%</option>
+        }
+        else if (ViewBag.SelectCondition1 == ">=")
+        {
+            <option value="=">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=" selected="selected">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3">%like%</option>
+        }
+        else if (ViewBag.SelectCondition1 == "<")
+        {
+            <option value="=">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<" selected="selected">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3">%like%</option>
+        }
+        else if (ViewBag.SelectCondition1 == "<=")
+        {
+            <option value="=">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=" selected="selected">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3">%like%</option>
+        }
+        else if (ViewBag.SelectCondition1 == "<>")
+        {
+            <option value="=">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>" selected="selected"><></option>
+            <option value="like1">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3">%like%</option>
+        }
+        else if (ViewBag.SelectCondition1 == "like1")
+        {
+            <option value="=">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1" selected="selected">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3">%like%</option>
+        }
+        else if (ViewBag.SelectCondition1 == "like2")
+        {
+            <option value="=">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1">%like</option>
+            <option value="like2" selected="selected">like%</option>
+            <option value="like3">%like%</option>
+        }
+        else if (ViewBag.SelectCondition1 == "like3")
+        {
+            <option value="=">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3" selected="selected">%like%</option>
+        }
+        else
+        {
+            <option value="=" selected="selected">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3">%like%</option>
+        }
+    </select>
+    <input type="text" class="form-control" id="id_vendorId" name="vendorId" maxlength="10" value="@ViewBag.VendorId" style="display: inline-block; width: 200px;"/>
+
+    <label for="id_vendorname" class="control-label">廠商簡稱</label>
+    <select class="form-control" style="width: 100px; display: inline;" id="selectCondition2" name="selectCondition2">
+        @if (ViewBag.SelectCondition2 == ">")
+        {
+            <option value="=">=</option>
+            <option value=">" selected="selected">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3">%like%</option>
+        }
+        else if (ViewBag.SelectCondition2 == ">=")
+        {
+            <option value="=">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=" selected="selected">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3">%like%</option>
+        }
+        else if (ViewBag.SelectCondition2 == "<")
+        {
+            <option value="=">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<" selected="selected">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3">%like%</option>
+        }
+        else if (ViewBag.SelectCondition2 == "<=")
+        {
+            <option value="=">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=" selected="selected">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3">%like%</option>
+        }
+        else if (ViewBag.SelectCondition2 == "like1")
+        {
+            <option value="=">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1" selected="selected">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3">%like%</option>
+        }
+        else if (ViewBag.SelectCondition2 == "like2")
+        {
+            <option value="=">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1">%like</option>
+            <option value="like2" selected="selected">like%</option>
+            <option value="like3">%like%</option>
+        }
+        else if (ViewBag.SelectCondition2 == "like3")
+        {
+            <option value="=">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3" selected="selected">%like%</option>
+        }
+        else
+        {
+            <option value="=" selected="selected">=</option>
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="<>"><></option>
+            <option value="like1">%like</option>
+            <option value="like2">like%</option>
+            <option value="like3">%like%</option>
+        }
+    </select>
+    <input type="text" class="form-control" id="id_vendorname" name="vendorName" maxlength="30" value="@ViewBag.VendorName" style="display: inline-block; width: 200px;"/>
+    <button type="submit" class="btn btn-default" id="btnSearch" name="action" value="btnSearch" aria-label="Left Align" style="display: inline-block;">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    </button>
+}
+<button class="btn btn-link" aria-label="Left Align" data-toggle="modal" data-target=".advanced-search-modal" style="display: inline-block;">
+    進階查詢
+</button>
+</div>
+</div>
+</div>
+
+<div id="divGrid">
+    @{
+        var webGrid = new WebGrid(source: (IEnumerable<Vendor>) ViewData["DisplayData"], canPage: false, canSort: true, defaultSort: "VendorId", ajaxUpdateContainerId: "divGrid");
+    }
+
+    @webGrid.GetHtml(
+
+        tableStyle: "table table-striped table-hover rms-table cmsi10-table",
+        mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+        columns: webGrid.Columns(
+            webGrid.Column(columnName: "", header: "動作", style: "column-two-actions",
+                format:
+                    @<text>
+                        @Html.ActionLink("編輯", "CUR", "Main", new {id = item.VendorId, type = "Edit"}, null)
+                        @Html.ActionLink("刪除", "Delete", "Main", new {id = item.VendorId}, new {@class = "delete_Vendor"})
+                     </text>),
+            webGrid.Column(columnName: "VendorId", header: "廠商代號", style: "col-vender-id"),
+            webGrid.Column(columnName: "VendorName", header: "廠商簡稱", style: "col-vender-name",
+                format:
+                    @<text>
+                        <a href="@Url.Action("CUR", "Main", new {id = item.VendorId, type = "Detail"}, null)">@item.VendorName</a>
+                     </text>),
+            webGrid.Column(columnName: "Contact", header: "連絡人", style: "col-contact"),
+            webGrid.Column(columnName: "TelNo", header: "電話", style: "col-tel"),
+            webGrid.Column(columnName: "FaxNo", header: "傳真")
+            )
+        )
+</div>
+</section>
+<input type="hidden" title="module" value="CMSI10" />
+    @RenderPage("~/Areas/CMSI10/Views/Shared/advanced-search-modal.cshtml")
+    @RenderPage("~/Areas/CMSI10/Views/Shared/advanced-import1-modal.cshtml")

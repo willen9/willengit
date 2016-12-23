@@ -1,0 +1,164 @@
+﻿<style type="text/css">
+    .record_selector_RGA-modal table .actioncolumn {
+        width: 200px;
+    }
+
+    .record_selector_RGA-modal table .RGATypeType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .OrderSNameType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .RGANoType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .OrderDateType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .CustomerIdType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .CustomerNameType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .CustomerTypeType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .AddressSNameType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .ProductNoType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .ProductNameType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .SerialNoType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .StatusCodeType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .ReturnedType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .RepairmanNameType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .RemarkType {
+        width: 200px;
+    }
+    .record_selector_RGA-modal table .PCompletionDateType {
+        width: 200px;
+    }
+</style>
+<div class='modal fade record_selector_RGA-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title'>單號查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <select class="form-control" style="width: 200px; display: inline;" name="addRGACol" id="addRGACol">
+                            <option value="RGAType">維修單別</option>
+                            <option value="RGANo">維修單號</option>
+                            <option value="ItemId">項次</option>
+                            <option value="PartNo">零件品號</option>
+                            <option value="PartName">零件品名</option>
+                            <option value="QTY">數量</option>
+                            <option value="Unit">單位</option>
+                            <option value="Repaired">維修否</option>
+                            <option value="Remark">單身備註</option>
+                            <option value="SourceOrderType">來源單別</option>
+                            <option value="SourceOrderNo">來源單號</option>
+                            <option value="SourceItemId">來源項次</option>
+                            <option value="ResponseOrderType">回覆單別</option>
+                            <option value="ResponseOrderNo">回覆單號</option>
+                            <option value="ResponseDate">回覆日期</option>
+                        </select>
+
+                        <select class="form-control" style="width: 100px; display: inline;" name="addRGACondition" id="addRGACondition">
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>">&lt;&gt;</option>
+                            <option value="like%">like%</option>
+                            <option value="%like">%like</option>
+                            <option value="%like%">%like%</option>
+                        </select>
+                        <input type="text" class="form-control" id="addRGAconditionValue" name="addRGAconditionValue" style="width: 200px; display: inline;" />
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" id="btnSearchRGA" style="display: inline;">查詢</button>
+                    </div>
+                </div>
+            </div>
+                <div id="divRGAGrid" style="height: 500px;overflow-y: auto;">
+                    <table class="table table-striped table-hover table-condensed" data-swhgajax="true" data-swhgcontainer="divRGAGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                    維修單別
+                                </th>
+                                <th scope="col">
+                                    單據名稱
+                                </th>
+                                <th scope="col">
+                                    維修單號
+                                </th>
+                                <th scope="col">
+                                    單據日期
+                                </th>
+                                <th scope="col">
+                                    客戶代號
+                                </th>
+                                <th scope="col">
+                                    客戶名稱
+                                </th>
+                                <th scope="col">
+                                    客戶形態
+                                </th>
+                                <th scope="col">
+                                    地址簡稱
+                                </th>
+                                <th scope="col">
+                                    品號
+                                </th>
+                                <th scope="col">
+                                    品名
+                                </th>
+                                <th scope="col">
+                                    序號
+                                </th>
+                                <th scope="col">
+                                    狀態
+                                </th>
+                                <th scope="col">
+                                    覆修否
+                                </th>
+                                <th scope="col">
+                                    維修人員
+                                </th>
+                                <th scope="col">
+                                    入件說明
+                                </th>
+                                <th scope="col">
+                                    預計完工日
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <input type="hidden" id="RGAPage" name="RGAPage" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

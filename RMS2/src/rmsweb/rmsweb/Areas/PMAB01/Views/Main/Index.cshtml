@@ -1,0 +1,511 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#from-SupportAplAsign').bootstrapValidator({
+            fields: {
+                ordertype: {
+                    validators: {
+                        notEmpty: {
+                            message: '單別不能為空！'
+                        }
+                    }
+                },
+                EmployeeId: {
+                    validators: {
+                        notEmpty: {
+                            message: '人員ID不能為空!'
+                        }
+                    }
+                },
+                EmployeeName: {
+                    validators: {
+                        notEmpty: {
+                            message: '人員不能為空!'
+                        }
+                    }
+                }
+            }
+        });
+
+        $("#chkAll").on("click", function () {
+            var isSelect = $("#chkAll").is(":checked");
+            var chks = $("#divGrid input[name='chk']");
+            for (var i = 0; i < chks.length; i++) {
+                if (chks[i].type == "checkbox") {
+                    chks[i].checked = isSelect;
+                }
+            }
+        });
+
+        $("#divGrid input[name='chk']").click(function () {
+            var chks = $("#divGrid input[name='chk']");
+            var allSelect = true;
+            for (var i = 0; i < chks.length; i++) {
+                if (chks[i].type == "checkbox") {
+                    if (!chks[i].checked) {
+                        allSelect = false;
+                        break;
+                    }
+                }
+            }
+            var chkAll = $("#chkAll");
+            if (chkAll[0].type == "checkbox") {
+                chkAll[0].checked = allSelect;
+            }
+        });
+
+        $("#btnChange").on("click", function () {
+            var chks = $("#divGrid input[name='chk']");
+            var SelectInfo = false;
+            var TypeInfo = false;
+            for (var i = 0; i < chks.length; i++) {
+                if (chks[i].type == "checkbox") {
+                    if (chks[i].checked) {
+                        SelectInfo = true;
+                        break;
+                    }
+                }
+            }
+            if (SelectInfo == false) {
+                alert("請選擇需拋磚項目");
+                return;
+            }
+
+            $(".allot-modal").modal();
+        });
+
+        $("#btnSearchAgainEmployee").on("click", function () {
+            var chks = $("#divGrid input[name='chk']");
+            var SelectInfo = false;
+            var TypeInfo = false;
+            for (var i = 0; i < chks.length; i++) {
+                if (chks[i].type == "checkbox") {
+                    if (chks[i].checked) {
+                        SelectInfo = true;
+                        break;
+                    }
+                }
+            }
+            if (SelectInfo == false) {
+                alert("請選擇需派工項目");
+                return;
+            }
+
+            for (var i = 0; i < chks.length; i++) {
+                if (chks[i].type == "checkbox") {
+                    if (chks[i].checked) {
+                        if ($(chks[i]).closest('tr').find(".orderstatusType").html() != "已派工") {
+                            TypeInfo = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (TypeInfo == true) {
+                alert("請選擇已派工項目");
+                return;
+            }
+
+            $(".again-allot-modal").modal();
+        });
+
+        $("#id_confirmeddate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+    });
+    function SelectOrderType(id) {
+        $("#id_OrderType").val($(id).closest('tr').find(".OrderTypeType").html());
+        $("#ordersname").html($(id).closest('tr').find(".OrderSNameType").html());
+        $(".allot-modal").modal();
+    };
+
+    $(function () {
+        $('#id_OrderType').blur(function () {
+            if (document.getElementById("id_OrderType").readOnly == true) {
+                return;
+            }
+            if ($("#id_OrderType").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Action("GetOrderTypeName", "Main", new { Area = "CONI01" })',
+                    data: JSON.stringify({ "OrderType": $("#id_OrderType").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            $('#ordersname').text(serverData[1]);
+                        } else {
+                            $('#ordersname').text(serverData[1]);
+                            $.ajax({
+                                url: '@Url.Action("GetOrderTypeNo", "Main")',
+                                data: JSON.stringify({ "OrderType": $("#id_OrderType").val().trim() }),
+                                type: 'POST',
+                                contentType: 'application/json; charset=utf-8',
+                                success: function (data) {
+                                    var strData = data.split('-');
+                                    if (strData[0] == "YES") {
+                                        $('#id_SupportAplOrderNo').val(strData[1]);
+                                        document.getElementById("id_SupportAplOrderNo").readOnly = "readonly";
+                                    } else {
+                                        $('#id_SupportAplOrderNo').val(strData[1]);
+                                        document.getElementById("id_SupportAplOrderNo").readOnly = "";
+                                    }
+                                }
+                            })
+                        }
+                    }
+                })
+            } else {
+                $('#ordersname').text("");
+            }
+        });
+    })
+
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function ($scope, $http) {
+        $scope.OrderCategoryitems = null;
+        $scope.OrderCategoryList = function () {
+            $http({
+                url: '@Url.Action("SearchOrderType", "Main", new { Area = "CONI01" })',
+                params: { Col: ",OrderCategory", Condition: ",=", conditionValue: ",D2", Page: 0 }
+            }).success(function (data, status) {
+                $scope.OrderCategoryitems = data;
+            })
+        };
+        $scope.SearchOrderCategoryList = function () {
+            $http({
+                url: '@Url.Action("SearchOrderType", "Main", new { Area = "CONI01" })',
+                params: { Col: ",OrderCategory," + $("#addOrderCategoryCol").val(), Condition: ",=," + $("#addOrderCategoryCondition").val(), conditionValue: ",D2," + $("#addOrderCategoryconditionValue").val(), Page: 0 }
+            }).success(function (data, status) {
+                $scope.OrderCategoryitems = data;
+            })
+        };
+    });
+
+</script>
+<section class="content-header">
+    <h1>定保計劃轉定保單作業</h1>
+</section>
+<section class="content" ng-app="myApp" ng-controller="myCtrl">
+    @using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }, new { id = "from-SupportAplAsign" }))
+    {
+        <div class="toolbar-container">
+            <button type="button" class="btn btn-primary" style="display:inline;" id="btnChange">拋磚</button>
+            <button type="submit" class="btn btn-primary" id="btnExport" name="action" value="btnExport" aria-label="Left Align">
+                <span class="glyphicon glyphicon-export" aria-hidden="true"></span> 匯出
+            </button>
+        </div>
+    }
+    @using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }, new { id = "from-SupportAplAsign" }))
+    {
+        <div class="basic-search-container form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-24">
+                    <label for="id_orderno" class="control-label">單號</label>
+                    <select class="form-control" style="width: 100px;display:inline;" name="selCond1">
+                        @if (@ViewBag.selCond1 == "=")
+                {
+                            <option value="=" selected>=</option>
+                        }
+                        else
+                        {
+                            <option value="=">=</option>
+                        }
+
+                        @if (@ViewBag.selCond1 == ">")
+                {
+                            <option value=">" selected>></option>
+                        }
+                        else
+                        {
+                            <option value=">">></option>
+                        }
+
+                        @if (@ViewBag.selCond1 == ">=")
+                {
+                            <option value=">=" selected>>=</option>
+                        }
+                        else
+                        {
+                            <option value=">=">>=</option>
+                        }
+                        @if (@ViewBag.selCond1 == "<")
+                {
+                            <option value="<" selected><</option>
+                        }
+                        else
+                        {
+                            <option value="<"><</option>
+                        }
+
+                        @if (@ViewBag.selCond1 == "<=")
+                {
+                            <option value="<=" selected><=</option>
+                        }
+                        else
+                        {
+                            <option value="<="><=</option>
+                        }
+
+                        @if (@ViewBag.selCond1 == "<>")
+                {
+                            <option value="<>" selected><></option>
+                        }
+                        else
+                        {
+                            <option value="<>"><></option>
+                        }
+
+                        @if (@ViewBag.selCond1 == "like%")
+                {
+                            <option value="like%" selected>like%</option>
+                        }
+                        else
+                        {
+                            <option value="like%">like%</option>
+                        }
+
+                        @if (@ViewBag.selCond1 == "%like")
+                {
+                            <option value="%like" selected>%like</option>
+                        }
+                        else
+                        {
+                            <option value="%like">%like</option>
+                        }
+
+                        @if (@ViewBag.selCond1 == "%like%")
+                {
+                            <option value="%like%" selected>%like%</option>
+                        }
+                        else
+                        {
+                            <option value="%like%">%like%</option>
+                        }
+
+                    </select>
+                    <input type="text" class="form-control" id="id_strSerArrangeOrderType" name="strSerArrangeOrderType" style="width:200px;display:inline;" value="@ViewBag.strSerArrangeOrderType" tabindex="1">
+                    <label for="id_customerid" class="control-label">客戶代號</label>
+                    <select class="form-control" style="width: 100px;display:inline;" name="selCond2">
+                        @if (@ViewBag.selCond2 == "=")
+                {
+                            <option value="=" selected>=</option>
+                        }
+                        else
+                        {
+                            <option value="=">=</option>
+                        }
+
+                        @if (@ViewBag.selCond2 == ">")
+                {
+                            <option value=">" selected>></option>
+                        }
+                        else
+                        {
+                            <option value=">">></option>
+                        }
+
+                        @if (@ViewBag.selCond2 == ">=")
+                {
+                            <option value=">=" selected>>=</option>
+                        }
+                        else
+                        {
+                            <option value=">=">>=</option>
+                        }
+                        @if (@ViewBag.selCond2 == "<")
+                {
+                            <option value="<" selected><</option>
+                        }
+                        else
+                        {
+                            <option value="<"><</option>
+                        }
+
+                        @if (@ViewBag.selCond2 == "<=")
+                {
+                            <option value="<=" selected><=</option>
+                        }
+                        else
+                        {
+                            <option value="<="><=</option>
+                        }
+
+                        @if (@ViewBag.selCond2 == "<>")
+                {
+                            <option value="<>" selected><></option>
+                        }
+                        else
+                        {
+                            <option value="<>"><></option>
+                        }
+
+                        @if (@ViewBag.selCond2 == "like%")
+                {
+                            <option value="like%" selected>like%</option>
+                        }
+                        else
+                        {
+                            <option value="like%">like%</option>
+                        }
+
+                        @if (@ViewBag.selCond2 == "%like")
+                {
+                            <option value="%like" selected>%like</option>
+                        }
+                        else
+                        {
+                            <option value="%like">%like</option>
+                        }
+
+                        @if (@ViewBag.selCond2 == "%like%")
+                {
+                            <option value="%like%" selected>%like%</option>
+                        }
+                        else
+                        {
+                            <option value="%like%">%like%</option>
+                        }
+                    </select>
+                    <input type="text" class="form-control" id="id_strCustomerId" name="strCustomerId" style="width:200px;display:inline;" value="@ViewBag.strCustomer" tabindex="2">
+                    <label for="id_customerid" class="control-label">保養月份</label>
+                    <select class="form-control" style="width: 100px;display:inline;" name="selCond3">
+                        @if (@ViewBag.selCond3 == "=")
+                {
+                            <option value="=" selected>=</option>
+                        }
+                        else
+                        {
+                            <option value="=">=</option>
+                        }
+
+                        @if (@ViewBag.selCond3 == ">")
+                {
+                            <option value=">" selected>></option>
+                        }
+                        else
+                        {
+                            <option value=">">></option>
+                        }
+
+                        @if (@ViewBag.selCond3 == ">=")
+                {
+                            <option value=">=" selected>>=</option>
+                        }
+                        else
+                        {
+                            <option value=">=">>=</option>
+                        }
+                        @if (@ViewBag.selCond3 == "<")
+                {
+                            <option value="<" selected><</option>
+                        }
+                        else
+                        {
+                            <option value="<"><</option>
+                        }
+
+                        @if (@ViewBag.selCond3 == "<=")
+                {
+                            <option value="<=" selected><=</option>
+                        }
+                        else
+                        {
+                            <option value="<="><=</option>
+                        }
+
+                        @if (@ViewBag.selCond3 == "<>")
+                {
+                            <option value="<>" selected><></option>
+                        }
+                        else
+                        {
+                            <option value="<>"><></option>
+                        }
+
+                        @if (@ViewBag.selCond3 == "like%")
+                {
+                            <option value="like%" selected>like%</option>
+                        }
+                        else
+                        {
+                            <option value="like%">like%</option>
+                        }
+
+                        @if (@ViewBag.selCond3 == "%like")
+                {
+                            <option value="%like" selected>%like</option>
+                        }
+                        else
+                        {
+                            <option value="%like">%like</option>
+                        }
+
+                        @if (@ViewBag.selCond3 == "%like%")
+                {
+                            <option value="%like%" selected>%like%</option>
+                        }
+                        else
+                        {
+                            <option value="%like%">%like%</option>
+                        }
+                    </select>
+                    <input type="text" class="form-control" id="id_strArrangeMonth" name="strArrangeMonth" style="width:200px;display:inline;" value="@ViewBag.strArrangeMonth" tabindex="3">
+                    <button type="submit" class="btn btn-default" id="btnSearch" name="action" value="btnSearch" aria-label="Left Align" style="display: inline-block;">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-link" aria-label="Left Align" data-toggle="modal" data-target=".advanced-search-modal" style="display: inline-block;">
+                        進階查詢
+                    </button>
+                </div>
+            </div>
+        </div>
+        <p style="color: red;">@ViewBag.Msg</p>
+        <div id="divGrid">
+            @{
+                <input type="checkbox" id="chkAll" style="position: absolute; margin-left: 8px; margin-top: 13px;" />
+                var grid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.ServiceArrange_D>)ViewData["ServiceArrange_D"], canPage: false, canSort: true, ajaxUpdateContainerId: "divGrid");
+
+                @grid.GetHtml(
+                 tableStyle: "table table-striped table-hover rms-table pmab01-table",
+                    columns: grid.Columns(
+                        grid.Column(format: @<text>
+                            <input type="checkbox" id="id_chk" name="chk" value="@item.SerArrangeOrderType-@item.SerArrangeOrderNo-@item.ItemId" />
+                        </text>, style: "actioncolumn"),
+                        grid.Column(columnName: "SerArrangeOrderType", header: "計劃單別", style: "SerArrangeOrderType"),
+                        grid.Column(columnName: "SerArrangeOrderNo", header: "計劃單號", style: "SerArrangeOrderNo", format:@<text><a href="@Url.Action("Details", "Main", new { SerArrangeOrderType = @item.SerArrangeOrderType, SerArrangeOrderNo = @item.SerArrangeOrderNo })">@item.SerArrangeOrderNo</a> </text>),
+                        grid.Column(columnName: "ItemId", header: "計劃項次", style: "ItemId"),
+                        grid.Column(columnName: "CustomerId", header: "客戶代號", style: "CustomerId"),
+                        grid.Column(columnName: "CustomerName", header: "客戶名稱", style: "CustomerName"),
+                        grid.Column(columnName: "CustomerType", header: "客戶形態", style: "ProductName"),
+                        grid.Column(columnName: "ProductNo", header: "品號", style: "ProductNo"),
+                        grid.Column(columnName: "ProductName", header: "品名", style: "ProductName"),
+                        grid.Column(columnName: "SerialNo", header: "序號", style: "SerialNo"),
+                        grid.Column(columnName: "WarrantyPeriod", header: "保固期限", style: "WarrantyPeriod"),
+                        grid.Column(columnName: "WarrantySDate", header: "保固起日", style: "WarrantySDate"),
+                        grid.Column(columnName: "WarrantyEDate", header: "保固迄日", style: "WarrantyEDate")
+                    )
+                )
+            }
+        </div>
+        @RenderPage("~/Areas/PMAB01/Views/Shared/allot-modal.cshtml")
+        }
+</section>
+<input type="hidden" title="module" value="PMAB01" />
+@RenderPage("~/Areas/PMAB01/Views/Shared/advanced-search-modal.cshtml")
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,61 @@
+﻿
+<section class="content-header">
+    <h1>平均首修時間統計表</h1>
+</section>
+<section class="content">
+@using (Ajax.BeginForm("CUR", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+{
+    <div class="panel panel-default">
+        <div class="box box-info basic-search">
+            <div class="box-body">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label for="id_View">品號：</label>
+                        <input id="id_ProductNo" name="ProductNo" value="@ViewBag.ProductNo" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_CustomerId">客戶代號：</label>
+                        <input id="id_CustomerId" name="CustomerId" value="@ViewBag.CustomerId" readonly>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <input type="hidden" name="strAdvCol" value="@ViewBag.strAdvCol" />
+                    <input type="hidden" name="strAdvCondition" value="@ViewBag.strAdvCondition" />
+                    <input type="hidden" name="strAdvValue" value="@ViewBag.strAdvValue" />
+                    <button type="submit" class="btn btn-primary" name="action" value="btnExport"><i class="fa fa-external-link" aria-hidden="true"></i>匯出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+    @{
+        var grid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.RGA_H>)ViewData["RGA_H"], canPage: false, canSort: false, ajaxUpdateContainerId: "divGrid");
+
+
+        @grid.GetHtml(
+                 tableStyle: "table table-striped table-hover rms-table repq05-table",
+            columns: grid.Columns(
+            grid.Column(columnName: "StatusCode", header: "單據狀態", style: "StatusCode"),
+            grid.Column(columnName: "RGAType", header: "維修單別", style: "RGAType"),
+            grid.Column(columnName: "OrderSName", header: "單據名稱", style: "OrderSName"),
+            grid.Column(columnName: "RGANo", header: "維修單號", style: "RGANo", format:@<text><a href="@Url.Action("Detail", "Main", new { RGAType = @item.RGAType,RGANo=@item.RGANo })">@item.RGANo</a> </text>),
+            grid.Column(columnName: "CustomerId", header: "客戶代號", style: "CustomerId"),
+            grid.Column(columnName: "CustomerName", header: "客戶名稱", style: "CustomerName"),
+            grid.Column(columnName: "AddressSName", header: "裝機地點名稱", style: "AddressSName"),
+            grid.Column(columnName: "ProductNo", header: "品號", style: "ProductNo"),
+            grid.Column(columnName: "ProductName", header: "品名", style: "ProductName"),
+            grid.Column(columnName: "SerialNo", header: "序號", style: "SerialNo"),
+            grid.Column(columnName: "AssetNo", header: "資產編號", style: "AssetNo"),
+            grid.Column(columnName: "SaleDate", header: "銷貨日期", style: "SaleDate"),
+            grid.Column(columnName: "PurchaseDate", header: "進貨日期", style: "PurchaseDate"),
+            grid.Column(columnName: "Remark", header: "入件說明", style: "Remark"),
+            grid.Column(columnName: "TestResult", header: "檢測結果", style: "TestResult"),
+            grid.Column(columnName: "Confirmor", header: "維修人員", style: "Confirmor"),
+            grid.Column(columnName: "ConfirmedDate", header: "出件日期", style: "ConfirmedDate"),
+            grid.Column(columnName: "InternalRemark", header: "出件備註", style: "InternalRemark")
+            )
+        )
+        <p style="color: red;">@ViewBag.Msg</p>
+    }
+</section>
+<input type="hidden" title="module" value="REPQ05" />

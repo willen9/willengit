@@ -1,0 +1,230 @@
+﻿<link type="text/css" href="~/AreasStyle/CMSI04.css" rel="stylesheet" />
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#submitButton-imageUploader").click(function () {
+            var url = $("#id_fileUpload").val();
+            if (url.trim() == "") {
+                $("#msg_information").html('請選擇要上傳的文件');
+                $('.msg-modal-lg').modal();
+                return false;
+            } else {
+                if (url.split(".")[url.split(".").length - 1].toUpperCase() != "CSV") {
+                    $("#msg_information").html('文件格式不正確');
+                    $('.msg-modal-lg').modal();
+                    return false;
+                }
+                $.ajaxFileUpload({
+                    //url: '/cmsi04',
+                    url: '@Url.Action("Index", "Main")',
+                    type: 'POST',
+                    secureuri: false,
+                    fileElementId: 'id_fileUpload',//file标签的id
+                    dataType: 'json',//返回数据的类型
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            $("#msg_information").html(serverData[1]);
+                            $('.msg-modal-lg').modal();
+                        }
+                        else {
+                            window.location = "@Url.Action("Index","Main")";
+                        }
+                    },
+                    error: function (data, status, e) {
+                        alert(e);
+                    }
+                });
+            }
+        });
+
+    });
+</script>
+<section class="content-header">
+    <h1>品號類別資料維護</h1>
+</section>
+<section class="content">
+    @using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+    {
+        <div class="toolbar-container">
+                <a class="btn btn-primary" href="@Url.Action("CUR", "Main", null)"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增</a>
+
+            <button type="button" class="btn btn-primary" aria-label="Left Align" data-toggle="modal" data-target="#imageUploader">
+                <span class="glyphicon glyphicon-import" aria-hidden="true"></span> 匯入
+            </button>
+
+            <button type="submit" class="btn btn-primary" aria-label="Left Align" name="action" value="btnExport">
+                <span class="glyphicon glyphicon-export" aria-hidden="true"></span> 匯出
+            </button>
+        </div>
+    }
+    @using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+    {
+        <div class="basic-search-container form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-24">
+                    <label for="id_companyid" class="control-label">分類方式</label>
+                    <select class="form-control" id="id_parenttype" name="parenttype" style="width:200px;display:inline-block;">
+                        <option></option>
+                        @if (@ViewBag.SelectCategoryType == "1")
+                        {
+                            <option value="1" selected>類別一</option>
+                        }
+                        else
+                        {
+                            <option value="1">類別一</option>
+                        }
+                        @if (@ViewBag.SelectCategoryType == "2")
+                        {
+                            <option value="2" selected>類別二</option>
+                        }
+                        else
+                        {
+                            <option value="2">類別二</option>
+                        }
+                        @if (@ViewBag.SelectCategoryType == "3")
+                        {
+                            <option value="3" selected>類別三</option>
+                        }
+                        else
+                        {
+                            <option value="3">類別三</option>
+                        }
+                        @if (@ViewBag.SelectCategoryType == "4")
+                        {
+                            <option value="4" selected>類別四</option>
+                        }
+                        else
+                        {
+                            <option value="4">類別四</option>
+                        }
+                    </select>
+                    <label for="id_companyid" class="control-label" style="display:inline-block;">類別代號</label>
+                    <select class="form-control" style="width: 200px;display:inline;" name="selCond">
+                        @if (ViewBag.selCond == "=")
+                        {
+                            <option value="=" selected>=</option>
+                        }
+                        else
+                        {
+                            <option value="=">=</option>
+                        }
+                        @if (ViewBag.selCond == ">")
+                        {
+                            <option value=">" selected>></option>
+                        }
+                        else
+                        {
+                            <option value=">">></option>
+                        }
+                        @if (ViewBag.selCond == ">=")
+                        {
+                            <option value=">=" selected>>=</option>
+                        }
+                        else
+                        {
+                            <option value=">=">>=</option>
+                        }
+                        @if (ViewBag.selCond == "<")
+                        {
+                            <option value="<" selected><</option>
+                        }
+                        else
+                        {
+                            <option value="<"><</option>
+                        }
+                        @if (ViewBag.selCond == ">=")
+                        {
+                            <option value=">=" selected>>=</option>
+                        }
+                        else
+                        {
+                            <option value=">=">>=</option>
+                        }
+                        @if (ViewBag.selCond == "<>")
+                        {
+                            <option value="<>" selected><></option>
+                        }
+                        else
+                        {
+                            <option value="<>"><></option>
+                        }
+                        @if (ViewBag.selCond == "like%")
+                        {
+                            <option value="like%" selected>like%</option>
+                        }
+                        else
+                        {
+                            <option value="like%">like%</option>
+                        }
+                        @if (ViewBag.selCond == "%like")
+                        {
+                            <option value="%like" selected>%like</option>
+                        }
+                        else
+                        {
+                            <option value="%like">%like</option>
+                        }
+                        @if (ViewBag.selCond == "%like%")
+                        {
+                            <option value="%like%" selected>%like%</option>
+                        }
+                        else
+                        {
+                            <option value="%like%">%like%</option>
+                        }
+                    </select>
+                    <input type="text" class="form-control" id="id_companyid" name="companyid" maxlength="6" style="display: inline-block; width: 200px;" value="@ViewBag.findcompanyid" />
+                    <button type="submit" class="btn btn-default" id="btnSearch" name="action" value="btnSearch" aria-label="Left Align" style="display: inline-block;">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-link" aria-label="Left Align" data-toggle="modal" data-target=".advanced-search-modal" style="display: inline-block;">
+                        進階查詢
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+
+        var grid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.ProductCategory>)ViewData["ProductCategory"], canPage: false, canSort: true, ajaxUpdateContainerId: "divGrid");
+
+
+        @grid.GetHtml(
+                    tableStyle: "table table-striped table-hover rms-table cmsi04-table",
+                    columns: grid.Columns(
+                        grid.Column(columnName: "", header: "動作", style: "column-two-actions", format: @<text>
+                            <a href="@Url.Action("Edit", "Main", new { ProductCategoryType = @item.ProductCategoryType, ProductTypeId = @item.ProductTypeId })">編輯</a>
+                            <a onclick="deleteInfo('@Url.Action("Delete", "Main", new { ProductCategoryType = @item.ProductCategoryType, ProductTypeId = @item.ProductTypeId })','@item.ProductType')" href="#">刪除</a>
+                        </text>, canSort: false),
+        grid.Column(columnName: "CategoryType", header: "分類方式", style: "col-category-type", format: @<text>
+                            @if (@item.ProductCategoryType == "1")
+                            {
+                                <span class="display-mode">類別一</span>
+                            }
+                            else if (@item.ProductCategoryType == "2")
+                            {
+                                <span class="display-mode">類別二</span>
+                            }
+                            else if (@item.ProductCategoryType == "3")
+                            {
+                                <span class="display-mode">類別三</span>
+                            }
+                            else
+                            {
+                                <span class="display-mode">類別四</span>
+                            }
+        </text>),
+        grid.Column(columnName: "ProductTypeId", header: "類別代號", style: "col-category-id"),
+        grid.Column(columnName: "ProductType", header: "類別名稱", style: "", format:@<text><a href="@Url.Action("Details", "Main", new { ProductCategoryType = @item.ProductCategoryType, ProductTypeId = @item.ProductTypeId })">@item.ProductType</a> </text>)
+                              )
+                          )
+        <p style="color: red;">@ViewBag.Msg</p>
+        @RenderPage("~/Areas/CMSI04/Views/Shared/advanced-search-modal.cshtml")
+    }
+</section>
+    <input type="hidden" title="module" value="CMSI04" />
+    @RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")
+    @using REGAL.MVC.UI.Bootstrap;
+    @(Html.REGAL().FileUpload(name: "imageUploader", description: "The maximum file upload size is 500 KB.", cssClass: "modal-vertical-center"))

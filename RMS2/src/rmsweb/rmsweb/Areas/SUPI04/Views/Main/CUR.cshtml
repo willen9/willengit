@@ -1,0 +1,131 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#from-OrderCategory').bootstrapValidator({
+            fields: {
+                ItemNo: {
+                    validators: {
+                        notEmpty: {
+                            message: '支援項目代號不能為空！'
+                        }
+                    }
+                },
+                itemName: {
+                    validators: {
+                        notEmpty: {
+                            message: '支援項目名稱不能為空！'
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    $(function () {
+
+        $('#id_ItemNo').blur(function () {
+            if (document.getElementById("id_ItemNo").readOnly == true) {
+                return;
+            }
+            if ($("#id_ItemNo").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Action("SupportItemId", "Main")',
+                    data: JSON.stringify({ "SupportItemId": $("#id_ItemNo").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data == false) {
+                            $('#isSupportItemId').text("支援項目代號已存在!");
+                        } else {
+                            $('#isSupportItemId').text("");
+                        }
+                    }
+                })
+            }
+        });
+
+    })
+
+</script>
+<section class="content-header">
+    <h1>支援項目維護</h1>
+</section>
+<section class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            <form id="from-OrderCategory" method="post" action="@Url.Action("CUR", "Main")">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_ItemNo" class="col-md-3 col-lg-3 control-label">項目代號</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "Edit" || ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_ItemNo" name="ItemNo" maxlength="5" value="@ViewBag.SupportItemId" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_ItemNo" name="ItemNo" maxlength="5" value="@ViewBag.SupportItemId" tabindex="1" />
+                            }
+                            <span style='color:red' id="isSupportItemId"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_itemName" class="col-md-3 col-lg-3 control-label">項目名稱</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_itemName" name="itemName" maxlength="20" value="@ViewBag.SupportItemName" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_itemName" name="itemName" maxlength="20" value="@ViewBag.SupportItemName" tabindex="2" />
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_remark" class="col-md-3 col-lg-3 control-label">備註</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <textarea id="id_remark" class="form-control" name="remark" rows="4" cols="40" maxlength="255" readonly>@ViewBag.Remark</textarea>
+                            }
+                            else
+                            {
+                                <textarea id="id_remark" class="form-control" name="remark" rows="4" cols="40" maxlength="255" tabindex="3">@ViewBag.Remark</textarea>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">                                                            
+                    <p style="color: red;">@ViewBag.Msg</p>
+                    @if (@ViewBag.Type == "Edit")
+                    {
+                        <button type=submit class="btn btn-primary" name="action" value="Edit" tabindex="4">存檔</button>
+                            <button type=submit class="btn btn-primary" name="action" value="EditAgain" tabindex="5">存檔並新增</button>
+                            <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="6">取消</a>
+                    }
+                    else if (@ViewBag.Type == "Details")
+                    {
+                        <button type=submit class="btn btn-primary" name="action" value="EditDetails">編輯</button>
+                            <button type=submit class="btn btn-primary" name="action" value="CopyAddDetails">複製並新增</button>
+                            <a class='btn btn-primary' onclick="deleteInfo('@Url.Action("Delete", "Main", new {  SupportItemId = @ViewBag.SupportItemId })', '@ViewBag.SupportItemName')">刪除</a>
+                            <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">返回列表</a>
+                    }
+                    else
+                    {
+                        <button type=submit class="btn btn-primary" name="action" value="Save" tabindex="7">存檔</button>
+                            <button type=submit class="btn btn-primary" name="action" value="SaveAgain" tabindex="8">存檔並新增</button>
+                            <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="9">取消</a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<input type="hidden" title="module" value="SUPI04" />
+    @RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")

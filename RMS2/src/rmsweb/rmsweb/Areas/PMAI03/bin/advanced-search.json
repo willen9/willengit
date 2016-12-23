@@ -1,0 +1,18 @@
+﻿{
+  "s.SerArrangeOrderType": "單別",
+  "s.SerArrangeOrderNo": "單號",
+  "s.Version": "版次",
+  "s.CustomerName": "客戶名稱",
+  "s.CustomerType": "客戶形態",
+  "s.ProductNo": "品號",
+  "s.ProductName": "品名",
+  "s.SerialNo": "序號",
+  "s.WarrantySDate": "保固起日",
+  "s.WarrantyEDate": "保固迄日",
+  "s.Company": "公司別",
+  "s.UserGroup": "群組",
+  "s.Creator": "建立人員",
+  "s.CreateDate": "建立日期",
+  "s.Modifier": "修改人員",
+  "s.ModiDate": "修改日期"
+}

@@ -1,0 +1,94 @@
+﻿@using System.Security.Policy
+@using BusinessLayer.Models
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSearchCustomer").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchCustomer", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "id": $("#txtCondition1").val(), "name": $("#txtCondition2").val()}),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divCustomerGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divCustomerGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectCustomer(this)'>選擇</a></td>" +
+                            "<td class='departmentId'>" + Maintain[i].CustomerId + "</td>" +
+                            "<td class='departmentName'>" + Maintain[i].CustomerName + "</td>" +
+                            "</tr>");
+                    }
+                }
+            });
+        });
+    });
+
+    function SelectCustomer(id) {
+        if ($("#importType").val() == "A") {
+            $("#id_custumer2").val($(id).closest('tr').find(".departmentId").html());
+            $("#spName2").html($(id).closest('tr').find(".departmentName").html());
+            $("#id_customerName2").val($(id).closest('tr').find(".departmentName").html());
+        } else {
+            $("#id_custumer1").val($(id).closest('tr').find(".departmentId").html());
+            $("#spName1").html($(id).closest('tr').find(".departmentName").html());
+            $("#id_customerName1").val($(id).closest('tr').find(".departmentName").html());
+        }
+    }
+</script>
+<style type="text/css">
+    .advanced-department-modal table .actioncolumn {
+        width: 50px;
+    }
+
+    .advanced-department-modal table .departmentId {
+        width: 150px;
+    }
+
+    .advanced-department-modal table .departmentName {
+        width: 200px;
+    }
+</style>
+<div class='modal fade modal-vertical-center' id="importSelect2" tabindex='-1' role='dialog' aria-hidden='true' aria-labelledby="myModalLabel2">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class="modal-title" id="myModalLabel2">
+                    客戶選擇
+                </h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-horizontal" id="search-condition-area">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <label for="txtCondition1" class="control-label">客戶代號</label>
+                            <input type="text" class="form-control" id="txtCondition1" name="txtCondition1" style="display: inline;" />
+                            <label for="txtCondition2" class="control-label">客戶簡稱</label>
+                            <input type="text" class="form-control" id="txtCondition2" name="txtCondition2" style="display: inline;" />
+                            <button type="button" class="btn btn-default" id="btnSearchCustomer" style="display: inline;">查詢</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="divCustomerGrid" style="height: 500px;overflow-y: auto;">
+                    <table class="table table-striped table-hover table-condensed" data-swhgajax="true" data-swhgcontainer="divVendorGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    選擇
+                                </th>
+                                <th scope="col">
+                                    客戶代號
+                                </th>
+                                <th scope="col">
+                                    客戶簡稱
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

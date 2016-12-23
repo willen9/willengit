@@ -1,0 +1,16 @@
+﻿{
+  "r.RMAAplType": "單別",
+  "o.OrderSName": "單據名稱",
+  "r.RMAAplNo": "單號",
+  "c.CustomerName": "客戶簡稱",
+  "r.ProductNo": "品號",
+  "r.ProductName": "品名",
+  "r.SerialNo": "序號",
+  "r.StatusCode": "狀態",
+  "r.Company": "公司別",
+  "r.UserGroup": "群組",
+  "r.Creator": "建立人員",
+  "r.CreateDate": "建立日期",
+  "r.Modifier": "修改人員",
+  "r.ModiDate": "修改日期"
+}

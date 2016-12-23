@@ -1,0 +1,54 @@
+﻿
+<div class='modal fade QuestionList_DExid-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>欄位新增-編輯</h4>
+            </div>
+            <div class='modal-body'>
+                <form class="form-horizontal">
+                    <input type="hidden" class="form-control" id="id_ExtxtAddressId" name="txtAddressId" style="width: 400px; display: inline;" maxlength="60" />
+                    <div class="form-group">
+                        <label for="id_QuestionList_DRemark" class="control-label col-sm-4">欄位代號</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_ExtxtColumnNo" name="ExtxtColumnNo" maxlength="255"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_QuestionList_DRemark" class="control-label col-sm-4">欄位名稱</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_ExtxtColumnName" name="ExtxtColumnName" maxlength="60"/>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="id_QuestionList_DRemark" class="control-label col-sm-4">型態</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_ExtxtDataType" name="ExtxtDataType" maxlength="60"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_QuestionList_DRemark" class="control-label col-sm-4">長度</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_ExtxtColLength" name="ExtxtColLength" maxlength="60"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_QuestionList_DRemark" class="control-label col-sm-4">欄位說明</label>
+                        <div class="col-sm-20">
+                            <textarea class="form-control" id="id_ExtxtRemark" name="ExtxtRemark" cols="40" rows="5" maxlength="255"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>               
+            <div class='modal-footer'>
+                <button type="button" class="btn btn-default" name="action" value="btnAllot" onclick="checkExid()">確定</button>
+                <button type='button' class='btn btn-default' data-dismiss='modal'>取消</button>
+            </div>
+        </div>
+    </div>
+</div>

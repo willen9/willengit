@@ -1,0 +1,1127 @@
+﻿<script type="text/javascript">
+
+    function CountSysc(idname) {
+        if (document.getElementById("id_AsignOrderType").value == "") {
+            $("#msg_information").html("單別不能為空！");
+            $('.msg-modal-lg').modal();
+            //$('#QuotationNo').val("");
+            return;
+        }
+
+        var Regx = /^[0-9]*$/;
+        if (!Regx.test(document.getElementById(idname).value)) {
+            $("#msg_information").html("單號只能包含数字");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+        $.ajax({
+            url: '@Url.Action("CountSysc", "Main", new { Area = "SUPI05" })',
+            data: JSON.stringify({ "CodeType": $("#id_AsignOrderType").val().trim(), "CodeNumber": document.getElementById(idname).value }),
+            type: 'POST',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                    //$('#QuotationNo').val("");
+                }
+            }
+        });
+    };
+
+    $(document).ready(function () {
+        $('#from-Picking_H').bootstrapValidator({
+            fields: {
+                AsignOrderType: {
+                    validators: {
+                        notEmpty: {
+                            message: '單別不能為空！'
+                        }
+                    }
+                },
+                AsignOrderNo: {
+                    validators: {
+                        notEmpty: {
+                            message: '單號不能為空！'
+                        }
+                    }
+                }
+            }
+        });
+
+        $("#id_orderdate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+
+    });
+
+    $(function () {
+        $('#id_AsignOrderType').blur(function () {
+            if (document.getElementById("id_AsignOrderType").readOnly == true) {
+                return;
+            }
+            if ($("#id_AsignOrderType").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Action("GetOrderTypeName", "Main", new { Area = "CONI01" })',
+                    data: JSON.stringify({ "OrderType": $("#id_AsignOrderType").val().trim(), "OrderCategory": "A3" }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $('#ordersname').text(data.OrderSName);
+                        $('#AutoConfirm').val(data.AutoConfirm);
+                        $('#CheckExOrder').val(data.CheckExOrder);
+                        $.ajax({
+                            url: '@Url.Action("GetOrderTypeNo", "Main",new { Area = "SUPI05"})',
+                            data: JSON.stringify({ "OrderType": $("#id_AsignOrderType").val().trim() }),
+                            type: 'POST',
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                var strData = data.split('-');
+                                if (strData[0] == "YES") {
+                                    $('#id_AsignOrderNo').val(strData[1]);
+                                    if (strData[1] == "") {
+                                        document.getElementById("id_AsignOrderNo").readOnly = "";
+                                    } else {
+                                        document.getElementById("id_AsignOrderNo").readOnly = "readonly";
+                                    }
+                                } else if (strData[0] == "NO") {
+                                    $('#id_AsignOrderNo').val(strData[1]);
+                                    document.getElementById("id_AsignOrderNo").readOnly = "";
+                                } else {
+                                    $("#id_AsignOrderNo").html(strData[1]);
+                                    document.getElementById("id_AsignOrderNo").readOnly = "";
+                                    $('.msg-modal-lg').modal();
+                                }
+                            }
+                        })
+                    },
+                    error: function () {
+                        $("#msg_information").html("單別不存在！");
+                        $('.msg-modal-lg').modal();
+                        $("#id_AsignOrderType").val("")
+                        $('#ordersname').text("");
+                        $('#id_AsignOrderNo').val("");
+                        $('#AutoConfirm').val("");
+                        $('#CheckExOrder').val("");
+                        document.getElementById("id_AsignOrderNo").readOnly = "";
+                        return;
+                    }
+                })
+            } else {
+                $("#id_OrderType").val("")
+                $('#ordersname').text("");
+                $('#id_SupportAplOrderNo').val("");
+                document.getElementById("id_SupportAplOrderNo").readOnly = "";
+            }
+        });
+
+        $("#btnSupportAplOrderType").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchSupportApl_H", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "Col": ",Picking,IsPicking", "Condition": ",=,=", "conditionValue": ",Y,N", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divSupportApl_HGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divSupportApl_HGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectSupportAplH(this)'>選擇</a>" +
+                                "<td class='SupportAplOrderTypeType'>" + Maintain[i].SupportAplOrderType + "</td>" +
+                                "<td class='SupportAplOrderNoType'>" + Maintain[i].SupportAplOrderNo + "</td>" +
+                                "<td><input type='hidden' class='CustomerIdType' name='customeridtype' value='" + Maintain[i].CustomerId + "'>" + "</td>" +
+                                "<td class='CustomerNameType'>" + Maintain[i].CustomerName + "</td>" +
+                                "<td><input type='hidden' class='SupportDeptType' name='supportDeptType' value='" + Maintain[i].SupportDept + "'>" + "</td>" +
+                                "<td class='SupportDeptNameType'>" + Maintain[i].SupportDeptName + "</td>" +
+                                "<td></td>" +
+                                "<td class='Address1Type'>" + Maintain[i].AddressSName + "</td>" +
+                                "<td class='ApplyDateType'>" + Maintain[i].ApplyDate + "</td>" +
+                                "<td class='RequestDateType'>" + Maintain[i].RequestDate + "</td>" +
+                                "<td class='SalesNameType'>" + Maintain[i].SalesName + "</td>" +
+                                "<td class='CustomerTypeType'>" + Maintain[i].CustomerType + "</td>" +
+                                "<td class='CreatorNameType'>" + Maintain[i].CreatorName + "</td>" +
+                                "<td><input type='hidden' class='RequestTimeType' name='requestTimeType' value='" + Maintain[i].RequestTime + "'>" + "</td>" +
+                                "<td><input type='hidden' class='NoOfPrintsType' name='noOfPrintsType' value='" + Maintain[i].NoOfPrints + "'>" + "</td>" +
+                                "<td><input type='hidden' class='SalesIdType' name='SalesIdType' value='" + Maintain[i].SalesId + "'>" + "</td>" +
+                                "</tr>");
+
+                    }
+                }
+            });
+            $("#txtSupportAplOrderType").val("");
+            $("#txtSupportAplOrderNo").val("");
+            $("#SupportApl_HPage").val("1");
+            $(".record_selector_supportapl_h-modal").modal();
+        });
+
+        $("#btnSearchSupportApl_H").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchSupportApl_H", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "Col": ",Picking,IsPicking," + $("#addsupportaplCol").val(), "Condition": ",=,=," + $("#addsupportaplCondition").val(), "conditionValue": ",Y,N," + $("#addsupportaplconditionValue").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divSupportApl_HGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divSupportApl_HGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectSupportAplH(this)'>選擇</a>" +
+                                "<td class='SupportAplOrderTypeType'>" + Maintain[i].SupportAplOrderType + "</td>" +
+                                "<td class='SupportAplOrderNoType'>" + Maintain[i].SupportAplOrderNo + "</td>" +
+                                "<td><input type='hidden' class='CustomerIdType' name='customeridtype' value='" + Maintain[i].CustomerId + "'>" + "</td>" +
+                                "<td class='CustomerNameType'>" + Maintain[i].CustomerName + "</td>" +
+                                "<td><input type='hidden' class='SupportDeptType' name='supportDeptType' value='" + Maintain[i].SupportDept + "'>" + "</td>" +
+                                "<td class='SupportDeptNameType'>" + Maintain[i].SupportDeptName + "</td>" +
+                                "<td></td>" +
+                                "<td class='Address1Type'>" + Maintain[i].AddressSName + "</td>" +
+                                "<td class='ApplyDateType'>" + Maintain[i].ApplyDate + "</td>" +
+                                "<td class='RequestDateType'>" + Maintain[i].RequestDate + "</td>" +
+                                "<td class='SalesNameType'>" + Maintain[i].SalesName + "</td>" +
+                                "<td class='CustomerTypeType'>" + Maintain[i].CustomerType + "</td>" +
+                                "<td class='CreatorNameType'>" + Maintain[i].CreatorName + "</td>" +
+                                "<td><input type='hidden' class='RequestTimeType' name='requestTimeType' value='" + Maintain[i].RequestTime + "'>" + "</td>" +
+                                "<td><input type='hidden' class='NoOfPrintsType' name='noOfPrintsType' value='" + Maintain[i].NoOfPrints + "'>" + "</td>" +
+                                "<td><input type='hidden' class='SalesIdType' name='SalesIdType' value='" + Maintain[i].SalesId + "'>" + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#SupportApl_HPage").val("1");
+        });
+
+        $("#divSupportApl_HGrid").scroll(function () {
+            var Page = document.getElementById("SupportApl_HPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchSupportApl_H", "Main")',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "Col": ",Picking,IsPicking," + $("#addsupportaplCol").val(), "Condition": ",=,=," + $("#addsupportaplCondition").val(), "conditionValue": ",Y,N," + $("#addsupportaplconditionValue").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divSupportApl_HGrid table tbody").append("<tr>" +
+                                   "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectSupportAplH(this)'>選擇</a>" +
+                                   "<td class='SupportAplOrderTypeType'>" + Maintain[i].SupportAplOrderType + "</td>" +
+                                   "<td class='SupportAplOrderNoType'>" + Maintain[i].SupportAplOrderNo + "</td>" +
+                                   "<td><input type='hidden' class='CustomerIdType' name='customeridtype' value='" + Maintain[i].CustomerId + "'>" + "</td>" +
+                                   "<td class='CustomerNameType'>" + Maintain[i].CustomerName + "</td>" +
+                                   "<td><input type='hidden' class='SupportDeptType' name='supportDeptType' value='" + Maintain[i].SupportDept + "'>" + "</td>" +
+                                   "<td class='SupportDeptNameType'>" + Maintain[i].SupportDeptName + "</td>" +
+                                   "<td></td>" +
+                                   "<td class='Address1Type'>" + Maintain[i].AddressSName + "</td>" +
+                                   "<td class='ApplyDateType'>" + Maintain[i].ApplyDate + "</td>" +
+                                   "<td class='RequestDateType'>" + Maintain[i].RequestDate + "</td>" +
+                                   "<td class='SalesNameType'>" + Maintain[i].SalesName + "</td>" +
+                                   "<td class='CustomerTypeType'>" + Maintain[i].CustomerType + "</td>" +
+                                   "<td class='CreatorNameType'>" + Maintain[i].CreatorName + "</td>" +
+                                   "<td><input type='hidden' class='RequestTimeType' name='requestTimeType' value='" + Maintain[i].RequestTime + "'>" + "</td>" +
+                                   "<td><input type='hidden' class='NoOfPrintsType' name='noOfPrintsType' value='" + Maintain[i].NoOfPrints + "'>" + "</td>" +
+                                   "<td><input type='hidden' class='SalesIdType' name='SalesIdType' value='" + Maintain[i].SalesId + "'>" + "</td>" +
+                                   "</tr>");
+                            }
+                        }
+                    });
+                    $("#SupportApl_HPage").val(Page);
+                }
+            }
+
+        });
+
+        $("#btnSupportAplProductDProductNo").click(function () {
+            $('.SupportApl_ProductD-modal').modal("hide");
+            $.ajax({
+                url: '@Url.Action("SearchProduct", "Main", new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ProductNo": "", "Col": "", "Condition": "", "conditionValue": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divProductGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divProductGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProduct(this)'>選擇</a>" +
+                                "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                "<td class='ProductTypeId1NameType'>" + Maintain[i].ProductTypeId1Name + "</td>" +
+                                "<td class='VendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                                "</tr>");
+
+                    }
+                }
+            });
+            $("#txtProductNo").val("");
+            //$("#txtProductName").val("");
+            $("#ProductPage").val("1");
+            $(".record-selector-product-modal").modal();
+
+        });
+
+        $("#btnSearchProduct").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchProduct", "Main", new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ProductNo": $("#txtProductNo").val(), "Col": $("#addProduct_Col").val(), "Condition": $("#addProduct_Condition").val(), "conditionValue": $("#addProduct_conditionValue").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divProductGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divProductGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProduct(this)'>選擇</a>" +
+                                "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                "<td class='ProductTypeId1NameType'>" + Maintain[i].ProductTypeId1Name + "</td>" +
+                                "<td class='VendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#ProductPage").val("1");
+        });
+
+        $("#divProductGrid").scroll(function () {
+            var Page = document.getElementById("ProductPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchProduct", "Main", new { Area = "CONI02" })',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "ProductNo": $("#txtProductNo").val(), "Col": $("#addProduct_Col").val(), "Condition": $("#addProduct_Condition").val(), "conditionValue": $("#addProduct_conditionValue").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divProductGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProduct(this)'>選擇</a>" +
+                                    "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                    "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                    "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                    "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                    "<td class='ProductTypeId1NameType'>" + Maintain[i].ProductTypeId1Name + "</td>" +
+                                    "<td class='VendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                                    "</tr>");
+                            }
+                        }
+                    });
+                    $("#ProductPage").val(Page);
+                }
+            }
+
+        });
+
+
+        $("#btnAddProduct").click(function () {
+            var stritemid = addZero(document.getElementById("divSupportApl_ProductDGrid").getElementsByTagName('tr').length.toString(), 4);
+            $("#id_SupportApl_ProductDItemId").val(stritemid);
+            $("#id_SupportApl_ProductDProductNo").val("");
+            $("#id_SupportApl_ProductDProductName").val("");
+            $("#id_SupportApl_ProductDQTY").val("0");
+            $("#id_SupportApl_ProductDUnit").val("");
+            $("#id_SupportApl_ProductDRemark").val("");
+            $('.SupportApl_ProductD-modal').modal();
+        });
+
+
+    })
+
+    function ProductDExit(id) {
+        $("#id_SupportApl_ProductDItemId").val($(id).closest('tr').find(".stritemid").val());        //品號
+        $("#id_SupportApl_ProductDProductNo").val($(id).closest('tr').find(".strproductno").val());        //品號
+        $("#id_SupportApl_ProductDProductName").val($(id).closest('tr').find(".strproductname").val());        //品名
+        $("#id_SupportApl_ProductDQTY").val($(id).closest('tr').find(".strqty").val());        //數量
+        $("#id_SupportApl_ProductDPickingQTY").val($(id).closest('tr').find(".strpickingQTY").val());        //數量
+        $("#id_SupportApl_ProductDUnit").val($(id).closest('tr').find(".strunit").val());        //單位
+        $("#id_SupportApl_ProductDRemark").val($(id).closest('tr').find(".strremark").val());        //保固期限
+        $('.SupportApl_ProductD-modal').modal();
+    };
+
+    function checkProductD() {
+        if ($("#id_SupportApl_ProductDProductNo").val() == '') {
+            $("#msg_information").html("请输入品號！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        var ajaxType = true;
+        $.ajax({
+            url: '@Url.Action("SearchProductInfo", "Main", new { Area = "PSMI01" })',
+            data: JSON.stringify({ "ProductNo": $("#id_SupportApl_ProductDProductNo").val().trim() }),
+            type: 'POST',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $("#id_SupportApl_ProductDProductNo").val(data.ProductNo);        //品號
+                $("#id_SupportApl_ProductDProductName").val(data.ProductName);     //品名
+                $("#id_SupportApl_ProductDUnit").val(data.Unit);     //商品類別
+            },
+            error: function () {
+                //$("#msg_information").html("品號不存在！");
+                //$('.msg-modal-lg').modal();
+                alert("品號不存在！");
+                $("#id_SupportApl_ProductDProductNo").val("");        //品號
+                $("#id_SupportApl_ProductDProductName").val("");     //品名
+                $("#id_SupportApl_ProductDUnit").val("");     //商品類別
+                ajaxType = false;
+                return;
+            }
+        })
+
+        if (ajaxType) {
+            if ($("#id_SupportApl_ProductDQTY").val() == '') {
+                $("#id_SupportApl_ProductDQTY").val("0");
+            }
+
+            var table = document.getElementById("divSupportApl_ProductDGrid");
+            var trs = table.getElementsByTagName('tr');
+            for (var i = 0; i < trs.length; i++) {
+                if ($(trs[i]).closest('tr').find(".stritemid").val() == $("#id_SupportApl_ProductDItemId").val()) {
+                    trs[i].innerHTML = "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='ProductDExit(this)'>編輯</a><a class='btn btn-link' data-dismiss='modal' onclick='RemoveProductD(this)'>刪除</a></td>" +
+                        "<td class='ItemIdType'>" + $("#id_SupportApl_ProductDItemId").val() + "<input type='hidden' class='stritemid' name='stritemid' value='" + $("#id_SupportApl_ProductDItemId").val() + "'></td>" +
+                        "<td class='ProductNoType'>" + $("#id_SupportApl_ProductDProductNo").val() + "<input type='hidden' class='strproductno' name='strproductno' value='" + $("#id_SupportApl_ProductDProductNo").val() + "'></td>" +
+                        "<td class='ProductNameType'>" + $("#id_SupportApl_ProductDProductName").val() + "<input type='hidden' class='strproductname' name='strproductname' value='" + $("#id_SupportApl_ProductDProductName").val() + "'></td>" +
+                        "<td class='QTYType'>" + $("#id_SupportApl_ProductDQTY").val() + "<input type='hidden' class='strqty' name='strqty' value='" + $("#id_SupportApl_ProductDQTY").val() + "'></td>" +
+                        "<td class='PickingQTYType'>" + $("#id_SupportApl_ProductDPickingQTY").val() + "<input type='hidden' class='strpickingQTY' name='strpickingQTY' value='" + $("#id_SupportApl_ProductDPickingQTY").val() + "'></td>" +
+                        "<td class='UnitType'>" + $("#id_SupportApl_ProductDUnit").val() + "<input type='hidden' class='strunit' name='strunit' value='" + $("#id_SupportApl_ProductDUnit").val() + "'></td>" +
+                        "<td class='RemarkType'>" + $("#id_SupportApl_ProductDRemark").val() + "<input type='hidden' class='strremark' name='strremark' value='" + $("#id_SupportApl_ProductDRemark").val() + "'></td>";
+                    $(".SupportApl_ProductD-modal").modal("hide");
+                    return;
+                }
+
+            }
+
+            $("#divSupportApl_ProductDGrid table tbody").append("<tr>" +
+                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='ProductDExit(this)'>編輯</a><a class='btn btn-link' data-dismiss='modal' onclick='RemoveProductD(this)'>刪除</a></td>" +
+                "<td class='ItemIdType'>" + $("#id_SupportApl_ProductDItemId").val() + "<input type='hidden' class='stritemid' name='stritemid' value='" + $("#id_SupportApl_ProductDItemId").val() + "'></td>" +
+                        "<td class='ProductNoType'>" + $("#id_SupportApl_ProductDProductNo").val() + "<input type='hidden' class='strproductno' name='strproductno' value='" + $("#id_SupportApl_ProductDProductNo").val() + "'></td>" +
+                        "<td class='ProductNameType'>" + $("#id_SupportApl_ProductDProductName").val() + "<input type='hidden' class='strproductname' name='strproductname' value='" + $("#id_SupportApl_ProductDProductName").val() + "'></td>" +
+                        "<td class='QTYType'>" + $("#id_SupportApl_ProductDQTY").val() + "<input type='hidden' class='strqty' name='strqty' value='" + $("#id_SupportApl_ProductDQTY").val() + "'></td>" +
+                        "<td class='PickingQTYType'>" + $("#id_SupportApl_ProductDPickingQTY").val() + "<input type='hidden' class='strpickingQTY' name='strpickingQTY' value='" + $("#id_SupportApl_ProductDPickingQTY").val() + "'></td>" +
+                        "<td class='UnitType'>" + $("#id_SupportApl_ProductDUnit").val() + "<input type='hidden' class='strunit' name='strunit' value='" + $("#id_SupportApl_ProductDUnit").val() + "'></td>" +
+                        "<td class='RemarkType'>" + $("#id_SupportApl_ProductDRemark").val() + "<input type='hidden' class='strremark' name='strremark' value='" + $("#id_SupportApl_ProductDRemark").val() + "'></td>" +
+                "</tr>");
+
+            $(".SupportApl_ProductD-modal").modal("hide");
+        }
+
+    };
+    function SelectProduct(id) {
+        $("#id_SupportApl_ProductDProductNo").val($(id).closest('tr').find(".ProductNoType").html());
+        $("#id_SupportApl_ProductDProductName").val($(id).closest('tr').find(".ProductNameType").html());
+        $("#id_SupportApl_ProductDUnit").val($(id).closest('tr').find(".UnitType").html());
+        $('.SupportApl_ProductD-modal').modal();
+        $(".record-selector-product-modal").modal("hide");
+    }
+    function SelectOrderType(id) {
+        $("#id_AsignOrderType").val($(id).closest('tr').find(".OrderTypeType").html());
+        $("#AsignOrderTypename").html($(id).closest('tr').find(".OrderSNameType").html());
+        $("#AutoConfirm").val($(id).closest('tr').find(".AutoConfirmType").val());
+        $("#CheckExOrder").val($(id).closest('tr').find(".CheckExOrderType").val());
+        $.ajax({
+            url: '@Url.Action("GetOrderTypeNo", "Main")',
+            data: JSON.stringify({ "OrderType": $("#id_AsignOrderType").val().trim() }),
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "YES") {
+                    $('#id_AsignOrderNo').val(strData[1]);
+                    document.getElementById("id_AsignOrderNo").readOnly = "readonly";
+                } else {
+                    $('#id_AsignOrderNo').val(strData[1]);
+                    document.getElementById("id_AsignOrderNo").readOnly = "";
+                }
+            }
+        })
+    };
+
+    function numModel(id)
+    {
+        //發料單別
+        $("#id_OrderType").html($("#id_AsignOrderType").val());
+        //發料單號
+        $("#id_OrderNo").html($("#id_AsignOrderNo").val());
+        //項次
+        $("#id_ItemId").html($(id).closest('tr').find(".stritemid").val());
+        //品號
+        $("#id_ProductNo").html($(id).closest('tr').find(".ProductNoType").html());
+        //品名
+        $("#id_ProductName").html($(id).closest('tr').find(".ProductNameType").html());
+        //數量
+        $("#id_QTY").html($(id).closest('tr').find(".QTYType").html());
+
+        $.ajax({
+            url: '@Url.Action("SearchPicking_ProductSerial", "Main")',
+            type: "POST",
+            datatype: 'JSON',
+            data: JSON.stringify({ "PickingOrderType": $("#id_AsignOrderType").val(), "PickingOrderNo": $("#id_AsignOrderNo").val(), "ItemId": $(id).closest('tr').find(".stritemid").val() }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $("#divProductSerialGrid table tbody").empty();
+                var Maintain = eval(data);
+                $("#id_SerialQTY").html(Maintain.length);
+                for (var i = 0; i < Maintain.length; i++) {
+                    $("#divProductSerialGrid table tbody").append("<tr>" +
+                       "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='DeleteSerial(this)'>刪除</a></td>" +
+                       "<td class='SerialItemType'>" + addZero((i + 1).toString(), 4)+ "</td>" +
+                       "<td class='SerialNoType'>" + "<input class='class_strSerialValue' name='strSerialValue' value='" + Maintain[i].SerialNo + "'>" + "</td>" +
+                       "</tr>");
+                }
+                $("#id_SerialQTY").html(Maintain.length);
+            }
+        });
+
+        $(".number-detail-modal").modal();
+    }
+
+    function numModels(id) {
+        //發料單別
+        $("#id_OrderTypes").html($("#id_AsignOrderType").val());
+        //發料單號
+        $("#id_OrderNos").html($("#id_AsignOrderNo").val());
+        //項次
+        $("#id_ItemId").html($(id).closest('tr').find(".stritemid").val());
+        //品號
+        $("#id_ProductNos").html($(id).closest('tr').find(".ProductNoType").html());
+        //品名
+        $("#id_ProductNames").html($(id).closest('tr').find(".ProductNameType").html());
+        //數量
+        $("#id_QTYs").html($(id).closest('tr').find(".QTYType").html());
+
+        $.ajax({
+            url: '@Url.Action("SearchPicking_ProductSerial", "Main")',
+            type: "POST",
+            datatype: 'JSON',
+            data: JSON.stringify({ "PickingOrderType": $("#id_AsignOrderType").val(), "PickingOrderNo": $("#id_AsignOrderNo").val(), "ItemId": $(id).closest('tr').find(".stritemid").val() }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $("#divProductSerialGrid table tbody").empty();
+                var Maintain = eval(data);
+                $("#id_SerialQTYs").html(Maintain.length);
+                for (var i = 0; i < Maintain.length; i++) {
+                    $("#divProductSerialGrid table tbody").append("<tr>" +
+                       "<td class='actioncolumn'></td>" +
+                       "<td class='SerialItemType'>" + addZero((i + 1).toString(), 4) + "</td>" +
+                       "<td class='SerialNoType'>" + Maintain[i].SerialNo + "</td>" +
+                       "</tr>");
+                }
+                $("#id_SerialQTY").html(Maintain.length);
+            }
+        });
+
+        $(".number-detail-modals").modal();
+    }
+
+    function SerialModel(id)
+    {
+        $("#id_Serial").val("");
+        $(".number-detail-modal").modal("hide");
+        $(".Serial-detail-modal").modal();
+    }
+
+    function SerialFalse()
+    {
+        $(".Serial-detail-modal").modal("hide");
+        $(".number-detail-modal").modal();
+    }
+
+    function SerialTrue() {
+        var strData = $("#id_Serial").val().split('\n');
+
+        var addserial = true;
+        for (i = 0; i < strData.length; i++)
+        {
+            if (strData[i] == "")
+                continue;
+            var table = document.getElementById("divProductSerialGrid");
+            var trs = table.getElementsByTagName('tr');
+            for (var y = 1; y < trs.length; y++) {
+                if ($(trs[y]).closest('tr').find(".class_strSerialValue").val() == strData[i]) {
+                    addserial = false;
+                    break;
+                }
+
+            }
+            if (addserial)
+            {
+                $("#divProductSerialGrid table tbody").append("<tr>" +
+                   "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='DeleteSerial(this)'>刪除</a>" +
+                   "<td class='SerialItemType'>" + addZero(document.getElementById("divProductSerialGrid").getElementsByTagName('tr').length.toString(),4) + "</td>" +
+                   "<td class='SerialNoType'>" + "<input class='class_strSerialValue' name='strSerialValue' value='" + strData[i] + "'>" + "</td>" +
+                   "</tr>");
+            }
+
+        }
+        $("#id_SerialQTY").html(parseInt($("#id_SerialQTY").html()) + strData.length);
+        $(".Serial-detail-modal").modal("hide");
+        $(".number-detail-modal").modal();
+    }
+
+    function addSerial()
+    {
+        $("#id_SerialQTY").html(parseInt($("#id_SerialQTY").html()) + 1);
+        $("#divProductSerialGrid table tbody").append("<tr>" +
+            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='DeleteSerial(this)'>刪除</a>" +
+            "<td class='SerialItemType'>" + addZero(document.getElementById("divProductSerialGrid").getElementsByTagName('tr').length.toString(), 4) + "</td>" +
+            "<td class='SerialNoType'>" + "<input class='class_strSerialValue' name='strSerialValue'>" + "</td>" +
+            "</tr>");
+    }
+
+    function DeleteSerial(id) {
+        $("#id_SerialQTY").html(parseInt($("#id_SerialQTY").html()) -1);
+        $(id).parents('tr:first').remove();
+        var table = document.getElementById("divProductSerialGrid");
+        var trs = table.getElementsByTagName('tr');
+        var stritem = "";
+        for (var i = 1; i < trs.length; i++) {
+            stritem = addZero((i).toString(), 4);
+            trs[i].cells[1].innerHTML = stritem;
+
+        }
+    }
+
+    function SaveSerial()
+    {
+        var table = document.getElementById("divProductSerialGrid");
+
+        var textinputs = table.getElementsByTagName('input');
+
+        var SerialArray = new Array()
+
+        for (var i = 0; i < textinputs.length; i++) {
+            if (textinputs[i].value == "")
+                continue;
+            SerialArray[i] = textinputs[i].value;
+        }
+
+        if (unique(SerialArray) == false)
+        {
+            alert("序號不能重複");
+            return;
+        }
+
+        if (SerialArray.length > parseInt($("#id_QTY").html()))
+        {
+            alert("序號數量超過需領數量，請確認！");
+            return;
+        }
+
+
+        var ajaxTrue = false;
+
+        $.ajax({
+            url: '@Url.Action("AddSerial", "Main")',
+            data: JSON.stringify({ "PickingOrderType": $("#id_AsignOrderType").val(), "PickingOrderNo": $("#id_AsignOrderNo").val(), "ItemId": $("#id_ItemId").html(), "SerialNoValue": SerialArray }),
+            type: 'POST',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "OK") {
+                    $(".number-detail-modal").modal("hide");
+                    ajaxTrue = true;
+                } else {
+                    alert(strData[1]);
+                }
+            }
+        });
+
+        if(ajaxTrue==true)
+        {
+            var table = document.getElementById("divSupportApl_ProductDGrid");
+            var trs = table.getElementsByTagName('tr');
+            for (var i = 1; i < trs.length; i++) {
+                if ($(trs[i]).closest('tr').find(".stritemid").val() == $("#id_ItemId").html()) {
+                    $(trs[i]).closest('tr').find(".PickingQTYType").html(SerialArray.length.toString() + "<input type='hidden' class='strpickingQTY' name='strpickingQTY' value='" + SerialArray.length.toString() + "'>")
+                    return;
+                }
+
+            }
+        }
+
+    }
+
+    function SelectSupportAplH(id) {
+        //來源單號
+        $("#id_SupportAplOrderTyper").val($(id).closest('tr').find(".SupportAplOrderTypeType").html());
+        //來源單別
+        $("#id_SupportAplOrderNo").val($(id).closest('tr').find(".SupportAplOrderNoType").html());
+        //客戶代號
+        $("#id_customerId").val($(id).closest('tr').find(".CustomerIdType").val());
+        //客戶名稱
+        $("#idcustomerName").html($(id).closest('tr').find(".CustomerNameType").html());
+        //列印次數
+        $("#id_nootprints").val($(id).closest('tr').find(".NoOfPrintsType").val());
+        //業務員
+        $("#id_salesID").val($(id).closest('tr').find(".SalesIdType").val());
+        $("#id_salesname").html($(id).closest('tr').find(".SalesNameType").html());
+        //客戶形態
+        $("#id_customertype").val($(id).closest('tr').find(".CustomerTypeType").html());
+        //需求日期
+        $("#id_requesDate").val($(id).closest('tr').find(".RequestDateType").html());
+        //指定時間
+        $("#id_requesttime").val($(id).closest('tr').find(".RequestTimeType").html());
+        //支援單位代號
+        $("#id_departmentId").val($(id).closest('tr').find(".SupportDeptType").val());
+        //支援單位名稱
+        $("#iddepartmentName").html($(id).closest('tr').find(".SupportDeptNameType").html());
+        //品項明細
+        $.ajax({
+            url: '@Url.Action("GetSupportApl_ProductD", "Main")',
+            type: "POST",
+            datatype: 'JSON',
+            data: JSON.stringify({ "SupportAplOrderType": $(id).closest('tr').find(".SupportAplOrderTypeType").html(), "SupportAplOrderNo": $(id).closest('tr').find(".SupportAplOrderNoType").html() }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $("#divSupportApl_HGrid table tbody").empty();
+                var Maintain = eval(data);
+                for (var i = 0; i < Maintain.length; i++) {
+                    if (Maintain[i].SerialControl == "Y")
+                    {
+                        $("#divSupportApl_ProductDGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'><button type='button' class='btn btn-link' style='display:inline;' onclick='numModel(this)'>序號管理</button>" +
+                            "<td class='ItemIdType'>" + Maintain[i].ItemId +
+                            "<input type='hidden' class='stritemid' name='stritemid' value='" + Maintain[i].ItemId + "'>" + "</td>" +
+                            "<td class='ProductNoType'>" + Maintain[i].ProductNo +
+                            "<input type='hidden' class='strproductno' name='strproductno' value='" + Maintain[i].ProductNo + "'>" + "</td>" +
+                            "<td class='ProductNameType'>" + Maintain[i].ProductName +
+                            "<input type='hidden' class='strproductname' name='strproductname' value='" + Maintain[i].ProductName + "'>" + "</td>" +
+                            "<td class='QTYType'>" + Maintain[i].QTY +
+                            "<input type='hidden' class='strqty' name='strqty' value='" + Maintain[i].QTY + "'>" + "</td>" +
+                            "<td class='PickingQTYType'>" + Maintain[i].PickingQTY +
+                            "<input type='hidden' class='strpickingQTY' name='strpickingQTY' value='" + Maintain[i].PickingQTY + "'>" + "</td>" +
+                            "<td class='UnitType'>" + Maintain[i].Unit +
+                            "<input type='hidden' class='strunit' name='strunit' value='" + Maintain[i].Unit + "'>" + "</td>" +
+                            "<td class='RemarkType'>" + Maintain[i].Remark +
+                            "<input type='hidden' class='strremark' name='strremark' value='" + Maintain[i].Remark + "'>" + "</td>" +
+                            "</tr>");
+                    }else
+                    {
+                        $("#divSupportApl_ProductDGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'>" +
+                            "<td class='ItemIdType'>" + Maintain[i].ItemId +
+                            "<input type='hidden' class='stritemid' name='stritemid' value='" + Maintain[i].ItemId + "'>" + "</td>" +
+                            "<td class='ProductNoType'>" + Maintain[i].ProductNo +
+                            "<input type='hidden' class='strproductno' name='strproductno' value='" + Maintain[i].ProductNo + "'>" + "</td>" +
+                            "<td class='ProductNameType'>" + Maintain[i].ProductName +
+                            "<input type='hidden' class='strproductname'  name='strproductname' value='" + Maintain[i].ProductName + "'>" + "</td>" +
+                            "<td class='QTYType'>" + Maintain[i].QTY +
+                            "<input type='hidden' class='strqty'  name='strqty' value='" + Maintain[i].QTY + "'>" + "</td>" +
+                            "<td class='PickingQTYType'>" + Maintain[i].PickingQTY +
+                            "<input type='hidden' class='strpickingQTY' name='strpickingQTY' value='" + Maintain[i].PickingQTY + "'>" + "</td>" +
+                            "<td class='UnitType'>" + Maintain[i].Unit +
+                            "<input type='hidden' class='strunit' name='strunit' value='" + Maintain[i].Unit + "'>" + "</td>" +
+                            "<td class='RemarkType'>" + Maintain[i].Remark +
+                            "<input type='hidden' class='strremark' name='strremark' value='" + Maintain[i].Remark + "'>" + "</td>" +
+                            "</tr>");
+                    }
+
+                }
+            }
+        });
+    }
+
+    function checkSave(from) {
+        if (document.getElementById("CheckExOrder").value == "Y") {
+            if (document.getElementById("id_SupportAplOrderTyper").value == "" || document.getElementById("id_SupportAplOrderNo").value == "") {
+                $("#msg_information").html("來源單號不能為空！");
+                $('.msg-modal-lg').modal();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function ($scope, $http) {
+        $scope.OrderCategoryitems = null;
+        $scope.OrderCategoryList = function () {
+            $http({
+                url: '@Url.Action("SearchOrderType", "Main", new { Area = "CONI01" })',
+                params: { Col: ",OrderCategory", Condition: ",=", conditionValue: ",A3", Page: 0 }
+            }).success(function (data, status) {
+                $scope.OrderCategoryitems = data;
+            })
+        };
+        $scope.SearchOrderCategoryList = function () {
+            $http({
+                url: '@Url.Action("SearchOrderType", "Main", new { Area = "CONI01" })',
+                params: { Col: ",OrderCategory," + $("#addOrderCategoryCol").val(), Condition: ",=," + $("#addOrderCategoryCondition").val(), conditionValue: ",A3," + $("#addOrderCategoryconditionValue").val(), Page: 0 }
+            }).success(function (data, status) {
+                $scope.OrderCategoryitems = data;
+            })
+        };
+    });
+</script>
+<section class="content-header">
+    <h1>發料單維護</h1>
+</section>
+<section class="content" ng-app="myApp" ng-controller="myCtrl">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            <form id="from-Picking_H" method="post" action="@Url.Action("CUR", "Main")">
+                <h5>申請發料資料</h5>
+                <hr />
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_ordertype" class="control-label col-md-3 col-lg-3">單別</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (ViewBag.Type == "Edit" || ViewBag.Type == "Details")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_AsignOrderType" name="AsignOrderType" value="@ViewBag.PickingOrderType" readonly />
+                                    <span class="input-group-addon" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                                
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_AsignOrderType" name="AsignOrderType" value="@ViewBag.PickingOrderType" tabindex="1" maxlength="5"/>
+                                    <span class="input-group-addon" id="btnAsignOrderType" style="cursor:pointer;" data-toggle="modal" data-target="#modal-orderCategory" ng-click="OrderCategoryList()"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                            }
+                        </div>
+                        <label for="id_orderdate" class="control-label col-md-3 col-lg-3">單據日期</label>
+                        @if (ViewBag.Type == "Details")
+                        {
+                            <div class="col-md-5 col-lg-5 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_orderdate" data-link-format="yyyy/mm/dd">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="orderdate" readonly="readonly" value="@ViewBag.OrderDate"/>
+                                    <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-5 col-lg-5 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_orderdate" data-link-format="yyyy/mm/dd">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_orderdate" name="orderdate" readonly="readonly" value="@ViewBag.OrderDate" />
+                                    <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        }
+                        <label for="id_status" class="control-label col-md-3 col-lg-3">狀態碼</label>
+                        @if (ViewBag.Type == "Details")
+                        {
+                            <div class="col-md-5 col-lg-5">
+                                <select class="form-control" name="IsPicking" disabled>
+                                    @if (@ViewBag.IsPicking == "Y")
+                                    {
+                                        <option value="Y" selected>Y.已領料</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Y">Y.已領料</option>
+                                    }
+
+                                    @if (@ViewBag.IsPicking == "N")
+                                    {
+                                        <option value="N" selected>N.未領料</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="N">N.未領料</option>
+                                    }
+
+
+                                </select>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-5 col-lg-5">
+                                <select class="form-control" name="IsPicking" disabled>
+                                    @if (@ViewBag.IsPicking == "N")
+                                    {
+                                        <option value="N" selected>N.未領料</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="N">N.未領料</option>
+                                    }
+                                    @if (@ViewBag.IsPicking == "Y")
+                                    {
+                                        <option value="Y" selected>Y.已領料</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Y">Y.已領料</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_orderno" class="control-label col-md-3 col-lg-3">單號</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_AsignOrderNo" name="AsignOrderNo" value="@ViewBag.PickingOrderNo" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_AsignOrderNo" name="AsignOrderNo" value="@ViewBag.PickingOrderNo" onchange="CountSysc(this.id)"  tabindex="2" maxlength="12"/>
+                            }
+                        </div>
+                        <label for="id_noofprint" class="control-label col-md-3 col-lg-3">列印次數</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_nootprints" name="nootprints" value="@ViewBag.NoOfPrints" readonly />
+                        </div>
+                        <label for="id_modifier" class="control-label col-md-3 col-lg-3">修改人員</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_deptid" name="deptid" value="@ViewBag.Modifier" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_exorder" class="control-label col-md-3 col-lg-3">來源單號</label>
+                        <div class="col-md-13 col-lg-13 form-inline">
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_SupportAplOrderTyper" name="SupportAplOrderType" value="@ViewBag.SupportAplOrderType" readonly />
+                                    <span class="input-group-addon" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                                <input type="text" class="form-control" id="id_SupportAplOrderNo" name="SupportAplOrderNo" value="@ViewBag.SupportAplOrderNo" readonly />
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_SupportAplOrderTyper" name="SupportAplOrderType" value="@ViewBag.SupportAplOrderType"  tabindex="3" maxlength="11"/>
+                                    <span class="input-group-addon" id="btnSupportAplOrderType" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                                <input type="text" class="form-control" id="id_SupportAplOrderNo" name="SupportAplOrderNo" value="@ViewBag.SupportAplOrderNo"  />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_salesman" class="control-label col-md-3 col-lg-3">業務員</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_salesID" name="salesname" value="@ViewBag.Sales" readonly />
+                            <span style="display:inline;" id="id_salesname">@ViewBag.SalesName</span>
+                        </div>
+                        <label for="id_pickingman" class="control-label col-md-3 col-lg-3">發料人員</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_pickingman" name="pickingman" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_customerid" class="control-label col-md-3 col-lg-3">客戶代號</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_customerId" name="customerId" value="@ViewBag.CustomerId" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_customerId" name="customerId" value="@ViewBag.CustomerId" maxlength="10" tabindex="4" readonly/>
+                            }
+
+                            <span style="display:inline;" id="idcustomerName">@ViewBag.CustomerName</span>
+                        </div>
+                        <label for="id_customertype" class="control-label col-md-3 col-lg-3">客戶形態</label>
+                        <div class="col-md-5 col-lg-5">
+                            @*<input type="text" class="form-control" id="id_customerTypeName" name="customerTypeName" value="@ViewBag.CustomerName" readonly />*@
+                            <input type="text" class="form-control" id="id_customertype" name="customertype" value="@ViewBag.CustomerType" readonly />
+                        </div>
+                        <label for="id_pickingdate" class="control-label col-md-3 col-lg-3">發料日期</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_pickingdate" name="pickingdate" value="@ViewBag.PickingDate" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_requestdate" class="control-label col-md-3 col-lg-3">需求日期</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" name="requesDate" id="id_requesDate" readonly="readonly" value="@ViewBag.RequestDate" />
+                        </div>
+                        <label for="id_requesttime" class="control-label col-md-3 col-lg-3">指定時間</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_requesttime" name="id_requesttime" readonly />
+                        </div>
+                        <label for="id_supportdept" class="control-label col-md-3 col-lg-3">支援單位</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_departmentId" name="departmentId" value="@ViewBag.SupportDept" maxlength="6" readonly />
+                            <span style="display:inline;" id="iddepartmentName"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_remark" class="control-label col-md-3 col-lg-3">備註</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <textarea id="id_remark" class="form-control" name="remark" rows="4" cols="40" readonly>@ViewBag.Remark</textarea>
+                            }
+                            else
+                            {
+                                <textarea id="id_remark" class="form-control" name="remark" rows="4" cols="40"  tabindex="5" maxlength="255">@ViewBag.Remark</textarea>
+                            }
+                        </div>
+                    </div>
+                </div>
+                
+
+                <h5>品項明細</h5>
+                <hr />
+                <div class="text-right">
+                    @if (@ViewBag.Type == "Details")
+                    {
+                    <button type="button" class="btn btn-primary" id="btnAddProduct" name="action" value="btnAddProduct" aria-label="Left Align" tabindex="11" disabled>
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增品項
+                    </button>
+                    }
+                    else
+                    {
+                    <button type="button" class="btn btn-primary" id="btnAddProduct" name="action" value="btnAddProduct" aria-label="Left Align" tabindex="11">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增品項
+                    </button>
+                    }
+                </div>
+                <hr />
+                <div id="divSupportApl_ProductDGrid" style="height: 100px;overflow-y: auto;">
+                    @{
+                        var webGridProduct = new WebGrid(source: (IEnumerable<BusinessLayer.Models.Picking_ProductD>)ViewData["Picking_ProductD"], canPage: false, canSort: false, ajaxUpdateContainerId: "divSupportApl_ProductDGrid");
+                    }
+
+                    @webGridProduct.GetHtml(
+
+                tableStyle: "table table-striped table-hover",
+                columns: webGridProduct.Columns(
+                    webGridProduct.Column(columnName: "", header: "動作", style: "actioncolumn",
+                        format:
+                        @<text>
+                            @if (@item.SerialControl == "Y")
+                            {
+                                if (@ViewBag.Type == "Details")
+                                {
+                                    <a class='btn btn-link' style='display:inline;' onclick="numModels(this)">序號管理</a>
+                                }
+                                else
+                                {
+                                    <a class='btn btn-link' style='display:inline;' onclick="numModel(this)" href="#">序號管理</a>
+                                }
+                            }
+                        </text>),
+                                webGridProduct.Column(columnName: "ItemId", header: "項次", style: "ItemIdType",
+                                format: @<text>
+                                    @item.ItemId<input type='hidden' class="stritemid" name='stritemid' value='@item.ItemId'>
+                                </text>),
+                                webGridProduct.Column(columnName: "ProductNo", header: "品號", style: "ProductNoType",
+                                format: @<text>
+                                    @item.ProductNo<input type='hidden' class="strproductno" name='strproductno' value='@item.ProductNo'>
+                                </text>),
+                                webGridProduct.Column(columnName: "ProductName", header: "品名", style: "ProductNameType",
+                                format: @<text>
+                                    @item.ProductName<input type='hidden' class="strproductname" name='strproductname' value='@item.ProductName'>
+                                </text>),
+                                webGridProduct.Column(columnName: "QTY", header: "需發數量", style: "QTYType",
+                                format: @<text>
+                                    @item.QTY<input type='hidden' class="strqty" name='strqty' value='@item.QTY'>
+                                </text>),
+                                webGridProduct.Column(columnName: "PickingQTY", header: "已領數量", style: "PickingQTYType",
+                                format: @<text>
+                                    @item.PickingQTY<input type='hidden' class="strpickingQTY" name='strpickingQTY' value='@item.PickingQTY'>
+                                </text>),
+                                webGridProduct.Column(columnName: "Unit", header: "單位", style: "UnitType",
+                                format: @<text>
+                                    @item.Unit<input type='hidden' class="strunit" name='strunit' value='@item.Unit'>
+                                </text>),
+                                webGridProduct.Column(columnName: "Remark", header: "備註", style: "RemarkType",
+                                format: @<text>
+                                    @item.Remark<input type='hidden' class="strremark" name='strremark' value='@item.Remark'>
+                                </text>)
+                        )
+                    )
+                </div>
+                <input type="hidden" class="form-control" id="AutoConfirm" name="AutoConfirm" value="@ViewBag.AutoConfirm" readonly />
+                <input type="hidden" class="form-control" id="CheckExOrder" name="CheckExOrder" value="@ViewBag.CheckExOrder" readonly />
+                <p style="color: red;">@ViewBag.Msg</p>
+                <div class="text-right">
+                    @if (@ViewBag.Type == "Edit")
+                    {
+                        <button type=submit class="btn btn-primary" name="action" value="Edit" tabindex="12" onclick="return checkSave(this)">存檔</button>
+                        <button type=submit class="btn btn-primary" name="action" value="EditAgain" tabindex="13" onclick="return checkSave(this)">存檔並新增</button>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+                    else if (@ViewBag.Type == "Details")
+                    {
+                        <a class="btn btn-primary" href="@Url.Action("Tree", "Main", new { Area = "SUPI05", SupportAplOrderType = @ViewBag.SupportAplOrderType, SupportAplOrderNo = @ViewBag.SupportAplOrderNo })" tabindex="27">串查</a>
+                        if (@ViewBag.Confirmed == "N")
+                        {
+                            <button type=submit class="btn btn-primary" name="action" value="EditDetails" tabindex="12">編輯</button>
+                        }
+                        <button type=submit class="btn btn-primary" name="action" value="CopyAddDetails" tabindex="13">複製並新增</button>
+                            //<a class="btn btn-primary" onclick="deleteInfo('@Url.Action("Delete", "Main", new { CategoryType = @ViewBag.CategoryType, ProductTypeId = @ViewBag.ProductTypeId })','@ViewBag.ProductType')" href="#">刪除</a>
+                        if (@ViewBag.Confirmed == "N")
+                        {
+                            <button type=submit class="btn btn-primary" name="action" value="ConfirmedY" tabindex="14">發料確認</button>
+                        }
+                        if (@ViewBag.Confirmed == "Y")
+                        {
+                            <button type=submit class="btn btn-primary" name="action" value="ConfirmedN" tabindex="15">取消確認</button>
+                        }
+                        <a class="btn btn-primary" href="@Url.Action("Print", "Main", new { Area = "SUPI05", SupportAplOrderType = @ViewBag.SupportAplOrderType, SupportAplOrderNo = @ViewBag.SupportAplOrderNo })" tabindex="33">列印</a>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="16">返回列表</a>
+                    }
+                    else
+                    {
+                        <button type=submit class="btn btn-primary" name="action" value="Save" tabindex="12" onclick="return checkSave(this)">存檔</button>
+                        <button type=submit class="btn btn-primary" name="action" value="SaveAgain" tabindex="13" onclick="return checkSave(this)">存檔並新增</button>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_OrderCategory.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_supportapl_h.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/number-detail-modal.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/number-detail-modals.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/Serial-detail-modal.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_product.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/choose-msg-dialog.cshtml")
+    @RenderPage("~/Areas/SUPI09/Views/Shared/SupportApl_ProductD-modal.cshtml")
+</section>
+<input type="hidden" title="module" value="SUPI09" />

@@ -1,0 +1,5 @@
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\RMS.Security.Authentication\bin\Debug\RMS.Security.Authentication.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\RMS.Security.Authentication\bin\Debug\RMS.Security.Authentication.pdb
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\RMS.Security.Authentication\obj\Debug\RMS.Security.Authentication.csprojResolveAssemblyReference.cache
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\RMS.Security.Authentication\obj\Debug\RMS.Security.Authentication.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\RMS.Security.Authentication\obj\Debug\RMS.Security.Authentication.pdb

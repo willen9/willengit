@@ -1,0 +1,20 @@
+﻿{
+  "ProductNo": "品號",
+  "ProductName": "品名",
+  "Unit": "單位",
+  "VendorId": "供應商",
+  "ProductTypeId1": "類別一",
+  "ProductTypeId2": "類別二",
+  "ProductTypeId3": "類別三",
+  "ProductTypeId4": "類別四",
+  "Specification": "規格",
+  "Explanation": "商品描述",
+  "Brand": "品牌",
+  "SerialControl": "產品序號管理",
+  "Company": "公司別",
+  "UserGroup": "群組",
+  "product.Creator": "建立人員",
+  "product.CreateDate": "建立日期",
+  "product.Modifier": "修改人員",
+  "product.ModiDate": "修改日期"
+}

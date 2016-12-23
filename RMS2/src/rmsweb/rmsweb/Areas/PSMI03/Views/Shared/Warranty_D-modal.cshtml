@@ -1,0 +1,121 @@
+﻿
+<div class='modal fade Warranty_D-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>商品資料</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="id_Warranty_DChangeDate" class="control-label col-sm-4">異動日期</label>
+                        <div class="col-sm-20 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_Warranty_DChangeDate" data-link-format="yyyy-mm-dd">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="id_Warranty_DChangeDate" name="Warranty_DChangeDate" readonly />
+                                <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_Warranty_DChangeOrderType" class="control-label col-sm-4">異動單別</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_Warranty_DChangeOrderType" name="Warranty_DChangeOrderType" />
+                        </div> 
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_Warranty_DChangeOrderNo" class="control-label col-sm-4">異動單號</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_Warranty_DChangeOrderNo" name="Warranty_DChangeOrderNo" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_Warranty_DChangeOrderItemId" class="control-label col-sm-4">異動項次</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_Warranty_DChangeOrderItemId" name="Warranty_DChangeOrderItemId" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_Warranty_DTargetId" class="control-label col-sm-4">異動對象</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_Warranty_DTargetId" name="Warranty_DTargetId" style="width:90%;display:inline;" readonly />
+                            <button type="button" class="btn btn-default" id="btnChooseTargetId" name="action" aria-label="Left Align" style="display: inline;">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            </button>
+                            <input type="hidden" class="form-control" id="id_Warranty_Dtype" name="Warranty_Dtype" style="width: 200px; display: inline;" readonly />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_Warranty_DTargetName" class="control-label col-sm-4">對象簡稱</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_Warranty_DTargetName" name="Warranty_DTargetName" readonly />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_Warranty_DWarrantyPeriod" class="control-label col-sm-4">保固期限</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_Warranty_DWarrantyPeriod" name="Warranty_DWarrantyPeriod" onchange="updateProductDWarrantyEDate()" onkeydown="onlyNumber();" maxlength="3" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_Warranty_DWarrantySDate" class="control-label col-sm-4">保固起日</label>
+                        @*<div class="col-sm-20 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_Warranty_DWarrantySDate" data-link-format="yyyy-mm-dd">*@
+                            <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-autoclose="true" data-date-clear-btn="true" data-date-today-btn="true" data-date-today-highlight="true">
+                                <input type="text" class="form-control" id="id_Warranty_DWarrantySDate" name="Warranty_DWarrantySDate" onchange="updateProductDWarrantyEDate()" readonly />
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                        @*</div>*@
+                    </div>
+
+                    @*<div class="form-group">
+                        <label for="id_period_from" class="control-label">From</label>
+                        <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-autoclose="true" data-date-clear-btn="true" data-date-today-btn="true" data-date-today-highlight="true">
+                            <input type="text" class="form-control" id="id_period_from" name="SalesPeriodFrom" value="@Html.DisplayFor(model => model.SalesPeriodFrom)" readonly />
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>*@
+                    
+                    <div class="form-group">
+                        <label for="id_Warranty_DWarrantyEDate" class="control-label col-sm-4">保固迄日</label>
+                        <div class="col-sm-20 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_Warranty_DWarrantyEDate" data-link-format="yyyy-mm-dd">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="id_Warranty_DWarrantyEDate" name="Warranty_DWarrantyEDate" readonly />
+                                <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_Warranty_DWarrantyType" class="col-sm-4 control-label col-sm-4">保固類型</label>
+                        <div class="col-sm-20">
+                            <select class="form-control" name="Warranty_DWarrantyType" id="id_Warranty_DWarrantyType">
+                                <option value="0.空白" selected>0.空白</option>
+                                <option value="1.廠商">1.廠商</option>
+                                <option value="2.客戶">2.客戶</option>
+                                <option value="3.合約">3.合約</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_Warranty_DRemark" class="control-label col-sm-4">備註</label>
+                        <div class="col-sm-20">
+                            <textarea class="form-control" id="id_Warranty_DRemark" name="id_Warranty_DRemark" cols="40" rows="5" maxlength="255"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='modal-footer'>
+                <button type="button" class="btn btn-default" name="action" value="btnAllot" onclick="check()">確定</button>
+                @*<button type="button" class='btn btn-default' data-dismiss='modal' onclick='numModel()'>序號管理</button>*@
+                <button type='button' class='btn btn-default' data-dismiss='modal'>取消</button>
+            </div>
+        </div>
+    </div>
+</div>

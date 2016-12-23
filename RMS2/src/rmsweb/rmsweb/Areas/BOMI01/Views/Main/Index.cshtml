@@ -1,0 +1,209 @@
+﻿<style type="text/css">
+    .table .actioncolumn {
+        width: 120px;
+    }
+    .table .MajorComponentNo {
+        width: 120px;
+    }
+    .table .MajorComponentName {
+        width: 120px;
+    }    
+    .table .Specification {
+        width: 120px;
+    }
+    .table .Unit {
+        width: 120px;
+    }    
+    .table .CreateDate {
+        width: 120px;
+    }
+    .table .ConfirmDate {
+        width: 120px;
+    }   
+    .table .Remark {
+        width: 120px;
+    }   
+</style>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#submitButton-imageUploader").click(function () {
+            var url = $("#id_fileUpload").val();
+            if (url.trim() == "") {
+                alert('請選擇要上傳的文件');
+                return false;
+            } else {
+                if (url.split(".")[url.split(".").length - 1].toUpperCase() != "CSV") {
+                    alert('文件格式不正確');
+                    return false;
+                }
+                $.ajaxFileUpload({
+                    url: '@Url.Action("Index", "Main")',
+                    type: 'POST',
+                    secureuri: false,
+                    fileElementId: 'id_fileUpload',//file标签的id
+                    dataType: 'json',//返回数据的类型
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            alert(serverData[1]);
+                        }
+                        else {
+                            window.location = "@Url.Action("Index", "Main")";
+                        }
+                    },
+                    error: function (data, status, e) {
+                        alert(e);
+                    }
+                });
+            }
+        });
+
+    });
+</script>
+<section class="content-header">
+    <h1>BOM表用量維護</h1>
+</section>
+<section class="content">
+    @using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+    {
+        <div class="toolbar-container">
+            <a class="btn btn-primary" href="@Url.Action("CUR", "Main", null)"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增</a>
+            <button type="submit" class="btn btn-primary" aria-label="Left Align" name="action" value="btnExport">
+                <span class="glyphicon glyphicon-export" aria-hidden="true"></span> 匯出
+            </button>
+            <button type="button" class="btn btn-primary" aria-label="Left Align" data-toggle="modal" data-target="#imageUploader">
+                <span class="glyphicon glyphicon-import" aria-hidden="true"></span> 匯入
+            </button>
+            <input type="hidden" name="strAdvCol" value="@ViewBag.strAdvCol" />
+            <input type="hidden" name="strAdvCondition" value="@ViewBag.strAdvCondition" />
+            <input type="hidden" name="strAdvValue" value="@ViewBag.strAdvValue" />
+        </div>
+    }
+    @using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+    {
+        <div class="basic-search-container form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-24">
+                    <label for="id_strMajorComponentNo" class="control-label">主件品號</label>
+                    <select class="form-control" style="width: 100px;display:inline;" name="selCond1">
+                        @if (ViewBag.selCond1 == "=")
+                        {
+                            <option value="=" selected>=</option>
+                        }
+                        else
+                        {
+                            <option value="=">=</option>
+                        }
+                        @if (ViewBag.selCond1 == ">")
+                        {
+                            <option value=">" selected>></option>
+                        }
+                        else
+                        {
+                            <option value=">">></option>
+                        }
+                        @if (ViewBag.selCond1 == ">=")
+                        {
+                            <option value=">=" selected>>=</option>
+                        }
+                        else
+                        {
+                            <option value=">=">>=</option>
+                        }
+                        @if (ViewBag.selCond1 == "<")
+                        {
+                            <option value="<" selected><</option>
+                        }
+                        else
+                        {
+                            <option value="<"><</option>
+                        }
+                        @if (ViewBag.selCond1 == "<=")
+                        {
+                            <option value="<=" selected><=</option>
+                        }
+                        else
+                        {
+                            <option value="<="><=</option>
+                        }
+                        @if (ViewBag.selCond1 == "<>")
+                        {
+                            <option value="<>" selected><></option>
+                        }
+                        else
+                        {
+                            <option value="<>"><></option>
+                        }
+                        @if (ViewBag.selCond1 == "like%")
+                        {
+                            <option value="like%" selected>like%</option>
+                        }
+                        else
+                        {
+                            <option value="like%">like%</option>
+                        }
+                        @if (ViewBag.selCond1 == "%like")
+                        {
+                            <option value="%like" selected>%like</option>
+                        }
+                        else
+                        {
+                            <option value="%like">%like</option>
+                        }
+                        @if (ViewBag.selCond1 == "%like%")
+                        {
+                            <option value="%like%" selected>%like%</option>
+                        }
+                        else
+                        {
+                            <option value="%like%">%like%</option>
+                        }
+                    </select>
+                    <input type="text" class="form-control" id="id_strMajorComponentNo" name="strMajorComponentNo" style="display: inline-block; width: 200px;" value="@ViewBag.strMajorComponentNo" />
+                    <button type="submit" class="btn btn-default" id="btnSearch" name="action" value="btnSearch" aria-label="Left Align" style="display: inline-block;">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-link" aria-label="Left Align" data-toggle="modal" data-target=".advanced-search-modal" style="display: inline-block;">
+                        進階查詢
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        var grid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.BOM_H>)ViewData["BOM_H"], canPage: false, canSort: false, ajaxUpdateContainerId: "divGrid");
+
+
+        @grid.GetHtml(
+             tableStyle: "table table-striped table-hover rms-table bomi01-table",
+        columns: grid.Columns(
+                 grid.Column(columnName: "", header: "動作", style: "column-two-actions", format: @<text>
+                @if (@item.Confirmed != "Y")
+                {
+                    <a href="@Url.Action("Edit", "Main", new { MajorComponentNo = @item.MajorComponentNo})">編輯</a>
+                }
+                @*<button type="button" class="btn btn-link" onclick="deleteInfo('@Url.Action("Delete", "Main", new {  MajorComponentNo = @item.MajorComponentNo })','@item.MajorComponentNo BOM表用量')">刪除</button>*@
+    <a onclick="deleteInfo('@Url.Action("Delete", "Main", new {  MajorComponentNo = @item.MajorComponentNo })','@item.MajorComponentNo BOM表用量')" href="#">刪除</a>
+            </text>, canSort: false),
+        grid.Column(columnName: "MajorComponentNo", header: "主件品號", style: "MajorComponentNo", format:
+        @<text>
+            <a href="@Url.Action("Details", "Main", new { MajorComponentNo = @item.MajorComponentNo})">@item.MajorComponentNo</a>
+        </text>),
+        grid.Column(columnName: "MajorComponentName", header: "品名", style: "MajorComponentName"),
+        grid.Column(columnName: "Specification", header: "規格", style: "Specification"),
+        grid.Column(columnName: "Unit", header: "單位", style: "Unit"),
+        grid.Column(columnName: "CreateDate", header: "建立日期", style: "CreateDate"),
+        grid.Column(columnName: "ConfirmDate", header: "確認日期", style: "ConfirmDate"),
+        grid.Column(columnName: "Remark", header: "備註", style: "Remark")
+        )
+    )
+        <p style="color: red;">@ViewBag.Msg</p>
+        @RenderPage("~/Areas/BOMI01/Views/Shared/advanced-search-modal.cshtml")
+    }
+</section>
+<input type="hidden" title="module" value="BOMI01" />
+    @RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")
+
+    @using REGAL.MVC.UI.Bootstrap;
+    @(Html.REGAL().FileUpload(name: "imageUploader", description: "The maximum file upload size is 500 KB.", cssClass: "modal-vertical-center"))

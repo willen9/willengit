@@ -1,0 +1,57 @@
+﻿<script type="text/javascript">
+    $(function () {
+       
+    });
+
+    function TossTurncheck(from) {
+        if ($("#id_OrderType").val() == '') {
+            $("#msg_information").html("请输入派工單別！");
+            $('.msg-modal-lg').modal();
+            return false;
+        }
+
+        if ($("#id_requesDate").val() == '') {
+            $("#msg_information").html("请選擇派工日期！");
+            $('.msg-modal-lg').modal();
+            return false;
+        }
+
+        return true;
+    }
+
+    function SelectOrderType(id) {
+        $("#id_OrderType").val($(id).closest('tr').find(".OrderTypeType").html());
+        $("#ordersname").html($(id).closest('tr').find(".OrderSNameType").html());
+    };
+</script>
+<div class='modal fade TossTurn-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>派工</h4>
+            </div>
+                <div class='modal-body'>
+                    <div class="form-group">
+                        <label for="id_OrderType" class="control-label">計劃單別</label>
+                        <input type="text" class="form-control" id="id_OrderType" name="ordertype" style="width: 200px; display: inline;" maxlength="5" />
+                        <button type="button" class="btn btn-default" style="display:inline;" id="btnOrderType" data-toggle="modal" data-target="#modal-orderCategory" ng-click="OrderCategoryList()">Q</button>
+                        <span style="display:inline;" id="ordersname"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_requesDate" class="control-label">單據日期</label>
+                        <div class="col-sm-8 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_requesDate" data-link-format="yyyy-mm-dd">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="id_requesDate" name="requesDate" readonly="readonly" value="@ViewBag.RequestDate" />
+                                <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='modal-footer'>
+                    <button type="submit" class="btn btn-default" name="action" value="btnTossTurn" onclick="return TossTurncheck(this)">確定</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal'>取消</button>
+                </div>
+        </div>
+    </div>
+</div>
+@RenderPage("../../../../Views/Shared/RecordSelector/record_selector_OrderCategory.cshtml")

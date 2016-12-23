@@ -1,0 +1,314 @@
+﻿<section class="content-header">
+    <h1>支援申請派工回報作業</h1>
+</section>
+<section class="content">
+    @using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+    {
+        <div class="basic-search-container form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-24">
+                    <label for="id_orderno" class="control-label">單號</label>
+                    <select class="form-control" style="width: 80px;display:inline;" name="selCond1">
+                        @if (ViewBag.selCond1 == "=")
+                {
+                            <option value="=" selected>=</option>
+                        }
+                        else
+                        {
+                            <option value="=">=</option>
+                        }
+                        @if (ViewBag.selCond1 == ">")
+                {
+                            <option value=">" selected>></option>
+                        }
+                        else
+                        {
+                            <option value=">">></option>
+                        }
+                        @if (ViewBag.selCond1 == ">=")
+                {
+                            <option value=">=" selected>>=</option>
+                        }
+                        else
+                        {
+                            <option value=">=">>=</option>
+                        }
+                        @if (ViewBag.selCond1 == "<")
+                {
+                            <option value="<" selected><</option>
+                        }
+                        else
+                        {
+                            <option value="<"><</option>
+                        }
+                        @if (ViewBag.selCond1 == "<=")
+                {
+                            <option value="<=" selected><=</option>
+                        }
+                        else
+                        {
+                            <option value="<="><=</option>
+                        }
+                        @if (ViewBag.selCond1 == "<>")
+                {
+                            <option value="<>" selected><></option>
+                        }
+                        else
+                        {
+                            <option value="<>"><></option>
+                        }
+                        @if (ViewBag.selCond1 == "like%")
+                {
+                            <option value="like%" selected>like%</option>
+                        }
+                        else
+                        {
+                            <option value="like%">like%</option>
+                        }
+                        @if (ViewBag.selCond1 == "%like")
+                {
+                            <option value="%like" selected>%like</option>
+                        }
+                        else
+                        {
+                            <option value="%like">%like</option>
+                        }
+                        @if (ViewBag.selCond1 == "%like%")
+                {
+                            <option value="%like%" selected>%like%</option>
+                        }
+                        else
+                        {
+                            <option value="%like%">%like%</option>
+                        }
+                    </select>
+                    <input type="text" class="form-control" id="id_supportaplorderno" name="supportaplorderno" style="width:160px;display:inline;" value="@ViewBag.SupportAplOrderNo" />
+                    <label for="id_customerid" class="control-label">客戶代號</label>
+                    <select class="form-control" style="width: 80px;display:inline;" name="selCond2">
+                        @if (ViewBag.selCond2 == "=")
+                {
+                            <option value="=" selected>=</option>
+                        }
+                        else
+                        {
+                            <option value="=">=</option>
+                        }
+                        @if (ViewBag.selCond2 == ">")
+                {
+                            <option value=">" selected>></option>
+                        }
+                        else
+                        {
+                            <option value=">">></option>
+                        }
+                        @if (ViewBag.selCond2 == ">=")
+                {
+                            <option value=">=" selected>>=</option>
+                        }
+                        else
+                        {
+                            <option value=">=">>=</option>
+                        }
+                        @if (ViewBag.selCond2 == "<")
+                {
+                            <option value="<" selected><</option>
+                        }
+                        else
+                        {
+                            <option value="<"><</option>
+                        }
+                       @if (ViewBag.selCond1 == "<=")
+                {
+                        <option value="<=" selected><=</option>
+                       }
+                       else
+                       {
+                        <option value="<="><=</option>
+                       }
+                        @if (ViewBag.selCond2 == "<>")
+                {
+                            <option value="<>" selected><></option>
+                        }
+                        else
+                        {
+                            <option value="<>"><></option>
+                        }
+                        @if (ViewBag.selCond2 == "like%")
+                {
+                            <option value="like%" selected>like%</option>
+                        }
+                        else
+                        {
+                            <option value="like%">like%</option>
+                        }
+                        @if (ViewBag.selCond2 == "%like")
+                {
+                            <option value="%like" selected>%like</option>
+                        }
+                        else
+                        {
+                            <option value="%like">%like</option>
+                        }
+                        @if (ViewBag.selCond2 == "%like%")
+                {
+                            <option value="%like%" selected>%like%</option>
+                        }
+                        else
+                        {
+                            <option value="%like%">%like%</option>
+                        }
+                    </select>
+                    <input type="text" class="form-control" id="id_customerid" name="customerid" style="width:160px;display:inline;" value="@ViewBag.CustomerId">
+                    <label for="id_dealman" class="control-label">處理人員</label>
+                    <select class="form-control" style="width: 80px;display:inline;" name="selCond3">
+                        @if (ViewBag.selCond3 == "=")
+                {
+                            <option value="=" selected>=</option>
+                        }
+                        else
+                        {
+                            <option value="=">=</option>
+                        }
+                        @if (ViewBag.selCond3 == ">")
+                {
+                            <option value=">" selected>></option>
+                        }
+                        else
+                        {
+                            <option value=">">></option>
+                        }
+                        @if (ViewBag.selCond3 == ">=")
+                {
+                            <option value=">=" selected>>=</option>
+                        }
+                        else
+                        {
+                            <option value=">=">>=</option>
+                        }
+                        @if (ViewBag.selCond3 == "<")
+                {
+                            <option value="<" selected><</option>
+                        }
+                        else
+                        {
+                            <option value="<"><</option>
+                        }
+                       @if (ViewBag.selCond1 == "<=")
+                {
+                        <option value="<=" selected><=</option>
+                       }
+                       else
+                       {
+                        <option value="<="><=</option>
+                       }
+                        @if (ViewBag.selCond3 == "<>")
+                {
+                            <option value="<>" selected><></option>
+                        }
+                        else
+                        {
+                            <option value="<>"><></option>
+                        }
+                        @if (ViewBag.selCond3 == "like%")
+                {
+                            <option value="like%" selected>like%</option>
+                        }
+                        else
+                        {
+                            <option value="like%">like%</option>
+                        }
+                        @if (ViewBag.selCond3 == "%like")
+                {
+                            <option value="%like" selected>%like</option>
+                        }
+                        else
+                        {
+                            <option value="%like">%like</option>
+                        }
+                        @if (ViewBag.selCond3 == "%like%")
+                {
+                            <option value="%like%" selected>%like%</option>
+                        }
+                        else
+                        {
+                            <option value="%like%">%like%</option>
+                        }
+                    </select>
+                    <input type="text" class="form-control" id="id_ProcessMan" name="ProcessMan" style="width:160px;display:inline;" value="@ViewBag.ProcessMan">
+                    <button type="submit" class="btn btn-default" id="btnSearch" name="action" value="btnSearch" aria-label="Left Align" style="display: inline-block;">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                    <button class="btn btn-link" aria-label="Left Align" data-toggle="modal" data-target=".advanced-search-modal" style="display: inline-block;">
+                        進階查詢
+                    </button>
+                </div>
+            </div>
+        </div>
+        var grid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.SupportApl_H>)ViewData["SupportApl_H"], canPage: false, canSort: false, ajaxUpdateContainerId: "divGrid");
+
+        @grid.GetHtml(
+                 tableStyle: "table table-striped table-hover rms-table suoi08-table",
+            columns: grid.Columns(
+                     grid.Column(header: "編輯", style: "column-one-action", format: @<text>
+                    @if (@item.OrderStatus.Substring(0, 1) != "2" && @item.OrderStatus.Substring(0, 1) != "3")
+                    {
+                        <a href="@Url.Action("Edit", "Main", new { SupportAplOrderType = @item.SupportAplOrderType, SupportAplOrderNo = @item.SupportAplOrderNo })">編輯</a>
+                    }
+                </text>, canSort: false),
+                 grid.Column(header: "列印", style: "column-one-action", format: @<text>
+                    <a href="@Url.Action("Print", "Main", new { Area = "SUPI05", SupportAplOrderType = @item.SupportAplOrderType, SupportAplOrderNo = @item.SupportAplOrderNo })">列印</a>
+                </text>, canSort: false),
+                grid.Column(columnName: "SupportAplOrderType", header: "單別", style: "supportaplordertype"),
+                grid.Column(columnName: "SupportAplOrderNo", header: "單號", style: "supportaplorderno", format:@<text><a href="@Url.Action("Details", "Main", new { Area = "SUPI05", SupportAplOrderType = @item.SupportAplOrderType, SupportAplOrderNo = @item.SupportAplOrderNo })">@item.SupportAplOrderNo</a> </text>),
+                grid.Column(columnName: "CustomerName", header: "客戶名稱", style: "CustomerName",
+                    format: @<text>
+                    <a href="@Url.Action("CUR", "Main", new { Area = "CMSI09", id = @item.CustomerId, type = "Detail" })">@item.CustomerName</a>
+                    </text>),
+                grid.Column(columnName: "SupportDept", header: "支援單位", style: "supportdept"),
+                grid.Column(columnName: "AddressSName", header: "地址簡稱", style: "AddressSName"),
+                grid.Column(columnName: "RequestDate", header: "需求日期", style: "requestdate"),
+                grid.Column(columnName: "OrderStatus", header: "狀態", style: "orderstatus",
+                    format:
+                    @<text>
+                        @if (@item.OrderStatus == "0")
+                        {
+                            <p>未處理</p>
+                        }
+                        else if (@item.OrderStatus == "1")
+                        {
+                            <p>已派工</p>
+                        }
+                        else if (@item.OrderStatus == "2")
+                        {
+                            <p>完工</p>
+                        }
+                        else
+                        {
+                            <p>作廢</p>
+                        }
+                    </text>
+                ),
+                grid.Column(columnName: "ProcessManName", header: "支援人員", style: "processmanname"),
+                grid.Column(columnName: "AsignManName", header: "業務人員", style: "asignmanname"),
+                grid.Column(columnName: "CreatorName", header: "建立人員", style: "creatorname"),
+                grid.Column(columnName: "CustomerType", header: "客戶狀態", style: "customertype",
+                    format:
+                    @<text>
+                        @if (@item.CustomerType == "A")
+                        {
+                            <p>一般客戶</p>
+                        }
+                        else
+                        {
+                            <p>經銷商</p>
+                        }
+
+                    </text>
+                                         )
+                                     )
+                                 )
+        <p style="color: red;">@ViewBag.Msg</p>
+        @RenderPage("~/Areas/SUPI08/Views/Shared/advanced-search-modal.cshtml")
+    }
+</section>
+<input type="hidden" title="module" value="SUPI08" />

@@ -1,0 +1,103 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        //$('#from-Issue-modal').bootstrapValidator({
+        //    fields: {
+        //        ordertype: {
+        //            validators: {
+        //                notEmpty: {
+        //                    message: '请输入派工單別！'
+        //                }
+        //            }
+        //        },
+        //        requesDate: {
+        //            validators: {
+        //                notEmpty: {
+        //                    message: '请選擇派工日期！'
+        //                }
+        //            }
+        //        }
+        //    }
+        //});
+
+        $("#id_requesDate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+    });
+    $(function () {
+        $('#id_OrderType').blur(function () {
+            if (document.getElementById("id_OrderType").readOnly == true) {
+                return;
+            }
+            if ($("#id_OrderType").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Action("GetOrderTypeName", "Main", new { Area = "CONI01" })',
+                    data: JSON.stringify({ "OrderType": $("#id_OrderType").val().trim(), "OrderCategory": "A3" }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $('#ordersname').text(data.OrderSName);
+                    },
+                    error: function () {
+                        //$("#msg_information").html("單別不存在！");
+                        //$('.msg-modal-lg').modal();
+                        alert("單別不存在！");
+                        $("#id_OrderType").val("")
+                        $('#ordersname').text("");
+                        return;
+                    }
+                })
+            } else {
+                $("#id_OrderType").val("")
+                $('#ordersname').text("");
+                $('#id_SupportAplOrderNo').val("");
+            }
+        });
+
+    });
+
+    function SelectOrderType(id) {
+        $("#id_OrderType").val($(id).closest('tr').find(".OrderTypeType").html());
+        $("#ordersname").html($(id).closest('tr').find(".OrderSNameType").html());
+        $(".record-selector-orderCategory-modal").modal("hide");
+        $(".Issue-modal").modal();
+    };
+</script>
+<div class='modal fade Issue-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>發料</h4>
+            </div>
+            <form id="from-Issue-modal" method="post" action='@Url.Action("CUR", "Main")'>
+                <div class='modal-body'>
+                    <label for="id_OrderType" class="control-label">發料單別</label>
+                    <input type="text" class="form-control" id="id_OrderType" name="ordertype" style="width: 200px; display: inline;" maxlength="5" />
+                    <button type="button" class="btn btn-default" style="display:inline;" id="btnOrderType" data-toggle="modal" data-target="#modal-orderCategory" ng-click="OrderCategoryList()">Q</button>
+                    <span style="display:inline;" id="ordersname"></span>
+                    <br />
+                    <label for="id_requesDate" class="control-label">發料日期</label>
+                    <div class="col-sm-12 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_requesDate" data-link-format="yyyy-mm-dd">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="id_requesDate" name="requesDate" readonly="readonly" value="@ViewBag.RequestDate" />
+                            <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                    <input type="hidden" class="form-control" id="id_SupportAplOrderType" name="SupportAplOrderType" readonly />
+                    <input type="hidden" class="form-control" id="id_SupportAplOrderNo" name="SupportAplOrderNo" readonly />
+                </div>
+                <div class='modal-footer'>
+                    <button type="submit" class="btn btn-default" name="action" value="btnAllot">確定</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal'>取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@RenderPage("../../../../Views/Shared/RecordSelector/record_selector_OrderCategory.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")

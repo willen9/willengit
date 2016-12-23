@@ -1,0 +1,52 @@
+﻿<section class="content-header">
+    <h1>Authentication</h1>
+</section>
+<section class="content">
+    <div class="btn-group" data-toggle="buttons">
+        <label class="btn btn-primary active">
+            <input type="radio" name="options" id="option1" autocomplete="off" checked> Local
+        </label>
+        <label class="btn btn-default">
+            <input type="radio" name="options" id="option2" autocomplete="off"> LDAP
+        </label>
+    </div>
+    <h3>LDAP</h3>
+    <hr />
+    <div class="form-group">
+        <label for="id-ldap-host">Host</label>
+        <input type="text" class="form-control" id="id-ldap-host" />
+    </div>
+    <div class="form-group">
+        <label for="id-ldap-port">Port</label>
+        <input type="text" class="form-control" id="id-ldap-port" />
+    </div>
+    <div class="form-group">
+        <label for="id-ldap-base-dn">Base DN</label>
+        <input type="text" class="form-control" id="id-ldap-base-dn" />
+        <small>Example: OU=Users,DC=xxx,DC=yyy,DC=domain,DC=com</small>
+    </div>
+    <div class="form-group">
+        <label for="id-ldap-bind-dn">Bind DN</label>
+        <input type="text" class="form-control" id="id-ldap-bind-dn" />
+        <small>Example: CN=username,OU=Users,DC=xxx,DC=yyy,DC=domain,DC=com</small>
+    </div>
+    <div class="form-group">
+        <label for="id-ldap-bind-password">Bind Password</label>
+        <input type="password" class="form-control" id="id-ldap-bind-password" />
+    </div>
+    <div class="form-group">
+        <label for="id-ldap-login-attribute">Login Attribute</label>
+        <input type="text" class="form-control" id="id-ldap-login-attribute" />
+        <small>Use samAccountName for Active Directory</small>
+    </div>
+    <div class="form-group">
+        <label for="id-ldap-email-attribute">Email Attribute</label>
+        <input type="text" class="form-control" id="id-ldap-email-attribute" />
+    </div>
+    <hr />
+    <div class="text-left">
+        <button class="btn btn-primary">Save</button>
+        <button class="btn btn-default">Cancel</button>
+    </div>
+</section>
+<input type="hidden" title="module" value="ADMI20" />

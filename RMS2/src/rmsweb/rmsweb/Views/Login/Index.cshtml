@@ -1,0 +1,32 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="google" value="notranslate">
+    <meta name="viewport" content="width=device-width" />
+    <title>REGAL RMS</title>
+    <link rel="stylesheet" href="~/Content/login.css" />
+    <link rel="stylesheet" href="~/bower_components/material-design-lite/material.min.css" />
+</head>
+<body>
+    <form method="post" action="@Url.Action("Signin", "Login")" id="form-signin">
+        <div class="mdl-grid">
+            <div class="mdl-layout-spacer mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="username" name="username">
+                <label class="mdl-textfield__label" for="username">Username</label>
+            </div>
+            <div class="mdl-layout-spacer mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="password">
+                <label class="mdl-textfield__label" for="password">Password</label>
+            </div>
+        </div>
+        
+        <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Login</button>
+    </form>
+    <script defer src="~/bower_components/material-design-lite/material.min.js"></script>
+</body>
+</html>

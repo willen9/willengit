@@ -1,0 +1,162 @@
+﻿<style type="text/css">
+    .record_selector_supportapl_h-modal table .actioncolumn {
+        width: 50px;
+    }
+
+    .record_selector_supportapl_h-modal table .SupportAplOrderTypeType {
+        width: 150px;
+    }
+    .record_selector_supportapl_h-modal table .SupportAplOrderNoType {
+        width: 200px;
+    }
+    .record_selector_supportapl_h-modal table .CustomerIdType {
+        width: 150px;
+    }
+    .record_selector_supportapl_h-modal table .CustomerNameType {
+        width: 150px;
+    }
+    .record_selector_supportapl_h-modal table .SupportDeptNameType {
+        width: 150px;
+    }
+    .record_selector_supportapl_h-modal table .Address1Type {
+        width: 150px;
+    }
+    .record_selector_supportapl_h-modal table .ApplyDateType {
+        width: 150px;
+    }
+    .record_selector_supportapl_h-modal table .RequestDateType {
+        width: 150px;
+    }
+    .record_selector_supportapl_h-modal table .SalesNameType {
+        width: 150px;
+    }
+    .record_selector_supportapl_h-modal table .CustomerTypeType {
+        width: 150px;
+    }
+    .record_selector_supportapl_h-modal table .CreatorNameType {
+        width: 150px;
+    }
+    .record_selector_supportapl_h-modal table .RequestTimeType {
+        width: 150px;
+    }
+    
+
+</style>
+<div class='modal fade record_selector_supportapl_h-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title'>單號查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-inline">
+                    <div class="form-group">
+                        @*<label for="txtCondition" class="control-label">單別</label>
+            <input type="text" class="form-control" id="txtSupportAplOrderType" name="txtSupportAplOrderType" style="width: 200px; display: inline;" />
+            <label for="txtCondition" class="control-label">單號</label>
+            <input type="text" class="form-control" id="txtSupportAplOrderNo" name="txtSupportAplOrderNo" style="width: 200px; display: inline;" />*@
+
+                        <select class="form-control" style="width: 200px; display: inline;" name="addsupportaplCol" id="addsupportaplCol">
+                            <option value="SupportAplOrderType">來源單別</option>
+                            <option value="SupportAplOrderNo">來源單號</option>
+                            <option value="OrderDate">單據日期</option>
+                            <option value="ApplyDate">申請日期</option>
+                            <option value="CustomerId">客戶代號</option>
+                            <option value="CustomerType">客戶型態</option>
+                            <option value="SalesId">業務員</option>
+                            <option value="AddressSName">地址簡稱</option>
+                            <option value="Address">地址</option>
+                            <option value="TelNo">電話</option>
+                            <option value="FaxNo">傳真</option>
+                            <option value="Email">E-mail</option>
+                            <option value="Remark">備註</option>
+                            <option value="NoOfPrints">列印次數</option>
+                            <option value="Picking">需領料</option>
+                            <option value="IsPicking">已領料</option>
+                            <option value="RequestDate">需求日期</option>
+                            <option value="RequestTime">指定時間</option>
+                            <option value="SupportDept">支援單位</option>
+                            <option value="SourceOrderNo">來源單號</option>
+                            <option value="CompletionDate">完工日期</option>
+                            <option value="CompletionMan">完工人員</option>
+                            <option value="OrderStatus">單據狀態</option>
+                            <option value="Confirmed">確認碼(完工碼)</option>
+                            <option value="AsignCheck">派工碼</option>
+                        </select>
+
+                        <select class="form-control" style="width: 100px; display: inline;" name="addsupportaplCondition" id="addsupportaplCondition">
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>">&lt;&gt;</option>
+                            <option value="like%">like%</option>
+                            <option value="%like">%like</option>
+                            <option value="%like%">%like%</option>
+                        </select>
+                        <input type="text" class="form-control" id="addsupportaplconditionValue" name="addsupportaplconditionValue" style="width: 200px; display: inline;" />
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" id="btnSearchSupportApl_H" style="display: inline;">查詢</button>
+                    </div>
+                </div>
+            </div>
+                <div id="divSupportApl_HGrid" style="height: 500px;overflow-y: auto;">
+                    <table class="table table-striped table-hover table-condensed" data-swhgajax="true" data-swhgcontainer="divSupportApl_HGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                    單別
+                                </th>
+                                <th scope="col">
+                                    單號
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                    客戶名稱
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                    支援單位
+                                </th>
+                                <th scope="col">
+                                    支援項目
+                                </th>
+                                <th scope="col">
+                                    地址簡稱
+                                </th>
+                                <th scope="col">
+                                    申請日期
+                                </th>
+                                <th scope="col">
+                                    需求日期
+                                </th>
+                                <th scope="col">
+                                    業務人員
+                                </th>
+                                <th scope="col">
+                                    客戶形態
+                                </th>
+                                <th scope="col">
+                                    建立人員
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <input type="hidden" id="SupportApl_HPage" name="SupportApl_HPage" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

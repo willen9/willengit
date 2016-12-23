@@ -1,0 +1,232 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $("input[type='text']").keypress(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                var tabIndex = $(this).attr("tabindex");
+                if (!isNaN(tabIndex)) {
+                    $("[tabindex='" + (parseInt(tabIndex) + 1) + "']").focus();
+                    $("[tabindex='" + (parseInt(tabIndex) + 1) + "']").select();
+                }
+            }
+        });
+        $("#btnDelete").click(function () {
+            if (confirm("是否確定刪除" + $("#id_currencyName").val() + "幣別？")) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        $(document).ready(function () {
+            $("#id_availableDate").datetimepicker({
+                format: 'yyyy/mm/dd',
+                autoclose: 1,
+                forceParse: 1,
+                startView: 2,
+                minView: 2,
+                todayBtn: 1,
+                todayHighlight: 1
+            });
+        });
+
+        $('#defaultForm').bootstrapValidator({
+            //        live: 'disabled',
+            //message: 'This value is not valid',
+            //feedbackIcons: {
+            //    valid: 'glyphicon glyphicon-ok',
+            //    invalid: 'glyphicon glyphicon-remove',
+            //    validating: 'glyphicon glyphicon-refresh'
+            //},
+            fields: {
+                currencyId: {
+                    validators: {
+                        notEmpty: {
+                            message: '幣別代號不能為空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 4,
+                            message: '幣別代號長度為1~4'
+                        },
+                        callback: {
+                            message: '幣別代號已存在！',
+                            callback: function (value, validator) {
+                                var res = true;
+                                if (document.getElementById("id_currencyId").readOnly == true) {
+                                    return res;
+                                }
+                                if (value.length > 0) {
+                                    $.ajax({
+                                        //url: '/cmsi04/curid',
+                                        url: '@Url.Action("CURMID", "Main")',
+                                        data: JSON.stringify({ "currencyId": value }),
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function (data) {
+                                            res = data;
+                                        }
+                                    });
+                                }
+                                return res;
+                            }
+                        }
+                    }
+                },
+                currencyName: {
+                    validators: {
+                        notEmpty: {
+                            message: '幣別名稱不能為空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 40,
+                            message: '幣別名稱長度為1~40'
+                        }
+                    }
+                },
+                availableDate: {
+                    validators: {
+                        date: {
+                            format: 'YYYY/MM/DD',
+                            message: '生效日期格式不正確'
+                        },
+                        stringLength: {
+                            min: 0,
+                            max: 10,
+                            message: '生效日期最大長度為10'
+                        }
+                    }
+                },
+                rate: {
+                    validators: {
+                        notEmpty: {
+                            message: '匯率不能為空'
+                        },
+                        regexp: {
+                            regexp: /^\d{1,10}(\.\d{1,9})?$/,
+                            message: '匯率格式不正確'
+                        },
+                        stringLength: {
+                            min: 0,
+                            max: 20,
+                            message: '匯率最大長度為20'
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+<section class="content-header">
+    <h1>交易幣別資料維護</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            @using (Ajax.BeginForm("CUR", "Main", new AjaxOptions { HttpMethod = "POST" }, new { id = "defaultForm" }))
+            {
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_currencyId" class="col-md-3 col-lg-3 control-label">幣別</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "New")
+                            {
+                                <input type="text" class="form-control" id="id_currencyId" name="currencyId" value="@ViewBag.CurrencyId" maxlength="4" tabindex="1" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_currencyId" name="currencyId" value="@ViewBag.CurrencyId" readonly="readonly" maxlength="4" tabindex="1" />
+                            }
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_currencyName" class="col-md-3 col-lg-3 control-label">幣別名稱</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="id_currencyName" name="currencyName" value="@ViewBag.CurrencyName" readonly="readonly" maxlength="40" tabindex="2" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_currencyName" name="currencyName" value="@ViewBag.CurrencyName" maxlength="40" tabindex="2" />
+                            }
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_availableDate" class="col-md-3 col-lg-3 control-label">生效日期</label>
+                        @if (ViewBag.Type == "Detail")
+                        {
+                            <div class="col-md-21 col-lg-21" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_availableDate" data-link-format="yyyy/mm/dd">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_availableDateDetail" name="availableDate" value="@ViewBag.EffectiveDate" readonly="readonly" tabindex="3" />
+                                    <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-21 col-lg-21" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_availableDate" data-link-format="yyyy/mm/dd">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_availableDate" name="availableDate" value="@ViewBag.EffectiveDate" readonly="readonly" tabindex="3" />
+                                    <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_rate" class="col-md-3 col-lg-3 control-label">匯率</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="id_rate" name="rate" value="@ViewBag.ExchangeRate" readonly="readonly" maxlength="20" tabindex="4" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_rate" name="rate" value="@ViewBag.ExchangeRate" maxlength="20" tabindex="4" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    @if (ViewBag.Type == "New")
+                    {
+                        <button type="submit" class="btn btn-primary" name="action" value="btnSaveNew" tabindex="5">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i> 存檔
+                        </button>
+                                <button type="submit" class="btn btn-primary" name="action" value="btnNextNew" tabindex="6">存檔並新增</button>
+                                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="7">取消</a>
+                    }
+                    else if (ViewBag.Type == "Edit")
+                    {
+                        <button type="submit" class="btn btn-primary" name="action" value="btnSaveEdit" tabindex="5">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i> 存檔
+                        </button>
+                                <button type="submit" class="btn btn-primary" name="action" value="btnNextEdit" tabindex="6">存檔並新增</button>
+                                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="7">取消</a>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary" name="action" value="btnEdit" tabindex="5">編輯</button>
+                                @*<button type="submit" class="btn btn-primary" name="action" value="btnAdd" tabindex="6">複製并新增</button>*@
+                                        <button type="submit" class="btn btn-primary" id="btnDelete" name="action" value="btnDelete" tabindex="7">刪除</button>
+                                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="8">返回列表</a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<input type="hidden" title="module" value="CMSI07" />

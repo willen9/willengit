@@ -1,0 +1,73 @@
+﻿<section class="content-header">
+    <h1>平均首修時間統計表</h1>
+</section>
+<section class="content">
+@using (Ajax.BeginForm("CUR", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+{
+    <div class="panel panel-default">
+        <div class="box box-info basic-search">
+            <div class="box-body">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label for="id_View">品號：</label>
+                        <label id="id_ProductNo" name="ProductNo"/>@ViewBag.ProductNo
+                        <input type="hidden" id="id_ProductNo" name="ProductNo" value="@ViewBag.ProductNo" />
+                    </div>
+                    <div class="form-group">
+                        <label for="id_View">品名：</label>
+                        <label id="id_ProductName" name="ProductName" />@ViewBag.ProductName
+                    </div>
+                    <div class="form-group">
+                        <label for="id_CustomerId">客戶代號：</label>
+                        <label id="id_CustomerId" name="CustomerId" />@ViewBag.CustomerId
+                        <input type="hidden" id="id_CustomerId" name="CustomerId" value="@ViewBag.CustomerId" />
+                    </div>
+                    <div class="form-group">
+                        <label for="id_CustomerId">客戶簡稱：</label>
+                        <label id="id_Customer" name="Customer" />@ViewBag.Customer
+                    </div>
+                    <div class="form-group">
+                        <label for="id_Closed">結案碼：</label>
+                        <label id="id_Closed" name="Closed"/>@ViewBag.Closed
+                        <input type="hidden" id="id_Closed" name="Closed" value="@ViewBag.Closed" />
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-primary" name="action" value="btnExport"><i class="fa fa-external-link" aria-hidden="true"></i>匯出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+    @{
+        var grid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.ProductLifetimeRecord>)ViewData["RGA_H"], canPage: false, canSort: false, ajaxUpdateContainerId: "divGrid");
+
+
+        @grid.GetHtml(
+                 tableStyle: "table table-striped table-hover rms-table repq05-table",
+            columns: grid.Columns(
+            grid.Column(columnName: "closed", header: "單據狀態", style: "Closed"),
+            grid.Column(columnName: "RGAType", header: "維修單別", style: "RGAType"),
+            grid.Column(columnName: "RGAName", header: "單據名稱", style: "RGAName"),
+            grid.Column(columnName: "RGANo", header: "維修單號", style: "RGANo", format:
+            @<text>
+                <a href="@Url.Action("Details", "Main", new {Area = "SERI06", RGAType = @item.RGAType, RGANo = @item.RGANo })">@item.RGANo</a>
+            </text>),
+            grid.Column(columnName: "OrderDate", header: "入件日期", style: "OrderDate"),
+            grid.Column(columnName: "Confirmor", header: "客戶名稱", style: "Confirmor", format:
+            @<text>
+    <a href="@Url.Action("CUR", "Main", new {Area = "CMSI09",id = @item.CustomerId, type = "Detail"}, null)">@item.Confirmor</a>
+            </text>),
+            grid.Column(columnName: "ProductNo", header: "品號", style: "ProductNo"),
+            grid.Column(columnName: "ProductName", header: "品名", style: "ProductName"),
+            grid.Column(columnName: "SerialNo", header: "序號", style: "SerialNo"),
+            grid.Column(columnName: "SaleDate", header: "銷貨日期", style: "SaleDate"),
+            grid.Column(columnName: "SaleMonth", header: "首次送廠時間-銷(月)", style: "SaleMonth"),
+            grid.Column(columnName: "PurchaseDate", header: "進貨日期", style: "PurchaseDate"),
+            grid.Column(columnName: "PurchaseMonth", header: "首次送廠時間-進(月)", style: "PurchaseMonth")
+            )
+        )
+        <p style="color: red;">@ViewBag.Msg</p>
+    }
+</section>
+<input type="hidden" title="module" value="REPQ05" />

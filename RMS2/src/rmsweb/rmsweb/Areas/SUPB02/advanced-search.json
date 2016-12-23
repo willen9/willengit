@@ -1,0 +1,15 @@
+﻿{
+  "h.SupportAplOrderType": "單別",
+  "h.SupportAplOrderNo": "單號",
+  "h.CustomerId": "客戶ID",
+  "h.CustomerType": "客戶形態",
+  "h.ApplyDate": "申請日期",
+  "h.AsignDate": "派工日期",
+  "h.RequestDate": "需求日期",
+  "h.Company": "公司別",
+  "h.UserGroup": "群組",
+  "h.Creator": "建立人員",
+  "h.CreateDate": "建立日期",
+  "h.Modifier": "修改人員",
+  "h.ModiDate": "修改日期"
+}

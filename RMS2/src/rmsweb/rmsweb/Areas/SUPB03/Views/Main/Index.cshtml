@@ -1,0 +1,88 @@
+﻿<section class="content-header">
+    <h1>ERP拋轉支援單作業</h1>
+</section>
+<section class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            <form id="from-SupportApl_H" method="post" action="@Url.Action("CUR", "Main")">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_ordertype" class="control-label col-md-3 col-lg-3">單別</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_ordertype" name="ordertype" />
+                        </div>
+                        <label for="id_orderno" class="control-label col-md-3 col-lg-3">單號</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_orderno" name="orderno" />
+                        </div>
+                        <label for="id_modifier" class="control-label col-md-3 col-lg-3">修改人員</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_modifier" name="modifier" disabled />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_customer" class="control-label col-md-3 col-lg-3">客戶簡稱</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_customer" name="customer" disabled />
+                        </div>
+                        <label for="id_expectedday" class="control-label col-md-3 col-lg-3">預交日</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_expectedday" name="expectedday" disabled />
+                        </div>
+                        <label for="id_salesman" class="control-label col-md-3 col-lg-3">業務員</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_salesman" name="salesman" disabled />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_supportdept" class="control-label col-md-3 col-lg-3">支援單位</label>
+                        <div class="col-md-5 col-lg-5">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="id_supportdept" name="id_supportdept" />
+                                <span class="input-group-addon" id="" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                            </div>
+                        </div>                            
+                        <label for="id_address1" class="control-label col-md-3 col-lg-3">地址簡稱</label>
+                        <div class="col-md-5 col-lg-5">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="id_address1" name="address1" />
+                                <span class="input-group-addon" id="" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                            </div>
+                        </div>
+                        <label for="id_picking" class="control-label col-md-3 col-lg-3">領料</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_picking" name="picking" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_remark" class="control-label col-md-3 col-lg-3">備註</label>
+                        <div class="col-md-21 col-lg-21">
+                            <textarea id="id_remark" class="form-control" name="remark" rows="4" cols="40"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <h5>品項明細</h5>
+                <hr />
+                <div class="col-sm-24">
+                </div>
+
+                <h5>需求資訊</h5>
+                <hr />
+                <div class="col-sm-24">
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary" name="action">拋轉</button>
+                        <button type="button" class="btn btn-primary" name="action">取消</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,14 @@
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\MVCWebControls\bin\Debug\MVCWebControls.dll.config
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\MVCWebControls\bin\Debug\MVCWebControls.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\MVCWebControls\bin\Debug\MVCWebControls.pdb
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\MVCWebControls\bin\Debug\EntityFramework.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\MVCWebControls\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\MVCWebControls\bin\Debug\MySql.Data.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\MVCWebControls\bin\Debug\MySql.Data.Entity.EF6.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\MVCWebControls\bin\Debug\System.Linq.Dynamic.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\MVCWebControls\bin\Debug\System.Web.Mvc.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\MVCWebControls\bin\Debug\EntityFramework.xml
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\MVCWebControls\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\MVCWebControls\obj\Debug\MVCWebControls.csprojResolveAssemblyReference.cache
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\MVCWebControls\obj\Debug\MVCWebControls.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\MVCWebControls\obj\Debug\MVCWebControls.pdb

@@ -1,0 +1,48 @@
+﻿
+<div class='modal fade QuestionList_DExid-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>地址新增-編輯</h4>
+            </div>
+            <div class='modal-body'>
+                <input type="hidden" class="form-control" id="id_ExtxtAddressId" name="ExtxtAddressId" style="width: 400px; display: inline;" maxlength="60" />
+                <label for="id_QuestionList_DRemark" class="control-label">地址簡稱</label>
+                @*<a href="~/Views/Shared/QuestionList_D-modal.cshtml">~/Views/Shared/QuestionList_D-modal.cshtml</a>*@
+                <br />
+                <input type="text" class="form-control" id="id_ExtxtAddress1" name="ExtxtAddress1" style="width: 400px; display: inline;" maxlength="255" />
+                <br />
+
+                <label for="id_QuestionList_DRemark" class="control-label">地址</label>
+                <br />
+                <input type="text" class="form-control" id="id_ExtxtAddress2" name="ExtxtAddress2" style="width: 400px; display: inline;" maxlength="255" />
+                <br />
+
+                <label for="id_QuestionList_DRemark" class="control-label">聯絡人</label>
+                <br />
+                <input type="text" class="form-control" id="id_ExtxtAddressContact" name="ExtxtAddressContact" style="width: 200px; display: inline;" maxlength="60" />
+                <br />
+
+                <label for="id_QuestionList_DRemark" class="control-label">電話</label>
+                <br />
+                <input type="text" class="form-control" id="id_ExtxtAddressTelNo" name="ExtxtAddressTelNo" style="width: 250px; display: inline;" maxlength="60" />
+                <br />
+
+                <label for="id_QuestionList_DRemark" class="control-label">傳真</label>
+                <br />
+                <input type="text" class="form-control" id="id_ExtxtAddressFaxNo" name="ExtxtAddressFaxNo" style="width: 250px; display: inline;" maxlength="60" />
+                <br />
+
+                <label for="id_QuestionList_DRemark" class="control-label">備註</label>
+                <br />
+                <textarea class="form-control" id="id_ExtxtAddressRemark" name="ExtxtAddressRemark" cols="40" rows="5" maxlength="255"></textarea>
+                <br />
+
+            </div>
+            <div class='modal-footer'>
+                <button type="button" class="btn btn-default" name="action" value="btnAllot" onclick="checkExid()">確定</button>
+                <button type='button' class='btn btn-default' data-dismiss='modal'>取消</button>
+            </div>
+        </div>
+    </div>
+</div>

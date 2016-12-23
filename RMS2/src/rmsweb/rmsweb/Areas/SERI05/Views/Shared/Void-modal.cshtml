@@ -1,0 +1,45 @@
+﻿<script type="text/javascript">
+    function checkVoid() {
+        if ($("#id_ConfirmV").val() == '') {
+            alert("请輸入作廢原因");
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("Confirmed", "Main",new { Type ='V'})',
+            data: $('#from-PhoneService_H').serialize(),
+            type: 'POST',
+            async: false,
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("Index", "Main")';
+                }
+
+            }
+        })
+    }
+</script>
+<div class='modal fade Void-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>作廢</h4>
+            </div>
+                <div class='modal-body'>
+                    <div class="form-group">
+                        <label for="id_ConfirmV" class="control-label">作廢原因</label>
+                        <textarea class="form-control" id="id_ConfirmV" name="id_ConfirmV" cols="40" rows="5" maxlength="255" tabindex="21"></textarea>
+                    </div>
+                </div>
+                <div class='modal-footer'>
+                    <button type="button" class="btn btn-default" name="action" value="btnAllot" onclick="checkVoid()">確定</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal'>取消</button>
+                </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,145 @@
+﻿<style type="text/css">
+    .record-selector-customer-modal table .actioncolumn {
+        width: 50px;
+    }
+
+    .record-selector-customer-modal table .ContractTypeType {
+        width: 150px;
+    }
+
+    .record-selector-customer-modal table .OrderSNameType {
+        width: 200px;
+    }
+
+    .record-selector-customer-modal table .ContractNoType {
+        width: 150px;
+    }
+
+    .record-selector-customer-modal table .VersionType {
+        width: 100px;
+    }
+
+    .record-selector-customer-modal table .CustomerIdType {
+        width: 150px;
+    }
+
+    .record-selector-customer-modal table .CustomerNameType {
+        width: 150px;
+    }
+
+    .record-selector-customer-modal table .CustomerTypeType {
+        width: 150px;
+    }
+
+    .record-selector-customer-modal table .ConfirmedDateType {
+        width: 150px;
+    }
+    .record-selector-customer-modal table .ContractSDateType {
+        width: 150px;
+    }
+
+    .record-selector-customer-modal table .ContractEDateType {
+        width: 150px;
+    }
+
+</style>
+<div class='modal fade record_selector_contract_product-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title'>合約查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <select class="form-control" style="width: 200px; display: inline;" name="addCol" id="addCol">
+                            <option value="ContractType">合約單別</option>
+                            <option value="ContractNo">合約單號</option>
+                            <option value="ItemId">項次</option>
+                            <option value="ProductNo">品號</option>
+                            <option value="QTY">數量</option>
+                            <option value="Unit">單位</option>
+                            <option value="WarrantyPeriod">保固期限</option>
+                            <option value="WarrantySDate">保固起日</option>
+                            <option value="WarrantyEDate">保固迄日</option>
+                            <option value="RoutineServiceFreq">定保次數</option>
+                            <option value="Remark">單身備註</option>
+                        </select>
+
+                        <select class="form-control" style="width: 100px; display: inline;" name="addCondition" id="addCondition">
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>">&lt;&gt;</option>
+                            <option value="like%">like%</option>
+                            <option value="%like">%like</option>
+                            <option value="%like%">%like%</option>
+                        </select>
+                        <input type="text" class="form-control" id="addconditionValue" name="addconditionValue" style="width: 200px; display: inline;" />
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" id="btnContractproductInfo" style="display: inline;">查詢</button>
+                    </div>
+                </div>
+            </div>
+                <div id="divContractproductGrid" style="height: 500px;overflow-y: auto;">
+                    <table class="table table-striped table-hover table-condensed" data-swhgajax="true" data-swhgcontainer="divContractGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                    單別
+                                </th>
+                                <th scope="col">
+                                    單據名稱
+                                </th>
+                                <th scope="col">
+                                    單號
+                                </th>
+                                <th scope="col">
+                                    項次
+                                </th>
+                                <th scope="col">
+                                    客戶代號
+                                </th>
+                                <th scope="col">
+                                    客戶簡稱
+                                </th>
+                                <th scope="col">
+                                    客戶型態
+                                </th>
+                                <th scope="col">
+                                    品號
+                                </th>
+                                <th scope="col">
+                                    品名
+                                </th>
+                                <th scope="col">
+                                    序號
+                                </th>
+                                <th scope="col">
+                                    保固期限
+                                </th>
+                                <th scope="col">
+                                    保固起日
+                                </th>
+                                <th scope="col">
+                                    保固迄日
+                                </th>
+                                <th scope="col">
+                                    定保次數
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <input type="hidden" id="ContractproductPage" name="ContractproductPage" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,52 @@
+﻿
+<section class="content-header">
+    <h1>平均首修時間統計表</h1>
+</section>
+<section class="content">
+@using (Ajax.BeginForm("CUR", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+{
+    <div class="panel panel-default">
+        <div class="box box-info basic-search">
+            <div class="box-body">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label for="id_RGAType">單別：</label>
+                        <label class="form-control" id="id_RGAType" name="RGAType"/>@ViewBag.RGAType
+                    </div>
+                    <div class="form-group">
+                        <label for="id_RGANo">單號：</label>
+                        <label class="form-control" id="id_RGANo" name="RGANo" />@ViewBag.RGANo
+                    </div>
+                    <div class="form-group">
+                        <label for="id_CustomerId">客戶代號：</label>
+                        <label class="form-control" id="id_CustomerId" name="CustomerId" />@ViewBag.CustomerId
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-primary" name="action" value="btnExport"><i class="fa fa-external-link" aria-hidden="true"></i>匯出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+    @{
+        var grid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.RepairRecord>)ViewData["RepairRecord"], canPage: false, canSort: false, ajaxUpdateContainerId: "divGrid");
+
+
+        @grid.GetHtml(
+                 tableStyle: "table table-striped table-hover rms-table repq05-table",
+            columns: grid.Columns(
+            grid.Column(columnName: "StatusCode", header: "單據狀態", style: "StatusCode"),
+            grid.Column(columnName: "RGAType", header: "維修單別", style: "RGAType"),
+            grid.Column(columnName: "OrderSName", header: "單據名稱", style: "OrderSName"),
+            grid.Column(columnName: "RGANo", header: "維修單號", style: "RGANo"),
+            grid.Column(columnName: "CustomerName", header: "客戶名稱", style: "CustomerName"),
+            grid.Column(columnName: "ProductNo", header: "品號", style: "ProductNo"),
+            grid.Column(columnName: "ProductName", header: "品名", style: "ProductName"),
+            grid.Column(columnName: "SerialNo", header: "序號", style: "SerialNo")
+            )
+        )
+        <p style="color: red;">@ViewBag.Msg</p>
+    }
+</section>
+<input type="hidden" title="module" value="REPQ05" />

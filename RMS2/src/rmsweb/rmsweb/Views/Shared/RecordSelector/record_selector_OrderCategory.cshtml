@@ -1,0 +1,106 @@
+﻿<style type="text/css">
+    .record-selector-brand-modal table .OrderTypeType {
+        width: 150px;
+    }
+
+    .record-selector-brand-modal table .OrderSNameType {
+        width: 200px;
+    }
+
+    .record-selector-brand-modal table .OrderCategoryType {
+        width: 200px;
+    }
+</style>
+<div class='modal fade record-selector-orderCategory-modal' tabindex='-1' id="modal-orderCategory" role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title'>單別查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <select class="form-control" style="width: 200px; display: inline;" name="addOrderCategoryCol" id="addOrderCategoryCol">
+                            <option value="OrderType">單別</option>
+                            <option value="OrderSName">單據名稱</option>
+                            <option value="OrderFName">單據全名</option>
+                            <option value="OrderCategory">單據性質</option>
+                            <option value="CodeMode">編碼方式</option>
+                            <option value="SerialNoLength">流水碼數</option>
+                            <option value="AutoConfirm">自動確認</option>
+                            <option value="CheckExOrder">核對來源單據</option>
+                            <option value="Remark">備註</option>
+                            <option value="DaysAfterCreate">建單後_天</option>
+                        </select>
+                        <select class="form-control" style="width: 100px; display: inline;" name="addOrderCategoryCondition" id="addOrderCategoryCondition">
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>">&lt;&gt;</option>
+                            <option value="like%">like%</option>
+                            <option value="%like">%like</option>
+                            <option value="%like%">%like%</option>
+                        </select>
+                        <input type="text" class="form-control" id="addOrderCategoryconditionValue" name="addOrderCategoryconditionValue" style="width: 200px; display: inline;" />
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" id="btnOrderTypeInfo" style="display: inline;" ng-click="SearchOrderCategoryList()">查詢</button>
+                    </div>
+                </div>
+                <br />
+                <div id="divOrderCategoryGrid">
+                    <table class="table table-striped table-hover table-condensed table-header-fixed" data-swhgajax="true" data-swhgcontainer="divOrderCategoryGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    選擇
+                                </th>
+                                <th scope="col">
+                                    單別
+                                </th>
+                                <th scope="col">
+                                    單據名稱
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in OrderCategoryitems">
+                                <td class='column-one-action'><a data-dismiss='modal' onclick='SelectOrderType(this)' href="#">選擇</a></td>
+                                <td class='OrderTypeType'>{{ item.OrderType }}</td>
+                                <td class='OrderSNameType'>{{ item.OrderSName }}</td>
+                                <td><input type='hidden' class='OrderCategoryType' name='version' value='{{ item.OrderCategoryID }}'></td>
+                                <td><input type='hidden' class='OrderFNameType' name='version' value='{{ item.OrderFName }}'></td>
+                                <td><input type='hidden' class='CodeModeType' name='version' value='{{ item.CodeMode }}'></td>
+                                <td><input type='hidden' class='SerialNrCodeLengthType' name='version' value='{{ item.SerialNrCodeLength }}'></td>
+                                <td><input type='hidden' class='AutoConfirmType' name='version' value='{{ item.AutoConfirm }}'></td>
+                                <td><input type='hidden' class='CheckExOrderType' name='version' value='{{ item.CheckExOrder }}'></td>
+                                <td><input type='hidden' class='RemarkType' name='version' value='{{ item.Remark }}'></td>
+                                <td><input type='hidden' class='DaysAfterCreateType' name='version' value='{{ item.DaysAfterCreate }}'></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <input type="hidden" id="OrderCategoryPage" name="OrderCategoryPage" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

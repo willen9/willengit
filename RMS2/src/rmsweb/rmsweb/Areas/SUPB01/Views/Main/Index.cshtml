@@ -1,0 +1,630 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+
+        //$('#from-SupportAplAsign').bootstrapValidator({
+        //    fields: {
+        //        ordertype: {
+        //            validators: {
+        //                notEmpty: {
+        //                    message: '單別不能為空！'
+        //                }
+        //            }
+        //        },
+        //        EmployeeId: {
+        //            validators: {
+        //                notEmpty: {
+        //                    message: '人員ID不能為空!'
+        //                }
+        //            }
+        //        },
+        //        EmployeeName: {
+        //            validators: {
+        //                notEmpty: {
+        //                    message: '人員不能為空!'
+        //                }
+        //            }
+        //        }
+        //    }
+        //});
+
+        $("#chkAll").on("click", function () {
+            var isSelect = $("#chkAll").is(":checked");
+            var chks = $("#divGrid input[name='chk']");
+            for (var i = 0; i < chks.length; i++) {
+                if (chks[i].type == "checkbox") {
+                    chks[i].checked = isSelect;
+                }
+            }
+        });
+
+        $("#divGrid input[name='chk']").click(function () {
+            var chks = $("#divGrid input[name='chk']");
+            var allSelect = true;
+            for (var i = 0; i < chks.length; i++) {
+                if (chks[i].type == "checkbox") {
+                    if (!chks[i].checked) {
+                        allSelect = false;
+                        break;
+                    }
+                }
+            }
+            var chkAll = $("#chkAll");
+            if (chkAll[0].type == "checkbox") {
+                chkAll[0].checked = allSelect;
+            }
+        });
+
+        $("#btnSearchEmployee").on("click", function () {
+            var chks = $("#divGrid input[name='chk']");
+            var SelectInfo = false;
+            var TypeInfo = false;
+            for (var i = 0; i < chks.length; i++) {
+                if (chks[i].type == "checkbox") {
+                    if (chks[i].checked) {
+                        SelectInfo = true;
+                        break;
+                    }
+                }
+            }
+            if (SelectInfo == false) {
+                alert("請選擇需派工項目");
+                return;
+            }
+
+            for (var i = 0; i < chks.length; i++) {
+                if (chks[i].type == "checkbox") {
+                    if (chks[i].checked) {
+                        if ($(chks[i]).closest('tr').find(".orderstatus").html() != "0:未處理") {
+                            TypeInfo = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (TypeInfo == true) {
+                alert("請選擇未處理項目");
+                return;
+            }
+
+            $(".allot-modal").modal();
+        });
+
+        $("#btnSearchAgainEmployee").on("click", function () {
+            var chks = $("#divGrid input[name='chk']");
+            var SelectInfo = false;
+            var TypeInfo = false;
+            for (var i = 0; i < chks.length; i++) {
+                if (chks[i].type == "checkbox") {
+                    if (chks[i].checked) {
+                        SelectInfo = true;
+                        break;
+                    }
+                }
+            }
+            if (SelectInfo == false) {
+                alert("請選擇需派工項目");
+                return;
+            }
+
+            for (var i = 0; i < chks.length; i++) {
+                if (chks[i].type == "checkbox") {
+                    if (chks[i].checked) {
+                        if ($(chks[i]).closest('tr').find(".orderstatus").html() != "1:已派工") {
+                            TypeInfo = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (TypeInfo == true) {
+                alert("請選擇已派工項目");
+                return;
+            }
+
+            $(".again-allot-modal").modal();
+        });
+
+        $("#id_requesDate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+
+        $("#btnEmployee").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchPositionEmployee", "Main",new { Area = "SUPB01" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "Col": ",d.PositionCategory", "Condition": ",=", "conditionValue": ",1", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divEmployeeGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divEmployeeGrid table tbody").append("<tr>" +
+                               "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectEmployee(this)'>選擇</a>" +
+                               "<td class='EmployeeIdType'>" + Maintain[i].EmployeeId + "</td>" +
+                               "<td class='EmployeeNameTyep'>" + Maintain[i].EmployeeName + "</td>" +
+                               "<td class='DepartmentNameTyep'>" + Maintain[i].DepartmentName + "</td>" +
+                               "</tr>");
+
+                    }
+                }
+            });
+            $("#addemployeeconditionValue").val("");
+            $("#EmployeePage").val("1");
+            $(".record-selector-Position_D-modal").modal();
+        });
+
+        $("#btnEmployeeAgain").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchPositionEmployee", "Main",new { Area = "SUPB01" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "Col": ",d.PositionCategory", "Condition": ",=", "conditionValue": ",1", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divEmployeeGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divEmployeeGrid table tbody").append("<tr>" +
+                               "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectEmployee(this)'>選擇</a>" +
+                               "<td class='EmployeeIdType'>" + Maintain[i].EmployeeId + "</td>" +
+                               "<td class='EmployeeNameTyep'>" + Maintain[i].EmployeeName + "</td>" +
+                               "<td class='DepartmentNameTyep'>" + Maintain[i].DepartmentName + "</td>" +
+                               "</tr>");
+
+                    }
+                }
+            });
+            $("#addemployeeconditionValue").val("");
+            $("#EmployeePage").val("1");
+            $(".record-selector-Position_D-modal").modal();
+        });
+
+        $("#btnEmployeeSearch").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchPositionEmployee", "Main",new { Area = "SUPB01" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "Col": ",d.PositionCategory," + $("#addemployeeCol").val(), "Condition": ",=," + $("#addemployeeCondition").val(), "conditionValue": ",1," + $("#addemployeeconditionValue").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divEmployeeGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divEmployeeGrid table tbody").append("<tr>" +
+                               "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectEmployee(this)'>選擇</a>" +
+                               "<td class='EmployeeIdType'>" + Maintain[i].EmployeeId + "</td>" +
+                               "<td class='EmployeeNameTyep'>" + Maintain[i].EmployeeName + "</td>" +
+                               "<td class='DepartmentNameTyep'>" + Maintain[i].DepartmentName + "</td>" +
+                               "</tr>");
+                    }
+                }
+            });
+            $("#EmployeePage").val("1");
+        });
+
+        $("#divEmployeeGrid").scroll(function () {
+            var Page = document.getElementById("EmployeePage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchPositionEmployee", "Main",new { Area = "SUPB01" })',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "Col": ",d.PositionCategory," + $("#addemployeeCol").val(), "Condition": ",=," + $("#addemployeeCondition").val(), "conditionValue": ",1," + $("#addemployeeconditionValue").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divEmployeeGrid table tbody").append("<tr>" +
+                                   "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectEmployee(this)'>選擇</a>" +
+                                   "<td class='EmployeeIdType'>" + Maintain[i].EmployeeId + "</td>" +
+                                   "<td class='EmployeeNameTyep'>" + Maintain[i].EmployeeName + "</td>" +
+                                   "<td class='DepartmentNameTyep'>" + Maintain[i].DepartmentName + "</td>" +
+                                   "</tr>");
+                            }
+                        }
+                    });
+                    $("#EmployeePage").val(Page);
+                }
+            }
+
+        });
+    });
+
+    function SelectEmployee(id) {
+        $("#id_EmployeeId").val($(id).closest('tr').find(".EmployeeIdType").html());
+        $("#id_EmployeeName").val($(id).closest('tr').find(".EmployeeNameTyep").html());
+        $("#id_EmployeeIdAgain").val($(id).closest('tr').find(".EmployeeIdType").html());
+        $("#id_EmployeeNameAgain").val($(id).closest('tr').find(".EmployeeNameTyep").html());
+    }
+    function SelectOrderType(id) {
+        $("#id_OrderType").val($(id).closest('tr').find(".OrderTypeType").html());
+        $("#ordersname").html($(id).closest('tr').find(".OrderSNameType").html());
+        $(".allot-modal").modal();
+    };
+
+    @*$(function () {
+        $('#id_OrderType').blur(function () {
+            if (document.getElementById("id_OrderType").readOnly == true) {
+                return;
+            }
+            if ($("#id_OrderType").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Action("GetOrderTypeName", "Main", new { Area = "CONI01" })',
+                    data: JSON.stringify({ "OrderType": value, "OrderCategory": "A2" }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $('#ordersname').text(data.OrderSName);
+                        $.ajax({
+                            url: '@Url.Action("GetOrderTypeNo", "Main")',
+                            data: JSON.stringify({ "OrderType": $("#id_OrderType").val().trim() }),
+                            type: 'POST',
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                var strData = data.split('-');
+                                if (strData[0] == "YES") {
+                                    $('#id_SupportAplOrderNo').val(strData[1]);
+                                    document.getElementById("id_SupportAplOrderNo").readOnly = "readonly";
+                                } else {
+                                    $('#id_SupportAplOrderNo').val(strData[1]);
+                                    document.getElementById("id_SupportAplOrderNo").readOnly = "";
+                                }
+                            }
+                        })
+                    }
+                })
+            } else {
+                $('#ordersname').text("");
+            }
+        });*@
+
+
+        @*$("#btnEmployee").click(function () {
+            if ($("#id_EmployeeId").val().trim() == "") {
+                alert("請選擇人員！");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("GetEmployeeName", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "EmployeeId": $("#id_EmployeeId").val().trim() }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        alert("人員不存在")
+                    } else {
+                        $('#id_EmployeeName').val(serverData[1]);
+                    }
+                }
+            });
+        });*@
+
+        @*$("#btnEmployeeAgain").click(function () {
+            if ($("#id_EmployeeIdAgain").val().trim() == "") {
+                alert("請選擇人員！");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("GetEmployeeName", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "EmployeeId": $("#id_EmployeeIdAgain").val().trim() }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        alert("人員不存在")
+                    } else {
+                        $('#id_EmployeeNameAgain').val(serverData[1]);
+                    }
+                }
+            });
+        });*@
+    //})
+
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function ($scope, $http) {
+        $scope.OrderCategoryitems = null;
+        $scope.OrderCategoryList = function () {
+            $http({
+                url: '@Url.Action("SearchOrderType", "Main", new { Area = "CONI01" })',
+                params: { Col: ",OrderCategory", Condition: ",=", conditionValue: ",A2", Page: 0 }
+            }).success(function (data, status) {
+                $scope.OrderCategoryitems = data;
+            })
+        };
+        $scope.SearchOrderCategoryList = function () {
+            $http({
+                url: '@Url.Action("SearchOrderType", "Main", new { Area = "CONI01" })',
+                params: { Col: ",OrderCategory," + $("#addOrderCategoryCol").val(), Condition: ",=," + $("#addOrderCategoryCondition").val(), conditionValue: ",A2," + $("#addOrderCategoryconditionValue").val(), Page: 0 }
+            }).success(function (data, status) {
+                $scope.OrderCategoryitems = data;
+            })
+        };
+    });
+</script>
+<section class="content-header">
+    <h1>支援申請派工作業</h1>
+</section>
+<section class="content" ng-app="myApp" ng-controller="myCtrl">
+    @using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }, new { id = "from-SupportAplAsign" }))
+    {
+        <div class="toolbar-container">
+            <button type="button" class="btn btn-primary" style="display:inline;" id="btnSearchEmployee">派工</button>
+            <button type="button" class="btn btn-primary" style="display:inline;" id="btnSearchAgainEmployee">重新派工</button>
+            <button type="submit" class="btn btn-primary" id="btnExport" name="action" value="btnExport" aria-label="Left Align">
+                <span class="glyphicon glyphicon-export" aria-hidden="true"></span> 匯出
+            </button>
+        </div>
+    }
+    @using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }, new { id = "from-SupportAplAsign" }))
+    {
+        <div class="basic-search-container form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-24">
+                    <label for="id_asignstatus" class="control-label">派工狀態</label>
+                    <select class="form-control" style="width: 100px;display:inline;" name="OrderStatus">
+                        @if (@ViewBag.OrderStatus == "0")
+                        {
+                            <option value="0" selected>未派工</option>
+                        }
+                        else
+                        {
+                            <option value="0">未派工</option>
+                        }
+                        @if (@ViewBag.OrderStatus == "1")
+                {
+                            <option value="1" selected>已派工</option>
+                        }
+                        else
+                        {
+                            <option value="1">已派工</option>
+                        }
+                        @if (@ViewBag.OrderStatus == "2")
+                {
+                            <option value="2" selected>完工</option>
+                        }
+                        else
+                        {
+                            <option value="2">完工</option>
+                        }
+
+                    </select>
+                    <label for="id_orderno" class="control-label">單號</label>
+                    <select class="form-control" style="width: 100px;display:inline;" name="selCondsupportaplorderno">
+                        @if (@ViewBag.selCondsupportaplorderno == "=")
+                {
+                            <option value="=" selected>=</option>
+                        }
+                        else
+                        {
+                            <option value="=">=</option>
+                        }
+
+                        @if (@ViewBag.selCondsupportaplorderno == ">")
+                {
+                            <option value=">" selected>></option>
+                        }
+                        else
+                        {
+                            <option value=">">></option>
+                        }
+
+                        @if (@ViewBag.selCondsupportaplorderno == ">=")
+                {
+                            <option value=">=" selected>>=</option>
+                        }
+                        else
+                        {
+                            <option value=">=">>=</option>
+                        }
+                        @if (@ViewBag.selCondsupportaplorderno == "<")
+                {
+                            <option value="<" selected><</option>
+                        }
+                        else
+                        {
+                            <option value="<"><</option>
+                        }
+
+                        @if (@ViewBag.selCondsupportaplorderno == "<=")
+                {
+                            <option value="<=" selected><=</option>
+                        }
+                        else
+                        {
+                            <option value="<="><=</option>
+                        }
+
+                        @if (@ViewBag.selCondsupportaplorderno == "<>")
+                {
+                            <option value="<>" selected><></option>
+                        }
+                        else
+                        {
+                            <option value="<>"><></option>
+                        }
+
+                        @if (@ViewBag.selCondsupportaplorderno == "like%")
+                {
+                            <option value="like%" selected>like%</option>
+                        }
+                        else
+                        {
+                            <option value="like%">like%</option>
+                        }
+
+                        @if (@ViewBag.selCondsupportaplorderno == "%like")
+                {
+                            <option value="%like" selected>%like</option>
+                        }
+                        else
+                        {
+                            <option value="%like">%like</option>
+                        }
+
+                        @if (@ViewBag.selCondsupportaplorderno == "%like%")
+                {
+                            <option value="%like%" selected>%like%</option>
+                        }
+                        else
+                        {
+                            <option value="%like%">%like%</option>
+                        }
+
+                    </select>
+                    <input type="text" class="form-control" id="id_orderno" name="supportaplorderno" style="width:200px;display:inline;" value="@ViewBag.supportaplorderno">
+                    <label for="id_customerid" class="control-label">客戶代號</label>
+                    <select class="form-control" style="width: 100px;display:inline;" name="selCondcustomerid">
+                        @if (@ViewBag.selCondcustomerid == "=")
+                {
+                            <option value="=" selected>=</option>
+                        }
+                        else
+                        {
+                            <option value="=">=</option>
+                        }
+
+                        @if (@ViewBag.selCondcustomerid == ">")
+                {
+                            <option value=">" selected>></option>
+                        }
+                        else
+                        {
+                            <option value=">">></option>
+                        }
+
+                        @if (@ViewBag.selCondcustomerid == ">=")
+                {
+                            <option value=">=" selected>>=</option>
+                        }
+                        else
+                        {
+                            <option value=">=">>=</option>
+                        }
+                        @if (@ViewBag.selCondcustomerid == "<")
+                {
+                            <option value="<" selected><</option>
+                        }
+                        else
+                        {
+                            <option value="<"><</option>
+                        }
+
+                        @if (@ViewBag.selCondcustomerid == "<=")
+                {
+                            <option value="<=" selected><=</option>
+                        }
+                        else
+                        {
+                            <option value="<="><=</option>
+                        }
+
+                        @if (@ViewBag.selCondcustomerid == "<>")
+                {
+                            <option value="<>" selected><></option>
+                        }
+                        else
+                        {
+                            <option value="<>"><></option>
+                        }
+
+                        @if (@ViewBag.selCondcustomerid == "like%")
+                {
+                            <option value="like%" selected>like%</option>
+                        }
+                        else
+                        {
+                            <option value="like%">like%</option>
+                        }
+
+                        @if (@ViewBag.selCondcustomerid == "%like")
+                {
+                            <option value="%like" selected>%like</option>
+                        }
+                        else
+                        {
+                            <option value="%like">%like</option>
+                        }
+
+                        @if (@ViewBag.selCondcustomerid == "%like%")
+                {
+                            <option value="%like%" selected>%like%</option>
+                        }
+                        else
+                        {
+                            <option value="%like%">%like%</option>
+                        }
+                    </select>
+                    <input type="text" class="form-control" id="id_customerid" name="customerid" style="width:200px;display:inline;" value="@ViewBag.customerid">
+                    <button type="submit" class="btn btn-default" id="btnSearch" name="action" value="btnSearch" aria-label="Left Align" style="display: inline-block;">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-link" aria-label="Left Align" data-toggle="modal" data-target=".advanced-search-modal" style="display: inline-block;">
+                        進階查詢
+                    </button>
+                </div>
+            </div>
+        </div>
+        <p style="color: red;">@ViewBag.Msg</p>
+        <div id="divGrid">
+            @{
+                <input type="checkbox" id="chkAll" style="position: absolute; margin-left: 8px; margin-top: 13px;" />
+                var grid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.SupportApl_H>)ViewData["SupportApl_H"], canPage: false, canSort: false, ajaxUpdateContainerId: "divGrid");
+
+                @grid.GetHtml(
+         tableStyle: "table table-striped table-hover rms-table supb01-table",
+            columns: grid.Columns(
+                grid.Column(format: @<text>
+                    <input type="checkbox" id="id_chk" name="chk" value="@item.SupportAplOrderType-@item.SupportAplOrderNo" />
+                </text>, style: "actioncolumn"),
+                grid.Column(columnName: "SupportAplOrderType", header: "單別", style: "supportaplordertype"),
+                grid.Column(columnName: "SupportAplOrderNo", header: "單號", style: "supportaplorderno", format:@<text><a href="@Url.Action("Details", "Main", new { SupportAplOrderType = @item.SupportAplOrderType, SupportAplOrderNo = @item.SupportAplOrderNo,Area = "SUPI05" })">@item.SupportAplOrderNo</a> </text>),
+                grid.Column(columnName: "CustomerName", header: "客戶名稱", style: "CustomerName"),
+                grid.Column(columnName: "SupportDept", header: "支援單位", style: "supportdept"),
+                //grid.Column(columnName: "SupportItemAll", header: "支援項目", style: "supportitemall"),
+                grid.Column(columnName: "RequestDate", header: "需求日期", style: "requestdate"),
+                grid.Column(columnName: "OrderStatus", header: "狀態", style: "orderstatus"),
+                grid.Column(columnName: "ProcessMan", header: "處理人員", style: "processman"),
+                grid.Column(columnName: "SalesName", header: "業務人員", style: "salesname"),
+                grid.Column(columnName: "Creator", header: "建立人員", style: "creator"),
+                grid.Column(columnName: "IsPicking", header: "發料", style: "ispicking"),
+                grid.Column(columnName: "SourceOrderNo", header: "來源單據", style: "sourceorderno"),
+                grid.Column(columnName: "CustomerType", header: "客戶狀態", style: "customertype")
+                    )
+                )
+            }
+        </div>
+        @RenderPage("~/Areas/SUPB01/Views/Shared/allot-modal.cshtml")
+        @RenderPage("~/Areas/SUPB01/Views/Shared/again-allot-modal.cshtml")
+                
+                }
+</section>
+<input type="hidden" title="module" value="SUPB01" />
+@RenderPage("../../../../Views/Shared/RecordSelector/record_selector_Position_D.cshtml")
+@RenderPage("~/Areas/SUPB01/Views/Shared/advanced-search-modal.cshtml")
+
+
+
+
+
+
+
+

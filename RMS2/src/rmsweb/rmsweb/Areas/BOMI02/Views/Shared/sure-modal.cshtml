@@ -1,0 +1,24 @@
+﻿<div class='modal fade sure-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>確認</h4>
+            </div>
+                <div class='modal-body'>
+                    <div class="form-group">
+                        <label for="id_sureConfirmDate" class="control-label">確認日期</label>
+                        <div class="col-sm-8 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_ConfirmDate" data-link-format="yyyy-mm-dd">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="id_sureConfirmDate" name="sureConfirmDate" readonly="readonly" value="@ViewBag.ConfirmDate" />
+                                <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='modal-footer'>
+                    <button type="button" class="btn btn-default" name="action" value="btnAllot" onclick="checkSure()">確定</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal'>取消</button>
+                </div>
+        </div>
+    </div>
+</div>

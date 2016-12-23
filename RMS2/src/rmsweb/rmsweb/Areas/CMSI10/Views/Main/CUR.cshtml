@@ -1,0 +1,1078 @@
+﻿@using System.Security.Policy
+@using BusinessLayer.Models
+@{
+    ViewBag.Title = "AddPage";
+}
+<style type="text/css">
+    .advanced-department-modal table .actioncolumn {
+        width: 50px;
+    }
+
+    .advanced-department-modal table .departmentId {
+        width: 150px;
+    }
+
+    .advanced-department-modal table .departmentName {
+        width: 200px;
+    }
+</style>
+<script type="text/javascript">
+
+    $(function () {
+        $("#btnQuestionList_D").click(function () {
+
+            if ($("#id_vendorid").val().trim().length == 0) {
+                $("#msg_information").html("廠商代號不能為空！");
+                $('.msg-modal-lg').modal();
+                return false;
+            }
+
+            $("#id_txtAddress1").val("");
+            $("#id_txtAddress2").val("");
+            $("#id_txtAddressContact").val("");
+            $("#id_txtAddressTelNo").val("");
+            $("#id_txtAddressFaxNo").val("");
+            $("#id_txtAddressRemark").val("");
+            $('.QuestionList_D-modal').modal();
+        });
+    });
+
+    function QuestionList_DExid(id) {
+
+        if ($("#id_vendorid").val().trim().length == 0) {
+            $("#msg_information").html("廠商代號不能為空！");
+            $('.msg-modal-lg').modal();
+            return false;
+        }
+        $("#id_ExtxtAddressId").val($(id).closest('tr').find(".txtAddressId").val());
+        $("#id_ExtxtAddress1").val($(id).closest('tr').find(".txtAddress1").val());
+        $("#id_ExtxtAddress2").val($(id).closest('tr').find(".txtAddress2").val());
+        $("#id_ExtxtAddressContact").val($(id).closest('tr').find(".txtAddressContact").val());
+        $("#id_ExtxtAddressTelNo").val($(id).closest('tr').find(".txtAddressTelNo").val());
+        $("#id_ExtxtAddressFaxNo").val($(id).closest('tr').find(".txtAddressFaxNo").val());
+        $("#id_ExtxtAddressRemark").val($(id).closest('tr').find(".txtAddressRemark").val());
+        $('.QuestionList_DExid-modal').modal();
+    };
+
+    function check() {
+
+        if ($("#id_txtAddress1").val() == '') {
+            $("#msg_information").html("地址一不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        var stritemid = addZero(document.getElementById("divAddresstGrid").getElementsByTagName('tr').length.toString(), 4);
+
+        $("#divAddresstGrid table tbody").append("<tr>" +
+            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='QuestionList_DExid(this)'>編輯</a>|<a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>" +
+              "<td class='txtAddressId'>" + stritemid + "<input type='hidden' class='txtAddressId' name='txtAddressId' value='" + stritemid + "'></td>" +
+            "<td>" + $("#id_txtAddress1").val() + "<input type='hidden' class='txtAddress1' name='txtAddress1' value='" + $("#id_txtAddress1").val() + "'></td>" +
+            "<td>" + $("#id_txtAddress2").val() + "<input type='hidden' class='txtAddress2' name='txtAddress2' value='" + $("#id_txtAddress2").val() + "'></td>" +
+            "<td>" + $("#id_txtAddressContact").val() + "<input type='hidden' class='txtAddressContact' name='txtAddressContact' value='" + $("#id_txtAddressContact").val() + "'></td>" +
+            "<td>" + $("#id_txtAddressTelNo").val() + "<input type='hidden' class='txtAddressTelNo' name='txtAddressTelNo' value='" + $("#id_txtAddressTelNo").val() + "'></td>" +
+            "<td>" + $("#id_txtAddressFaxNo").val() + "<input type='hidden' class='txtAddressFaxNo' name='txtAddressFaxNo' value='" + $("#id_txtAddressFaxNo").val() + "'></td>" +
+            "<td>" + $("#id_txtAddressRemark").val() + "<input type='hidden' class='txtAddressRemark' name='txtAddressRemark' value='" + $("#id_txtAddressRemark").val() + "'></td>" +
+            "</tr>");
+        $(".QuestionList_D-modal").modal("hide");
+    };
+
+    function checkExid() {
+
+        if ($("#id_vendorid").val().trim().length == 0) {
+            $("#msg_information").html("廠商代號不能為空！");
+            $('.msg-modal-lg').modal();
+            return false;
+        }
+
+        if ($("#id_txtAddressId").val() == '') {
+            $("#msg_information").html("地址代號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        var table = document.getElementById("divAddresstGrid");
+        var trs = table.getElementsByTagName('tr');
+        for (var i = 0; i < trs.length; i++) {
+            if ($(trs[i]).closest('tr').find(".txtAddressId").val() == $("#id_ExtxtAddressId").val()) {
+                trs[i].innerHTML ="<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='QuestionList_DExid(this)'>編輯</a>|<a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>" +
+                    "<td class='txtAddressId'>" + $("#id_ExtxtAddressId").val() + "<input type='hidden' class='txtAddressId' name='txtAddressId' value='" + $("#id_ExtxtAddressId").val() + "'></td>" +
+            "<td class='txtAddress1'>" + $("#id_ExtxtAddress1").val() + "<input type='hidden' class='txtAddress1' name='txtAddress1' value='" + $("#id_ExtxtAddress1").val() + "'></td>" +
+            "<td class='txtAddress2'>" + $("#id_ExtxtAddress2").val() + "<input type='hidden' class='txtAddress2' name='txtAddress2' value='" + $("#id_ExtxtAddress2").val() + "'></td>" +
+            "<td class='txtAddressContact'>" + $("#id_ExtxtAddressContact").val() + "<input type='hidden' class='txtAddressContact' name='txtAddressContact' value='" + $("#id_ExtxtAddressContact").val() + "'></td>" +
+            "<td class='txtAddressTelNo'>" + $("#id_ExtxtAddressTelNo").val() + "<input type='hidden' class='txtAddressTelNo' name='txtAddressTelNo' value='" + $("#id_ExtxtAddressTelNo").val() + "'></td>" +
+            "<td class='txtAddressFaxNo'>" + $("#id_ExtxtAddressFaxNo").val() + "<input type='hidden' class='txtAddressFaxNo' name='txtAddressFaxNo' value='" + $("#id_ExtxtAddressFaxNo").val() + "'></td>" +
+            "<td class='txtAddressRemark'>" + $("#id_ExtxtAddressRemark").val() + "<input type='hidden' class='txtAddressRemark' name='txtAddressRemark' value='" + $("#id_ExtxtAddressRemark").val() + "'></td>"
+            }
+        }
+
+        $(".QuestionList_DExid-modal").modal("hide");
+    };
+
+    function RemoveProcess(id) {
+        $(id).parents('tr:first').remove()
+        var table = document.getElementById("divAddresstGrid");
+        var trs = table.getElementsByTagName('tr');
+        var stritem = "";
+        for (var i = 1; i < trs.length; i++) {
+            stritem = addZero((i).toString(), 4);
+            trs[i].cells[1].innerHTML = stritem + "<input type='hidden' class='txtAddressId' name='txtAddressId' value='" + stritem + "'>";
+        }
+    };
+
+    $(document).ready(function () {
+        $("input[type='text']").keypress(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                var tabIndex = $(this).attr("tabindex");
+                if (!isNaN(tabIndex)) {
+                    $("[tabindex='" + (parseInt(tabIndex) + 1) + "']").focus();
+                    $("[tabindex='" + (parseInt(tabIndex) + 1) + "']").select();
+                }
+            }
+        });
+
+        $("#btnDelete").click(function () {
+            if (confirm("是否確定刪除" + $("#id_vendorname").val() + "廠商？")) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        //聯絡人
+        $(document).on('click', '.edit-user-contact', function () {
+            var tr = $(this).parents('tr:first');
+            tr.find('.edit-mode-contact, .display-mode-contact').toggle();
+        });
+
+        $(document).on("click", "#cancel-add-contact", function () {
+            $(".display-add-contact").remove();
+            $('#btnAddContact').removeAttr("disabled");
+            $('#btnSearchContact').removeAttr("disabled");
+        });
+
+        $(document).on('click', '#save-add-contact', function () {
+            var tr = $(this).parents('tr:first');
+            var countactId = tr.find("#txtContactId").val().trim();
+            var countact = tr.find("#txtContact").val().trim();
+            if (countactId.length <= 0) {
+                alert("聯絡人代號不能為空");
+                return;
+            }
+            if (countact.length <= 0) {
+                alert("聯絡人姓名不能為空");
+                return;
+            }
+            var verdorContact = {
+                "VendorId": $("#id_vendorid").val(),
+                "ContactId": tr.find("#txtContactId").val(),
+                "Contact": tr.find("#txtContact").val(),
+                "Department": tr.find("#txtDepartment").val(),
+                "Occupation": tr.find("#txtOccupation").val(),
+                "TelNo": tr.find("#txtTelNo").val(),
+                "FaxNo": tr.find("#txtFaxNo").val(),
+                "Email": tr.find("#txtEmail").val(),
+                "Remark": tr.find("#txtRemark").val()
+            };
+            $.ajax({
+                url: '@Url.Action("SaveNewContact","Main")',
+                type: "POST",
+                datatype: "JSON",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(verdorContact),
+                success: function (data) {
+                    if (data == "1") {
+                        //alert("保存成功");
+                        $("#divContacttGrid table").append("<tr>" +
+                            "<td class='actioncolumn'>" +
+                            "<a class='btn btn-link display-mode-contact' data-dismiss='modal' onclick='SelectContact(this)'>選擇</a>" +
+                            "<a class='btn btn-link edit-user-contact display-mode-contact'>編輯</a>" +
+                            "<a class='btn btn-link delete-user-contact display-mode-contact'>刪除</a>" +
+                            "<a class='btn btn-link save-user-contact edit-mode-contact'>確定</a>" +
+                            "<a class='btn btn-link cancel-user-contact edit-mode-contact'>取消</a>" +
+                            "</td>" +
+                            "<td class='departmentId'>" + tr.find("#txtContactId").val() + "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + tr.find("#txtContact").val() + "</span>" +
+                            "<input type='text' value='" + tr.find("#txtContact").val() + "' class='form-control edit-mode-contact' maxlength='30' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + tr.find("#txtDepartment").val() + "</span>" +
+                            "<input type='text' value='" + tr.find("#txtDepartment").val() + "' class='form-control edit-mode-contact' maxlength='40' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + tr.find("#txtOccupation").val() + "</span>" +
+                            "<input type='text' value='" + tr.find("#txtOccupation").val() + "' class='form-control edit-mode-contact' maxlength='40' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + tr.find("#txtTelNo").val() + "</span>" +
+                            "<input type='text' value='" + tr.find("#txtTelNo").val() + "' class='form-control edit-mode-contact' maxlength='20' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + tr.find("#txtFaxNo").val() + "</span>" +
+                            "<input type='text' value='" + tr.find("#txtFaxNo").val() + "' class='form-control edit-mode-contact' maxlength='20' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + tr.find("#txtEmail").val() + "</span>" +
+                            "<input type='text' value='" + tr.find("#txtEmail").val() + "' class='form-control edit-mode-contact' maxlength='60' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + tr.find("#txtRemark").val() + "</span>" +
+                            "<input type='text' value='" + tr.find("#txtRemark").val() + "' class='form-control edit-mode-contact' maxlength='255' />" +
+                            "</td>" +
+                            "</tr>");
+                        $(".display-add-contact").remove();
+                        $(".edit-mode-contact").hide();
+                        $('#btnAddContact').removeAttr("disabled");
+                        $('#btnSearchContact').removeAttr("disabled");
+                    } else {
+                        alert(data);
+                    }
+                }
+            });
+        });
+
+        $("#btnAddContact").click(function () {
+            $("#divContacttGrid table").append("<tr class='display-add-contact' id='trAdd'>" +
+                "<td><a id='save-add-contact' class='btn btn-link'>確定</a><a id='cancel-add-contact' class='btn btn-link'>取消</a></td>" +
+                "<td><input type='text' id='txtContactId' maxlength='6' class='form-control'/></td>" +
+                "<td><input type='text' id='txtContact' maxlength='30' class='form-control'/></td>" +
+                "<td><input type='text' id='txtDepartment' maxlength='40' class='form-control'/></td>" +
+                "<td><input type='text' id='txtOccupation' maxlength='40' class='form-control'/></td>" +
+                "<td><input type='text' id='txtTelNo' maxlength='20' class='form-control'/></td>" +
+                "<td><input type='text' id='txtFaxNo' maxlength='20' class='form-control'/></td>" +
+                "<td><input type='text' id='txtEmail' maxlength='60' class='form-control'/></td>" +
+                "<td><input type='text' id='txtRemark' maxlength='255' class='form-control'/></td>" +
+                "</tr>");
+            $(this).attr("disabled", "disabled");
+            $('#btnSearchContact').attr("disabled", "disabled");
+        });
+
+        $(document).on('click', '.cancel-user-contact', function () {
+            var tr = $(this).parents('tr:first');
+            tr.find("td:eq(2)").find("input").val(tr.find("td:eq(2)").find("span").html());
+            tr.find("td:eq(3)").find("input").val(tr.find("td:eq(3)").find("span").html());
+            tr.find("td:eq(4)").find("input").val(tr.find("td:eq(4)").find("span").html());
+            tr.find("td:eq(5)").find("input").val(tr.find("td:eq(5)").find("span").html());
+            tr.find("td:eq(6)").find("input").val(tr.find("td:eq(6)").find("span").html());
+            tr.find("td:eq(7)").find("input").val(tr.find("td:eq(7)").find("span").html());
+            tr.find("td:eq(8)").find("input").val(tr.find("td:eq(8)").find("span").html());
+            tr.find('.edit-mode-contact, .display-mode-contact').toggle();
+        });
+
+        $(document).on('click', '.delete-user-contact', function () {
+            var tr = $(this).parents('tr:first');
+            var contactId = tr.find("td:eq(1)").html();
+            if (!confirm("是否確定刪除聯絡人:" + contactId + "？")) {
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("DeleteContact", "Main")',
+                datatype: 'JSON',
+                data: JSON.stringify({ "vendorId": $("#id_vendorid").val(), "contactId": contactId }),
+                contentType: 'application/json; charset=utf-8',
+                type: 'POST',
+                success: function (data) {
+                    if (data == "0") {
+                        alert("聯絡人不存在");
+                    }
+                    else if (data == "1") {
+                        //alert("刪除成功");
+                        tr.remove();
+                    } else {
+                        alert(data);
+                    }
+                }
+            });
+        });
+
+        $(document).on('click', '.save-user-contact', function () {
+            var tr = $(this).parents('tr:first');
+            if (tr.find("td:eq(2)").find("input").val().length == 0) {
+                alert("聯絡人姓名不能為空");
+                return;
+            }
+            var customerContact = {
+                "Vendorid": $("#id_vendorid").val(),
+                "ContactId": tr.find("td:eq(1)").html(),
+                "Contact": tr.find("td:eq(2)").find("input").val(),
+                "Department": tr.find("td:eq(3)").find("input").val(),
+                "Occupation": tr.find("td:eq(4)").find("input").val(),
+                "TelNo": tr.find("td:eq(5)").find("input").val(),
+                "FaxNo": tr.find("td:eq(6)").find("input").val(),
+                "Email": tr.find("td:eq(7)").find("input").val(),
+                "Remark": tr.find("td:eq(8)").find("input").val()
+            };
+            $.ajax({
+                url: '@Url.Action("SaveContact","Main")',
+                type: "POST",
+                datatype: "JSON",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(customerContact),
+                success: function (data) {
+                    if (data == "1") {
+                        //alert("保存成功");
+                        tr.find("td:eq(2)").find("span").html(tr.find("td:eq(2)").find("input").val());
+                        tr.find("td:eq(3)").find("span").html(tr.find("td:eq(3)").find("input").val());
+                        tr.find("td:eq(4)").find("span").html(tr.find("td:eq(4)").find("input").val());
+                        tr.find("td:eq(5)").find("span").html(tr.find("td:eq(5)").find("input").val());
+                        tr.find("td:eq(6)").find("span").html(tr.find("td:eq(6)").find("input").val());
+                        tr.find("td:eq(7)").find("span").html(tr.find("td:eq(7)").find("input").val());
+                        tr.find("td:eq(8)").find("span").html(tr.find("td:eq(8)").find("input").val());
+                        tr.find('.edit-mode-contact, .display-mode-contact').toggle();
+                    } else {
+                        alert(data);
+                    }
+                }
+            });
+        });
+
+        $("#btnSearchContact").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchContact", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "vendorId": $("#id_vendorid").val(), "contactId": $("#id_txtCondition").val() }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divContacttGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divContacttGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'>" +
+                            "<a class='btn btn-link display-mode-contact' data-dismiss='modal' onclick='SelectContact(this)'>選擇</a>" +
+                            "<a class='btn btn-link edit-user-contact display-mode-contact'>編輯</a>" +
+                            "<a class='btn btn-link delete-user-contact display-mode-contact'>刪除</a>" +
+                            "<a class='btn btn-link save-user-contact edit-mode-contact'>確定</a>" +
+                            "<a class='btn btn-link cancel-user-contact edit-mode-contact'>取消</a>" +
+                            "</td>" +
+                            "<td class='departmentId'>" + Maintain[i].ContactId + "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + Maintain[i].Contact + "</span>" +
+                            "<input type='text' value='" + Maintain[i].Contact + "' class='form-control edit-mode-contact' maxlength='30' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + Maintain[i].Department + "</span>" +
+                            "<input type='text' value='" + Maintain[i].Department + "' class='form-control edit-mode-contact' maxlength='40' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + Maintain[i].Occupation + "</span>" +
+                            "<input type='text' value='" + Maintain[i].Occupation + "' class='form-control edit-mode-contact' maxlength='40' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + Maintain[i].TelNo + "</span>" +
+                            "<input type='text' value='" + Maintain[i].TelNo + "' class='form-control edit-mode-contact' maxlength='20' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + Maintain[i].FaxNo + "</span>" +
+                            "<input type='text' value='" + Maintain[i].FaxNo + "' class='form-control edit-mode-contact' maxlength='20' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + Maintain[i].Email + "</span>" +
+                            "<input type='text' value='" + Maintain[i].Email + "' class='form-control edit-mode-contact' maxlength='60' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + Maintain[i].Remark + "</span>" +
+                            "<input type='text' value='" + Maintain[i].Remark + "' class='form-control edit-mode-contact' maxlength='255' />" +
+                            "</td>" +
+                            "</tr>");
+                        $(".edit-mode-contact").hide();
+                    }
+                }
+            });
+        });
+
+        $("#contactModal").click(function () {
+            if ($("#id_vendorid").val().trim().length == 0) {
+                alert("廠商代號不能為空");
+                return false;
+            }
+            $.ajax({
+                url: '@Url.Action("SearchContactInfoAll", "Main")',
+                datatype: 'JSON',
+                data: JSON.stringify({ "vendorId": $("#id_vendorid").val().trim() }),
+                contentType: "application/json; charset=utf-8",
+                type: "POST",
+                success: function (data) {
+                    $("#divContacttGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divContacttGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'>" +
+                            "<a class='btn btn-link display-mode-contact' data-dismiss='modal' onclick='SelectContact(this)'>選擇</a>" +
+                            "<a class='btn btn-link edit-user-contact display-mode-contact'>編輯</a>" +
+                            "<a class='btn btn-link delete-user-contact display-mode-contact'>刪除</a>" +
+                            "<a class='btn btn-link save-user-contact edit-mode-contact'>確定</a>" +
+                            "<a class='btn btn-link cancel-user-contact edit-mode-contact'>取消</a>" +
+                            "</td>" +
+                            "<td class='departmentId'>" + Maintain[i].ContactId + "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + Maintain[i].Contact + "</span>" +
+                            "<input type='text' value='" + Maintain[i].Contact + "' class='form-control edit-mode-contact' maxlength='30' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + Maintain[i].Department + "</span>" +
+                            "<input type='text' value='" + Maintain[i].Department + "' class='form-control edit-mode-contact' maxlength='40' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + Maintain[i].Occupation + "</span>" +
+                            "<input type='text' value='" + Maintain[i].Occupation + "' class='form-control edit-mode-contact' maxlength='40' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + Maintain[i].TelNo + "</span>" +
+                            "<input type='text' value='" + Maintain[i].TelNo + "' class='form-control edit-mode-contact' maxlength='20' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + Maintain[i].FaxNo + "</span>" +
+                            "<input type='text' value='" + Maintain[i].FaxNo + "' class='form-control edit-mode-contact' maxlength='20' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + Maintain[i].Email + "</span>" +
+                            "<input type='text' value='" + Maintain[i].Email + "' class='form-control edit-mode-contact' maxlength='60' />" +
+                            "</td>" +
+                            "<td class='departmentName'>" +
+                            "<span class='display-mode-contact'>" + Maintain[i].Remark + "</span>" +
+                            "<input type='text' value='" + Maintain[i].Remark + "' class='form-control edit-mode-contact' maxlength='255' />" +
+                            "</td>" +
+                            "</tr>");
+                        $(".edit-mode-contact").hide();
+                    }
+                    $("#btnSearchContact").removeAttr("disabled");
+                    $("#btnAddContact").removeAttr("disabled");
+                }
+            });
+            return true;
+        });
+
+        //地址JS
+        $(".edit-mode-address").hide();
+
+        $(".savebefore").click(function () {
+            if ($("#divAddresstGrid table tbody tr").length >= 1) {
+                $("#txtSaveAddress1").val($("#divAddresstGrid table tbody tr:eq(0) .departmentId").html());
+            }
+            if ($("#divAddresstGrid table tbody tr").length >= 2) {
+                $("#txtSaveAddress2").val($("#divAddresstGrid table tbody tr:eq(1) .departmentId").html());
+            }
+        });
+
+        //$(document).on('click', '.edit-user-address', function () {
+        //    if ($("#id_vendorid").val().trim() == "") {
+        //        alert("廠商代號不能為空");
+        //        return;
+        //    }
+        //    var tr = $(this).parents('tr:first');
+        //    tr.find('.edit-mode-address, .display-mode-address').toggle();
+
+        //    //$("#divAddresstGrid table").append("<tr class='display-add-address' id='trAddAddress'>" +
+        //    //"<td><a id='save-add-address' class='btn btn-link'>確定</a><a id='cancel-add-address' class='btn btn-link'>取消</a></td>" +
+        //    //"<td><input type='text' id='txtAddressId' maxlength='6' class='form-control'/></td>" +
+        //    //"<td><input type='text' id='txtAddress1' maxlength='255' class='form-control'/></td>" +
+        //    //"<td><input type='text' id='txtAddress2' maxlength='255' class='form-control'/></td>" +
+        //    //"<td><input type='text' id='txtAddressContact' maxlength='30' class='form-control'/></td>" +
+        //    //"<td><input type='text' id='txtAddressTelNo' maxlength='20' class='form-control'/></td>" +
+        //    //"<td><input type='text' id='txtAddressFaxNo' maxlength='20' class='form-control'/></td>" +
+        //    //"<td><input type='text' id='txtAddressRemark' maxlength='255' class='form-control'/></td>" +
+        //    //"</tr>");
+        //    //$('button').attr("disabled", "disabled");
+        //});
+
+        //$(document).on("click", "#cancel-add-address", function () {
+        //    $(".display-add-address").remove();
+        //    $('#btnAddAddress').removeAttr("disabled");
+        //    $('button').removeAttr("disabled");
+        //});
+
+        //$(document).on('click', '.cancel-user-address', function () {
+        //    var tr = $(this).parents('tr:first');
+        //    tr.find("td:eq(2)").find("input").val(tr.find("td:eq(2)").find("span").html());
+        //    tr.find("td:eq(3)").find("input").val(tr.find("td:eq(3)").find("span").html());
+        //    tr.find("td:eq(4)").find("input").val(tr.find("td:eq(4)").find("span").html());
+        //    tr.find("td:eq(5)").find("input").val(tr.find("td:eq(5)").find("span").html());
+        //    tr.find("td:eq(6)").find("input").val(tr.find("td:eq(6)").find("span").html());
+        //    tr.find("td:eq(7)").find("input").val(tr.find("td:eq(7)").find("span").html());
+        //    tr.find("td:eq(8)").find("input").val(tr.find("td:eq(8)").find("span").html());
+        //    tr.find('.edit-mode-address, .display-mode-address').toggle();
+        //});
+
+        @*$(document).on('click', '.delete-user-address', function () {
+            var tr = $(this).parents('tr:first');
+            @*var addressId = tr.find("td:eq(1)").html();
+            if (!confirm("是否確定刪除地址:" + addressId + "？")) {
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("DeleteAddress","Main")',
+                datatype: 'JSON',
+                data: JSON.stringify({ "vendorId": $("#id_vendorid").val(), "addressId": addressId }),
+                contentType: 'application/json; charset=utf-8',
+                type: 'POST',
+                success: function (data) {
+                    if (data == "0") {
+                        alert("地址代號不存在");
+                    }
+                    else if (data == "1") {
+                        //alert("刪除成功");
+                        tr.remove();
+                    } else {
+                        alert(data);
+                    }
+                }
+            });
+            tr.remove();
+
+        });*@
+
+        @*$(document).on('click', '.save-user-address', function () {
+            var tr = $(this).parents('tr:first');
+            if (tr.find("td:eq(2)").find("input").val().length == 0) {
+                alert("地址一不能為空");
+                return;
+            }
+            var customerAddress = {
+                "VendorId": $("#id_vendorid").val(),
+                "AddressId": tr.find("td:eq(1)").html(),
+                "AddressSName": tr.find("td:eq(2)").find("input").val(),
+                "Address": tr.find("td:eq(3)").find("input").val(),
+                "Contact": tr.find("td:eq(4)").find("input").val(),
+                "TelNo": tr.find("td:eq(5)").find("input").val(),
+                "FaxNo": tr.find("td:eq(6)").find("input").val(),
+                "Remark": tr.find("td:eq(7)").find("input").val()
+            };
+            $.ajax({
+                url: '@Url.Action("SaveAddress","Main")',
+                type: "POST",
+                datatype: "JSON",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(customerAddress),
+                success: function (data) {
+                    if (data == "1") {
+                        //alert("保存成功");
+                        tr.find("td:eq(2)").find("span").html(tr.find("td:eq(2)").find("input").val());
+                        tr.find("td:eq(3)").find("span").html(tr.find("td:eq(3)").find("input").val());
+                        tr.find("td:eq(4)").find("span").html(tr.find("td:eq(4)").find("input").val());
+                        tr.find("td:eq(5)").find("span").html(tr.find("td:eq(5)").find("input").val());
+                        tr.find("td:eq(6)").find("span").html(tr.find("td:eq(6)").find("input").val());
+                        tr.find("td:eq(7)").find("span").html(tr.find("td:eq(7)").find("input").val());
+                        tr.find('.edit-mode-address, .display-mode-address').toggle();
+                    } else {
+                        alert(data);
+                    }
+                }
+            });
+        });*@
+
+        //$("#btnAddAddress").click(function () {
+        //    if ($("#id_vendorid").val().trim() == "") {
+        //        alert("廠商代號不能為空");
+        //        return;
+        //    }
+        //    $("#divAddresstGrid table").append("<tr class='display-add-address' id='trAddAddress'>" +
+        //    "<td><a id='save-add-address' class='btn btn-link'>確定</a><a id='cancel-add-address' class='btn btn-link'>取消</a></td>" +
+        //    "<td><input type='text' id='txtAddressId' maxlength='6' class='form-control'/></td>" +
+        //    "<td><input type='text' id='txtAddress1' maxlength='255' class='form-control'/></td>" +
+        //    "<td><input type='text' id='txtAddress2' maxlength='255' class='form-control'/></td>" +
+        //    "<td><input type='text' id='txtAddressContact' maxlength='30' class='form-control'/></td>" +
+        //    "<td><input type='text' id='txtAddressTelNo' maxlength='20' class='form-control'/></td>" +
+        //    "<td><input type='text' id='txtAddressFaxNo' maxlength='20' class='form-control'/></td>" +
+        //    "<td><input type='text' id='txtAddressRemark' maxlength='255' class='form-control'/></td>" +
+        //    "</tr>");
+        //    $('button').attr("disabled", "disabled");
+        //});
+
+        //$(document).on("click", "#cancel-add-address", function () {
+        //    $(".display-add-address").remove();
+        //    $('button').removeAttr("disabled");
+        //});
+
+        @*$(document).on('click', '#save-add-address', function () {
+            var tr = $(this).parents('tr:first');
+            var addressId = tr.find("#txtAddressId").val().trim();
+            var address1 = tr.find("#txtAddress1").val().trim();
+            if (addressId.length <= 0) {
+                alert("地址代號不能為空");
+                return;
+            }
+            if (address1.length <= 0) {
+                alert("地址一不能為空");
+                return;
+            }
+
+            $("#divAddresstGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'>" +
+                                "<a class='btn btn-link edit-user-address display-mode-address'>編輯</a>" +
+                                "<a class='btn btn-link delete-user-address display-mode-address'>刪除</a>"+
+                                "</td>" +
+"<td>" + tr.find("#txtAddressId").val() + "<input type='hidden' class='VendorId' name='VendorId' value='" + tr.find("#txtAddressId").val() + "'/></td>" +
+"<td>" + tr.find("#txtAddress1").val() + "<input type='hidden' class='AddressSName' name='AddressSName' value='" + tr.find("#txtAddress1").val() + "'/></td>" +
+"<td>" + tr.find("#txtAddress2").val() + "<input type='hidden' class='Address' name='Address' value='" + tr.find("#txtAddress2").val() + "'/></td>" +
+"<td>" + tr.find("#txtAddressContact").val() + "<input type='hidden' class='Contact' name='Contact' value='" + tr.find("#txtAddressContact").val() + "'/></td>" +
+"<td>" + tr.find("#txtAddressTelNo").val() + "<input type='hidden' class='TelNo' name='TelNo' value='" + tr.find("#txtAddressTelNo").val() + "'/></td>" +
+"<td>" + tr.find("#txtAddressFaxNo").val() + "<input type='hidden' class='FaxNo' name='FaxNo' value='" + tr.find("#txtAddressFaxNo").val() + "'/></td>" +
+"<td>" + tr.find("#txtAddressRemark").val() + "<input type='hidden' class='Remark' name='Remark' value='" + tr.find("#txtAddressRemark").val() + "'/></td>" +
+"</tr>");
+            $(this).parents('tr:first').remove()
+
+            $('button').removeAttr("disabled");
+            @*var customerAddress = {
+                "VendorId": $("#id_vendorid").val(),
+                "AddressId": tr.find("#txtAddressId").val(),
+                "AddressSName": tr.find("#txtAddress1").val(),
+                "Address": tr.find("#txtAddress2").val(),
+                "Contact": tr.find("#txtAddressContact").val(),
+                "TelNo": tr.find("#txtAddressTelNo").val(),
+                "FaxNo": tr.find("#txtAddressFaxNo").val(),
+                "Remark": tr.find("#txtAddressRemark").val()
+            };
+            $.ajax({
+                url: '@Url.Action("SaveNewAddress","Main")',
+                type: "POST",
+                datatype: "JSON",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(customerAddress),
+                success: function (data) {
+                    if (data == "1") {
+                        //alert("保存成功");
+                        $("#divAddresstGrid table").append("<tr>" +
+                                            "<td class='actioncolumn'>" +
+                                            "<a class='btn btn-link edit-user-address display-mode-address'>編輯</a>" +
+                                            "<a class='btn btn-link delete-user-address display-mode-address'>刪除</a>" +
+                                            "<a class='btn btn-link save-user-address edit-mode-address'>確定</a>" +
+                                            "<a class='btn btn-link cancel-user-address edit-mode-address'>取消</a>" +
+                                            "</td>" +
+                                            "<td class='departmentId'>" + tr.find("#txtAddressId").val() + "</td>" +
+                                            "<td class='departmentName'>" +
+                                            "<span class='display-mode-address'>" + tr.find("#txtAddress1").val() + "</span>" +
+                                            "<input type='text' value='" + tr.find("#txtAddress1").val() + "' class='form-control edit-mode-address' maxlength='255' />" +
+                                            "</td>" +
+                                            "<td class='departmentName'>" +
+                                            "<span class='display-mode-address'>" + tr.find("#txtAddress2").val() + "</span>" +
+                                             "<input type='text' value='" + tr.find("#txtAddress2").val() + "' class='form-control edit-mode-address' maxlength='255' />" +
+                                            "</td>" +
+                                             "<td class='departmentName'>" +
+                                            "<span class='display-mode-address'>" + tr.find("#txtAddressContact").val() + "</span>" +
+                                             "<input type='text' value='" + tr.find("#txtAddressContact").val() + "' class='form-control edit-mode-address' maxlength='30' />" +
+                                            "</td>" +
+                                             "<td class='departmentName'>" +
+                                            "<span class='display-mode-address'>" + tr.find("#txtAddressTelNo").val() + "</span>" +
+                                             "<input type='text' value='" + tr.find("#txtAddressTelNo").val() + "' class='form-control edit-mode-address' maxlength='20' />" +
+                                            "</td>" +
+                                             "<td class='departmentName'>" +
+                                            "<span class='display-mode-address'>" + tr.find("#txtAddressFaxNo").val() + "</span>" +
+                                             "<input type='text' value='" + tr.find("#txtAddressFaxNo").val() + "' class='form-control edit-mode-address' maxlength='20' />" +
+                                            "</td>" +
+                                             "<td class='departmentName'>" +
+                                            "<span class='display-mode-address'>" + tr.find("#txtAddressRemark").val() + "</span>" +
+                                             "<input type='text' value='" + tr.find("#txtAddressRemark").val() + "' class='form-control edit-mode-address' maxlength='255' />" +
+                                            "</td>" +
+                                            "</tr>");
+                        $(".display-add-address").remove();
+                        $(".edit-mode-address").hide();
+                        //$('#btnAddAddress').removeAttr("disabled");
+                        $('button').removeAttr("disabled");
+                    } else {
+                        alert(data);
+                    }
+                }
+            });*@
+        //});
+
+        $('#defaultForm').bootstrapValidator({
+            //        live: 'disabled',
+            //message: 'This value is not valid',
+            //feedbackIcons: {
+            //    valid: 'glyphicon glyphicon-ok',
+            //    invalid: 'glyphicon glyphicon-remove',
+            //    validating: 'glyphicon glyphicon-refresh'
+            //},
+            fields: {
+                vendorid: {
+                    validators: {
+                        notEmpty: {
+                            message: '廠商代號不能為空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 10,
+                            message: '廠商代號長度為1~10'
+                        },
+                        callback: {
+                            message: '廠商代號已存在！',
+                            callback: function (value, validator) {
+                                var res = true;
+                                if (document.getElementById("id_vendorid").readOnly == true) {
+                                    return res;
+                                }
+                                if (value.length > 0) {
+                                    $.ajax({
+                                        //url: '/cmsi04/curid',
+                                        url: '@Url.Action("CURMID", "Main")',
+                                        data: JSON.stringify({ "vendorid": value }),
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function (data) {
+                                            res = data;
+                                        }
+                                    });
+                                }
+                                return res;
+                            }
+                        }
+                    }
+                },
+                vendorname: {
+                    validators: {
+                        notEmpty: {
+                            message: '廠商簡稱不能為空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 30,
+                            message: '廠商簡稱長度為1~30'
+                        }
+                    }
+                },
+                rate: {
+                    validators: {
+                        notEmpty: {
+                            message: '營業稅率不能為空'
+                        },
+                        regexp: {
+                            regexp: /^\d{1,2}(\.\d{1,5})?$/,
+                            message: '營業稅率格式不正確'
+                        },
+                        stringLength: {
+                            min: 0,
+                            max: 8,
+                            message: '匯率最大長度為8'
+                        }
+                    }
+                },
+                vendorfullname: {
+                    validators: {
+                        stringLength: {
+                            min: 0,
+                            max: 80,
+                            message: '廠商全名最大長度為80'
+                        }
+                    }
+                },
+                contact: {
+                    validators: {
+                        stringLength: {
+                            min: 0,
+                            max: 30,
+                            message: '連絡人最大長度為30'
+                        }
+                    }
+                },
+                telno: {
+                    validators: {
+                        stringLength: {
+                            min: 0,
+                            max: 20,
+                            message: '電話號碼最大長度為20'
+                        }
+                    }
+                },
+                faxno: {
+                    validators: {
+                        stringLength: {
+                            min: 0,
+                            max: 20,
+                            message: '傳真號碼最大長度為20'
+                        }
+                    }
+                },
+                email: {
+                    validators: {
+                        stringLength: {
+                            min: 0,
+                            max: 60,
+                            message: 'E-Mail最大長度為60'
+                        }
+                    }
+                },
+                address: {
+                    validators: {
+                        stringLength: {
+                            min: 0,
+                            max: 255,
+                            message: '通訊地址最大長度為255'
+                        }
+                    }
+                },
+                remark: {
+                    validators: {
+                        stringLength: {
+                            min: 0,
+                            max: 255,
+                            message: '備註最大長度為255'
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    function SelectContact(id) {
+        $("#id_contact").val($(id).closest('tr').find("td:eq(2) span").html());
+        //$("#id_contact").val($(id).closest('tr').find("td:eq(1)").html());
+        //$("#spContactName").html($(id).closest('tr').find("td:eq(2) span").html());
+        //$("#id_ContactName").val($(id).closest('tr').find("td:eq(2) span").html());
+    }
+
+</script>
+<section class="content-header">
+    <h1>廠商基本資料維護</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            @using (Ajax.BeginForm("CUR", "Main", new AjaxOptions { HttpMethod = "POST" }, new { id = "defaultForm" }))
+            {
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_vendorid" class="col-md-3 col-lg-3 control-label">廠商代號</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (ViewBag.Type == "New")
+                            {
+                                <input type="text" class="form-control" id="id_vendorid" name="vendorid" tabindex="1" value="@ViewBag.VendorId" maxlength="10" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_vendorid" name="vendorid" tabindex="1" value="@ViewBag.VendorId" readonly="readonly" maxlength="10" />
+                            }
+                        </div>
+                        <label for="id_vendorname" class="col-md-3 col-lg-3 control-label">廠商簡稱</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="id_vendorname" name="vendorname" tabindex="2" value="@ViewBag.VendorName" readonly="readonly" maxlength="30" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_vendorname" name="vendorname" tabindex="2" value="@ViewBag.VendorName" maxlength="30" />
+                            }
+                        </div>
+                        <label for="id_rate" class="col-md-3 col-lg-3 control-label">營業稅率</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="id_rate" name="rate" value="@ViewBag.TaxRate" tabindex="3" readonly="readonly" maxlength="8" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_rate" name="rate" value="@ViewBag.TaxRate" tabindex="3" maxlength="8" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_vendorfullname" class="col-md-3 col-lg-3 control-label">廠商全名</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="id_vendorfullname" name="vendorfullname" tabindex="4" value="@ViewBag.VendorFullName" readonly="readonly" maxlength="80" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_vendorfullname" name="vendorfullname" tabindex="4" value="@ViewBag.VendorFullName" maxlength="80" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_contact" class="col-md-3 col-lg-3 control-label">聯絡人</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_contact" name="contact" value="@ViewBag.Contact" readonly="readonly" style="display:inline;" tabindex="5" maxlength="30" />
+                                    <span class="input-group-addon" id="contactModal" style="cursor: pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>   
+                           
+                                @*<button id="contactModal" type="button" class="btn btn-primary" aria-label="Left Align" data-toggle="modal" data-target="#contact" disabled="disabled" style="display:inline;" tabindex="10">
+                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                </button>*@
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_contact" name="contact" value="@ViewBag.Contact" style="display:inline;" tabindex="5" maxlength="30" />
+                                    <span class="input-group-addon" id="contactModal" data-toggle="modal" data-target="#contact" style="cursor: pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                              
+                                @*<button id="contactModal" type="button" class="btn btn-primary" aria-label="Left Align" data-toggle="modal" data-target="#contact" style="display:inline;" tabindex="10">
+                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                </button>*@
+                            }
+                        </div>
+                        <label for="id_telno" class="col-md-3 col-lg-3 control-label">電話號碼</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="id_telno" name="telno" value="@ViewBag.TelNo" readonly="readonly" tabindex="6" maxlength="20" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_telno" name="telno" value="@ViewBag.TelNo" tabindex="6" maxlength="20" />
+                            }
+                        </div>
+                        <label for="id_faxno" class="col-md-3 col-lg-3 control-label">傳真號碼</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="id_faxno" name="faxno" value="@ViewBag.FaxNo" readonly="readonly" tabindex="7" maxlength="20" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_faxno" name="faxno" value="@ViewBag.FaxNo" tabindex="7" maxlength="20" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_email" class="col-md-3 col-lg-3 control-label">E-Mail</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="id_email" name="email" value="@ViewBag.Email" readonly="readonly" tabindex="8" maxlength="60" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_email" name="email" value="@ViewBag.Email" tabindex="8" maxlength="60" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_remark" class="col-md-3 col-lg-3 control-label">備註</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <textarea class="form-control" id="id_remark" name="remark" cols="40" rows="5" readonly="readonly" tabindex="9" maxlength="255">@ViewBag.Remark</textarea>
+                            }
+                            else
+                            {
+                                <textarea class="form-control" id="id_remark" name="remark" cols="40" rows="5" tabindex="9" maxlength="255">@ViewBag.Remark</textarea>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    @if (ViewBag.Type == "Detail")
+                    {
+                        <button type="button" class="btn btn-primary" id="btnQuestionList_D" name="action" value="btnQuestionList_D" aria-label="Left Align" disabled="disabled" tabindex="11">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 地址新增
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" id="btnQuestionList_D" name="action" value="btnQuestionList_D" aria-label="Left Align" tabindex="11">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 地址新增
+                        </button>
+                    }
+                </div>
+                <div id="divAddresstGrid" style="height: 200px;overflow-y: auto;">
+                    @{
+                        var webGrid = new WebGrid(source: (IEnumerable<VendorAddress>)ViewData["DisplayDataAddress"], canPage: false, canSort: false, rowsPerPage: 10, ajaxUpdateContainerId: "divAddresstGrid");
+                    }
+
+                    @webGrid.GetHtml(
+                                        tableStyle: "table table-striped table-hover table-condensed",
+                                        mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                                        columns: webGrid.Columns(
+                                            webGrid.Column(columnName: "", header: "動作", style: "actioncolumn",
+                                                format:
+                                                @<text>
+                                                    @if (ViewBag.Type == "Detail")
+                                                    {
+                                                        <a class='btn btn-link'>編輯</a>
+                                                        <a class='btn btn-link'>刪除</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class='btn btn-link' data-dismiss='modal' onclick='QuestionList_DExid(this)'>編輯</a>
+                                                        <a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>
+                                                    }
+                                                </text>),
+                                            webGrid.Column(columnName: "AddressId", header: "地址代號", style: "departmentId", format:
+                                            @<text>
+                                                <span class="display-mode-address">@item.AddressId</span>
+                                                <input type="hidden" value="@item.AddressId" class="txtAddressId" maxlength="255" name="txtAddressId" />
+                                            </text>),
+                                            webGrid.Column(columnName: "AddressSName", header: "地址簡稱", style: "departmentName", format:
+                                            @<text>
+                                                <span class="display-mode-address">@item.AddressSName</span>
+                                                <input type="hidden" value="@item.AddressSName" class="txtAddress1" maxlength="255" name="txtAddress1" />
+                                            </text>),
+                                            webGrid.Column(columnName: "Address", header: "地址", style: "departmentName", format:
+                                            @<text>
+                                                <span class="display-mode-address">@item.Address</span>
+                                                <input type="hidden" value="@item.Address" class="txtAddress2" maxlength="255" name="txtAddress2" />
+                                            </text>),
+                                            webGrid.Column(columnName: "Contact", header: "聯絡人", style: "departmentName", format:
+                                            @<text>
+                                                <span class="display-mode-address">@item.Contact</span>
+                                                <input type="hidden" value="@item.Contact" class="txtAddressContact" maxlength="30" name="txtAddressContact" />
+                                            </text>),
+                                            webGrid.Column(columnName: "TelNo", header: "電話", style: "departmentName", format:
+                                            @<text>
+                                                <span class="display-mode-address">@item.TelNo</span>
+                                                <input type="hidden" value="@item.TelNo" class="txtAddressTelNo" maxlength="20" name="txtAddressTelNo" />
+                                            </text>),
+                                            webGrid.Column(columnName: "FaxNo", header: "傳真", style: "departmentName", format:
+                                            @<text>
+                                                <span class="display-mode-address">@item.FaxNo</span>
+                                                <input type="hidden" value="@item.FaxNo" class="txtAddressFaxNo" maxlength="20" name="txtAddressFaxNo" />
+                                            </text>),
+                                            webGrid.Column(columnName: "Remark", header: "備註", style: "departmentName", format:
+                                            @<text>
+                                                <span class="display-mode-address">@item.Remark</span>
+                                                <input type="hidden" value="@item.Remark" class="txtAddressRemark" maxlength="255" name="txtAddressRemark" />
+                                            </text>)
+)
+)
+                </div>
+                <div class="text-right">
+                    @if (ViewBag.Type == "New")
+                    {
+                        <button type="submit" class="btn btn-primary savebefore" name="action" value="btnSaveNew" tabindex="12">存檔</button>
+                            <button type="submit" class="btn btn-primary savebefore" name="action" value="btnNextNew" tabindex="13">存檔並新增</button>
+                                <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="14">取消</a>
+                    }
+                    else if (ViewBag.Type == "Edit")
+                    {
+                        <button type="submit" class="btn btn-primary savebefore" name="action" value="btnSaveEdit" tabindex="12">存檔</button>
+                            <button type="submit" class="btn btn-primary savebefore" name="action" value="btnNextEdit" tabindex="13">存檔並新增</button>
+                                <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="14">取消</a>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary" name="action" value="btnEdit" tabindex="12">編輯</button>
+                            <button type="submit" class="btn btn-primary" name="action" value="btnAdd" tabindex="13">複製並新增</button>
+                                <button type="submit" class="btn btn-primary" id="btnDelete" name="action" value="btnDelete" tabindex="14">刪除</button>
+                                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="15">返回列表</a>
+                    }
+                </div>
+                <input type="hidden" id="txtSaveAddress1" name="txtSaveAddress1" />
+                <input type="hidden" id="txtSaveAddress2" name="txtSaveAddress2" />
+            }
+        </div>
+    </div>
+</section>
+<input type="hidden" title="module" value="CMSI10" />
+
+@RenderPage("~/Views/Shared/RecordSelector/record_selector_contact1.cshtml")
+@RenderPage("~/Areas/CMSI10/Views/Shared/QuestionList_D-modal.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")
+@RenderPage("~/Areas/CMSI10/Views/Shared/QuestionList_DExid-modal.cshtml")

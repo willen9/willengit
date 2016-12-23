@@ -1,0 +1,39 @@
+﻿
+<div class='modal fade SupportApl_ProductD-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>支援項目</h4>
+            </div>
+            <div class='modal-body'>
+                <label for="id_SupportApl_ProductDItemId" class="control-label">項次</label>
+                <input type="text" class="form-control" id="id_SupportApl_ProductDItemId" name="SupportApl_ProductDItemId" style="width: 200px; display: inline;" readonly />
+                <br />
+                <label for="id_SupportApl_ProductDProductNo" class="control-label">品號</label>
+                <input type="text" class="form-control" id="id_SupportApl_ProductDProductNo" name="SupportApl_ProductDProductNo" style="width: 200px; display: inline;" maxlength="40" />
+                <button type="button" class="btn btn-default" style="display:inline;" id="btnSupportAplProductDProductNo" tabindex="7">Q</button>
+                <br />
+                <label for="id_SupportApl_ProductDProductName" class="control-label">品名</label>
+                <input type="text" class="form-control" id="id_SupportApl_ProductDProductName" name="SupportApl_ProductDProductName" style="width: 200px; display: inline;" readonly/>
+                <br />
+                <label for="id_SupportApl_ProductDQTY" class="control-label">需領數量</label>
+                <input type="text" class="form-control" id="id_SupportApl_ProductDQTY" name="SupportApl_ProductDQTY" style="width: 200px; display: inline;" onblur="if(isNaN(this.value))this.value=''"/>
+                <br />
+                <label for="id_SupportApl_ProductDPickingQTY" class="control-label">已領數量</label>
+                <input type="text" class="form-control" id="id_SupportApl_ProductDPickingQTY" name="SupportApl_ProductDPickingQTY" style="width: 200px; display: inline;" onblur="if(isNaN(this.value))this.value=''" />
+                <br />
+                <label for="id_SupportApl_ProductDUnit" class="control-label">單位</label>
+                <input type="text" class="form-control" id="id_SupportApl_ProductDUnit" name="SupportApl_ProductDUnit" maxlength="12" style="width: 200px; display: inline;"  tabindex="8"/>
+                <br />
+                <label for="id_SupportApl_ProductDRemark" class="control-label">備註</label>
+                <textarea class="form-control" id="id_SupportApl_ProductDRemark" name="id_SupportApl_ProductDRemark" cols="40" rows="5" maxlength="255" tabindex="9"></textarea>
+                <br />
+                
+            </div>
+            <div class='modal-footer'>
+                <button type="button" class="btn btn-default" name="action" value="btnAllot" onclick="checkProductD()" tabindex="10">確定</button>
+                <button type='button' class='btn btn-default' data-dismiss='modal' tabindex="11">取消</button>
+            </div>
+        </div>
+    </div>
+</div>

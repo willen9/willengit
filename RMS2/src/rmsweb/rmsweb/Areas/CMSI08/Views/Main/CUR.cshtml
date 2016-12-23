@@ -1,0 +1,127 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#from-ProductCategory').bootstrapValidator({
+            fields: {
+                brandId: {
+                    validators: {
+                        notEmpty: {
+                            message: '品牌代號不能為空！'
+                        },
+                        callback: {
+                            message: '品牌代號已存在！',
+                            callback: function (value, validator) {
+                                var res = true;
+                                if (document.getElementById("id_brandId").readOnly == true) {
+                                    return res;
+                                }
+                                if (value.length > 0) {
+                                    $.ajax({
+                                        //url: '/cmsi04/curid',
+                                        url: '@Url.Action("CURMID", "Main")',
+                                        data: JSON.stringify({ "brandId": value }),
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function (data) {
+                                            res = data;
+                                        }
+                                    });
+                                }
+                                return res;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+</script>
+<section class="content-header">
+    <h1>品牌類型資料維護</h1>
+</section>
+<section class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            <form id="from-ProductCategory" method="post" action="@Url.Action("CUR", "Main")">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_brandId" class="col-md-3 col-lg-3 control-label">品牌代號</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_brandId" name="brandId" maxlength="10" value="@ViewBag.BrandId" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_brandId" name="brandId" maxlength="10" value="@ViewBag.BrandId" />
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_brandName" class="col-md-3 col-lg-3 control-label">品牌名稱</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_brandName" name="brandName" maxlength="40" value="@ViewBag.BrandName" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_brandName" name="brandName" maxlength="40" value="@ViewBag.BrandName" />
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_remark" class="col-md-3 col-lg-3 control-label">備註</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_remark" name="remark" value="@ViewBag.Remark" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_remark" value="@ViewBag.Remark" name="remark" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <p style="color: red;">@ViewBag.Msg</p>
+                <div class="text-right">
+                    @if (@ViewBag.Type == "Edit")
+                    {
+                        <button type=submit class="btn btn-primary" name="action" value="Edit">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i> 存檔
+                        </button>
+                            <button type=submit class="btn btn-primary" name="action" value="EditAgain">存檔並新增</button>
+                                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+                    else if (ViewBag.Type == "Details")
+                    {
+                        <button type=submit class="btn btn-primary" name="action" value="EditDetails">編輯</button>
+                            @*<button type=submit class="btn btn-primary" name="action" value="CopyAddDetails">複製並新增</button>*@
+                                    <a class="btn btn-primary" onclick="deleteInfo('@Url.Action("Delete", "Main", new { BrandId = @ViewBag.BrandId })','@ViewBag.BrandName')" href="#">刪除</a>
+                                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">返回列表</a>
+                    }
+                    else
+                    {
+                        <button type=submit class="btn btn-primary" name="action" value="Save">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i> 存檔
+                        </button>
+                            <button type=submit class="btn btn-primary" name="action" value="SaveAgain">存檔並新增</button>
+                                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<input type="hidden" title="module" value="CMSI08" />
+@RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")

@@ -1,0 +1,24 @@
+﻿.table .actioncolumn {
+    width: 85px;
+}
+
+.table .ProductNo {
+    width: 170px;
+}
+
+.table .productName {
+    width: 230px;
+}
+
+.table .productSpec {
+    width: 220px;
+}
+
+.table .BaseUnit {
+    width: 75px;
+    text-align: right;
+}
+
+.table .ProductCategory{
+    width: 130px;
+}

@@ -1,0 +1,19 @@
+﻿{
+  "h.RGAType": "維修單別",
+  "h.OrderSName": "單據名稱",
+  "h.CustomerName": "客戶簡稱",
+  "h.AddressSName": "地址簡稱",
+  "h.ProductNo": "品號",
+  "h.ProductName": "品名",
+  "h.SerialNo": "序號",
+  "h.StatusCode": "狀態",
+  "h.RepairmanName": "維修人員",
+  "h.AssetNo": "資產編號",
+  "h.PCompletionDate": "預計完工日期",
+  "h.Company": "公司別",
+  "h.UserGroup": "群組",
+  "h.Creator": "建立人員",
+  "h.CreateDate": "建立日期",
+  "h.Modifier": "修改人員",
+  "h.ModiDate": "修改日期"
+}

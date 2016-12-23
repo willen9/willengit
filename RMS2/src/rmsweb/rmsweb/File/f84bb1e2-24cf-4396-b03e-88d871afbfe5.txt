@@ -1,0 +1,32 @@
+ @*alert(1);
+                var viewStart = $.fullCalendar.formatDate(view.start,"yyyy-MM-dd");
+                var viewEnd = $.fullCalendar.formatDate(view.end,"yyyy-MM-dd");
+                alert(viewStart);
+                alert(viewEnd);
+                $("#calendar").fullCalendar('removeEvents');
+                $.ajax({
+                    url: '@Url.Action("GetEventsByMonth", "Main")',
+                    type: "POST",
+                    datatype: 'JSON',
+                    data: JSON.stringify({ "ProductNo": $("#txtProductNo_d_Exit").val()}),
+                    contentType: 'application/x-www-form-urlencoded',
+                    success: function (data) {
+                        for(var i=0;i<data.length;i++) {
+                            var obj = new Object();
+                            obj.id = data[i].guID;
+                            obj.title = data[i].Title;
+                            obj.start = $.fullCalendar.parseDate(data[i].StartDate);
+                            obj.end = $.fullCalendar.parseDate(data[i].EndDate);
+                            $("#calendar").fullCalendar('renderEvent',obj,true);
+                        }
+
+                    }
+                })*@
+
+
+
+0d7180b4
+
+49ff785b
+
+f7e91d07

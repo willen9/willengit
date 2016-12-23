@@ -1,0 +1,19 @@
+﻿
+@using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+{
+    <div class='modal fade choose-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>請選擇異動對象來源</h4>
+            </div>
+                <div class='modal-body'>
+                    <button type="button" class="btn btn-default" style="display:inline;" id="btnCustomer">客戶資料</button>
+                    <button type="button" class="btn btn-default" style="display:inline;" id="btnVendor">廠商資料</button>
+                </div>
+        </div>
+    </div>
+</div>
+}
+@RenderPage("../../../../Views/Shared/RecordSelector/record_selector_customer.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/record_selector_vendor.cshtml")

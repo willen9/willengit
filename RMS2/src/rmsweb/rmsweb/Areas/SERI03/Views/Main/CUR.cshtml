@@ -1,0 +1,459 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#from-QuestionList').bootstrapValidator({
+            fields: {
+                QuestionNo: {
+                    validators: {
+                        notEmpty: {
+                            message: '問題代號不能為空！'
+                        },
+                        callback: {
+                            message: '輸入的問題代號已存在，請重新輸入!',
+                            callback: function (value, validator) {
+                                var res = true;
+                                if (value != "")
+                                {
+                                    $.ajax({
+                                        url: '@Url.Action("IsQuestionNo", "Main")',
+                                        data: JSON.stringify({ "QuestionNo": value }),
+                                        type: 'POST',
+                                        async:false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function (data) {
+                                            if (data == false) {
+                                                res = false;
+                                            }
+                                        }
+                                    })
+                                }
+                                return res;
+                            }
+                        }
+                    }
+                },
+                QuestionTopic: {
+                    validators: {
+                        notEmpty: {
+                            message: '問題描述不能為空！'
+                        }
+                    }
+                }
+            }
+        });
+
+    });
+
+    $(function () {
+        $("#btnQuestionList_D").click(function () {
+            $("#id_QuestionList_DSolution").val("");
+            $("#id_QuestionList_DRemark").val("");
+            $('.QuestionList_D-modal').modal();
+        });
+    });
+
+    function btnAdd() {
+        if (document.getElementById("id_QuestionNo").value == "") {
+            $("#msg_information").html("問題代號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        if (document.getElementById("id_QuestionTopic").value == "") {
+            $("#msg_information").html("問題描述不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        var ajaxTrue = true;
+
+        $.ajax({
+            url: '@Url.Action("IsQuestionNo", "Main")',
+            data: JSON.stringify({ "QuestionNo": document.getElementById("id_QuestionNo").value }),
+            type: 'POST',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data == false) {
+                    $("#msg_information").html("輸入的問題代號已存在，請重新輸入！");
+                    $('.msg-modal-lg').modal();
+                    ajaxTrue = false;
+                    return;
+                }
+            }
+        })
+
+        if (ajaxTrue == true)
+        {
+            $.ajax({
+                url: '@Url.Action("Add", "Main")',
+                data: $('#from-QuestionList').serialize(),
+                type: 'POST',
+                contentType: 'application/x-www-form-urlencoded',
+                success: function (data) {
+                    var strData = data.split('-');
+                    if (strData[0] == "NO") {
+                        $("#msg_information").html(strData[1]);
+                        $('.msg-modal-lg').modal();
+                    } else {
+                        window.location.href = '@Url.Action("Index", "Main")';
+                    }
+
+                }
+            })
+        }
+        
+    };
+
+    function btnAddAgain() {
+        if (document.getElementById("id_QuestionNo").value == "") {
+            $("#msg_information").html("問題代號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        if (document.getElementById("id_QuestionTopic").value == "") {
+            $("#msg_information").html("問題描述不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        var ajaxTrue = true;
+
+        $.ajax({
+            url: '@Url.Action("IsQuestionNo", "Main")',
+            data: JSON.stringify({ "QuestionNo": document.getElementById("id_QuestionNo").value }),
+            type: 'POST',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data == false) {
+                    $("#msg_information").html("輸入的問題代號已存在，請重新輸入！");
+                    $('.msg-modal-lg').modal();
+                    ajaxTrue = false;
+                    return;
+                }
+            }
+        })
+
+        if (ajaxTrue == true) {
+            $.ajax({
+                url: '@Url.Action("Add", "Main")',
+                data: $('#from-QuestionList').serialize(),
+                type: 'POST',
+                contentType: 'application/x-www-form-urlencoded',
+                success: function (data) {
+                    var strData = data.split('-');
+                    if (strData[0] == "NO") {
+                        $("#msg_information").html(strData[1]);
+                        $('.msg-modal-lg').modal();
+                    } else {
+                        window.location.href = '@Url.Action("CUR", "Main")';
+                    }
+
+                }
+            })
+        }
+    };
+
+    function btnExit() {
+        if (document.getElementById("id_QuestionTopic").value == "") {
+            $("#msg_information").html("問題描述不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("Exit", "Main")',
+            data: $('#from-QuestionList').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("Index", "Main")';
+                }
+
+            }
+        })
+    };
+
+    function btnExitAgain() {
+        if (document.getElementById("id_QuestionTopic").value == "") {
+            $("#msg_information").html("問題描述不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("Exit", "Main")',
+            data: $('#from-QuestionList').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("CUR", "Main")';
+                }
+
+            }
+        })
+    };
+
+    function check() {
+        if ($("#id_QuestionList_DSolution").val() == '') {
+            $("#msg_information").html("解決方法不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        var stritemid = addZero(document.getElementById("divQuestionList_DGrid").getElementsByTagName('tr').length.toString(), 4);
+
+        $("#divQuestionList_DGrid table tbody").append("<tr>" +
+            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='QuestionList_DExid(this)'>編輯</a>|<a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>" +
+            "<td class='ItemId'>" + stritemid + "<input type='hidden' class='strCItemId' name='strCItemId' value='" + stritemid + "'></td>" +
+            "<td class='Solution'>" + $("#id_QuestionList_DSolution").val() + "<input type='hidden' class='strCSolution' name='strCSolution' value='" + $("#id_QuestionList_DSolution").val() + "'></td>" +
+            "<td class='Remark'>" + $("#id_QuestionList_DRemark").val() + "<input type='hidden' class='strCRemark' name='strCRemark' value='" + $("#id_QuestionList_DRemark").val() + "'></td>" +
+            "</tr>");
+
+        $(".QuestionList_D-modal").modal("hide");
+    };
+
+    function RemoveProcess(id) {
+        $(id).parents('tr:first').remove()
+        var table = document.getElementById("divQuestionList_DGrid");
+        var trs = table.getElementsByTagName('tr');
+        var stritem = "";
+        for (var i = 1; i < trs.length; i++) {
+            stritem = addZero((i).toString(), 4);
+            trs[i].cells[1].innerHTML = stritem + "<input type='hidden' class='strCItemId' name='strCItemId' value='" + stritem + "'>";
+
+        }
+    };
+
+    function QuestionList_DExid(id) {
+        $("#id_QuestionList_DExidItemId").val($(id).closest('tr').find(".strCItemId").val());
+        $("#id_QuestionList_DExidSolution").val($(id).closest('tr').find(".strCSolution").val());
+        $("#id_QuestionList_DExidRemark").val($(id).closest('tr').find(".strCRemark").val());
+        $('.QuestionList_DExid-modal').modal();
+    };
+
+    function checkExid() {
+        if ($("#id_QuestionList_DExidSolution").val() == '') {
+            $("#msg_information").html("解決方法不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        var table = document.getElementById("divQuestionList_DGrid");
+        var trs = table.getElementsByTagName('tr');
+        for (var i = 0; i < trs.length; i++) {
+            if ($(trs[i]).closest('tr').find(".strCItemId").val() == $("#id_QuestionList_DExidItemId").val())
+            {
+                trs[i].innerHTML = "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='QuestionList_DExid(this)'>編輯</a>|<a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>" +
+                "<td class='ItemId'>" + $("#id_QuestionList_DExidItemId").val() + "<input type='hidden' class='strCItemId' name='strCItemId' value='" + $("#id_QuestionList_DExidItemId").val() + "'></td>" +
+                "<td class='Solution'>" + $("#id_QuestionList_DExidSolution").val() + "<input type='hidden' class='strCSolution' name='strCSolution' value='" + $("#id_QuestionList_DExidSolution").val() + "'></td>" +
+                "<td class='Remark'>" + $("#id_QuestionList_DExidRemark").val() + "<input type='hidden' class='strCRemark' name='strCRemark' value='" + $("#id_QuestionList_DExidRemark").val() + "'></td>";
+            }
+            
+        }
+        $(".QuestionList_DExid-modal").modal("hide");
+    };
+</script>
+<section class="content-header">
+    <h1>維修問題維護</h1>
+</section>
+<section class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            <form id="from-QuestionList" method="post">
+                <div class="row">
+                    <div class="form-group">
+                            <label for="id_QuestionNo" class="col-md-3 col-lg-3 control-label">問題代號</label>
+                            <div class="col-md-9 col-lg-9">
+                                @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Details")
+                                {
+                                    <input type="text" class="form-control" id="id_QuestionNo" name="QuestionNo" value="@ViewBag.QuestionNo" readonly />
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="id_QuestionNo" name="QuestionNo" value="@ViewBag.QuestionNo" maxlength="6" tabindex="1" />
+                                }
+                            </div>
+
+                            <label for="id_QuestionTopic" class="col-md-3 col-lg-3 control-label">問題描述</label>
+                            <div class="col-md-9 col-lg-9">
+                                @if (@ViewBag.Type == "Details")
+                                {
+                                    <input type="text" class="form-control" id="id_QuestionTopic" name="QuestionTopic" value="@ViewBag.QuestionTopic" readonly />
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="id_QuestionTopic" name="QuestionTopic" value="@ViewBag.QuestionTopic" maxlength="60" tabindex="2" />
+                                }
+                            </div>
+                        </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_QuestionDetail" class="col-md-3 col-lg-3 control-label">詳細內容</label>
+                        <div class="col-md-9 col-lg-9">
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_QuestionDetail" name="QuestionDetail" value="@ViewBag.QuestionDetail" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_QuestionDetail" name="QuestionDetail" value="@ViewBag.QuestionDetail" maxlength="255" tabindex="3" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_Remark" class="col-md-3 col-lg-3 control-label">備註</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <textarea class="form-control" id="id_Remark" name="Remark" cols="40" rows="5" maxlength="1000" readonly>@ViewBag.Remark</textarea>
+                            }
+                            else
+                            {
+                                <textarea class="form-control" id="id_Remark" name="Remark" cols="40" rows="5" maxlength="1000" tabindex="4">@ViewBag.Remark</textarea>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <h5>解決方法</h5>
+                <div class="text-right">
+                    @if (@ViewBag.Type == "Details")
+                    {
+                        <button type="button" class="btn btn-primary" id="btnQuestionList_D" name="action" value="btnQuestionList_D" aria-label="Left Align" disabled>
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" id="btnQuestionList_D" name="action" value="btnQuestionList_D" aria-label="Left Align" tabindex="5">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
+                        </button>
+                    }
+                </div>
+                <hr />
+                <div id="divQuestionList_DGrid" style="height: 300px;overflow-y: auto;">
+                        @{
+                            var webGrid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.QuestionList_D>)ViewData["QuestionList_D"], canPage: false, canSort: false, ajaxUpdateContainerId: "divQuestionList_DGrid");
+                        }
+                        @if (@ViewBag.Type == "Details")
+                        {
+                            @webGrid.GetHtml(
+
+                                tableStyle: "table table-striped table-hover",
+                                columns: webGrid.Columns(
+                                    webGrid.Column(columnName: "", header: "動作", style: "actioncolumn",
+                                        format:
+                                        @<text>
+                                            <a class='btn btn-link'>編輯</a>|
+                                            <a class='btn btn-link'>刪除</a>
+                                        </text>),
+                                        webGrid.Column(columnName: "ItemId", header: "項次", style: "ItemId",
+                                        format:
+                                        @<text>
+                                            @item.ItemId
+                                            <input type="hidden" class="strCItemId" name="strCItemId" value='@item.ItemId'>
+                                        </text>),
+                                        webGrid.Column(columnName: "Solution", header: "處理狀況說明", style: "Solution",
+                                        format:
+                                        @<text>
+                                            @item.Solution
+                                            <input type="hidden" class="strCSolution" name="strCSolution" value='@item.Solution'>
+                                        </text>),
+                                        webGrid.Column(columnName: "Remark", header: "備註", style: "Remark",
+                                        format:
+                                        @<text>
+                                            @item.Remark
+                                            <input type="hidden" class="strCRemark" name="strCRemark" value='@item.Remark'>
+                                        </text>)
+    )
+)
+                        }
+                        else
+                        {
+                            @webGrid.GetHtml(
+
+                                tableStyle: "table table-striped table-hover",
+                                columns: webGrid.Columns(
+                                    webGrid.Column(columnName: "", header: "動作", style: "actioncolumn",
+                                        format:
+                                        @<text>
+                                            <a class='btn btn-link' data-dismiss='modal' onclick='QuestionList_DExid(this)'>編輯</a>|
+                                            <a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>
+                                        </text>),
+                                            webGrid.Column(columnName: "ItemId", header: "項次", style: "ItemId",
+                                        format:
+                                        @<text>
+                                            @item.ItemId
+                                            <input type="hidden" class="strCItemId" name="strCItemId" value='@item.ItemId'>
+                                        </text>),
+                                        webGrid.Column(columnName: "Solution", header: "處理狀況說明", style: "Solution",
+                                        format:
+                                        @<text>
+                                            @item.Solution
+                                            <input type="hidden" class="strCSolution" name="strCSolution" value='@item.Solution'>
+                                        </text>),
+                                        webGrid.Column(columnName: "Remark", header: "備註", style: "Remark",
+                                        format:
+                                        @<text>
+                                            @item.Remark
+                                            <input type="hidden" class="strCRemark" name="strCRemark" value='@item.Remark'>
+                                        </text>)
+                )
+        )
+                        }
+                    </div>
+                <p style="color: red;">@ViewBag.Msg</p>
+                <div class="text-right">
+                    @if (@ViewBag.Type == "Edit")
+                    {
+                        <button type="button" class="btn btn-primary" name="action" value="Edit" onclick="btnExit()">存檔</button>
+                        <button type="button" class="btn btn-primary" name="action" value="EditAgain" onclick="btnExitAgain()">存檔並新增</button>
+                        if (@ViewBag.cur == "0")
+                        {
+                            <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-primary" href="@Url.Action("Details", "Main", new { QuestionNo = @ViewBag.QuestionNo})">取消</a>
+                        }
+                    }
+                    else if (@ViewBag.Type == "Details")
+                    {
+
+                        <a class="btn btn-primary" href="@Url.Action("Edit", "Main", new { QuestionNo = @ViewBag.QuestionNo,cur='1'})">編輯</a>
+                        <a class="btn btn-primary" href="@Url.Action("Show", "Main", new { QuestionNo = @ViewBag.QuestionNo })">複製並新增</a>
+                        <a class="btn btn-primary" onclick="deleteInfo('@Url.Action("Delete", "Main", new { QuestionNo = @ViewBag.QuestionNo })', '@ViewBag.QuestionNo 問題')">刪除</a>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">返回列表</a>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" name="action" value="Save" onclick="btnAdd()">存檔</button>
+                        <button type=button class="btn btn-primary" name="action" value="SaveAgain" onclick="btnAddAgain()">存檔並新增</button>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/record_selector_product.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")
+@RenderPage("~/Areas/SERI03/Views/Shared/QuestionList_D-modal.cshtml")
+@RenderPage("~/Areas/SERI03/Views/Shared/QuestionList_DExid-modal.cshtml")

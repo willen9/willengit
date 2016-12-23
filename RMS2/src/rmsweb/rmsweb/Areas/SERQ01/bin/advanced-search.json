@@ -1,0 +1,19 @@
+﻿{
+  "c.CustomerName": "客戶名稱",
+  "d.PartName": "零件品名",
+  "d.QTY": "數量",
+  "d.UnitPrice": "單價",
+  "d.PreferentialPrice": "優惠價格",
+  "d.QuotationType": "報價單別",
+  "d.QuotationNo": "報價單號",
+  "h.SourceOrderType": "維修單別",
+  "h.SourceOrderNo": "維修單號",
+  "h.ProductNo": "品名",
+  "h.Remark": "備註",
+  "h.Company": "公司別",
+  "h.UserGroup": "群組",
+  "h.Creator": "建立人員",
+  "h.CreateDate": "建立日期",
+  "h.Modifier": "修改人員",
+  "h.ModiDate": "修改日期"
+}

@@ -1,0 +1,116 @@
+﻿@section Styles
+{
+    <link rel="stylesheet" href="@Url.Content("~/bower_components/fullcalendar/dist/fullcalendar.min.css")" />
+}
+@section Javascripts
+{
+    <script type="text/javascript" src="@Url.Content("~/bower_components/moment/min/moment.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/bower_components/fullcalendar/dist/fullcalendar.min.js")"></script>    
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#submitButton-imageUploader").click(function () {
+            var url = $("#id_fileUpload").val();
+            if (url.trim() == "") {
+                alert('請選擇要上傳的文件');
+                return false;
+            } else {
+                if (url.split(".")[url.split(".").length - 1].toUpperCase() != "CSV") {
+                    alert('文件格式不正確');
+                    return false;
+                }
+                $.ajaxFileUpload({
+                    //url: '/cmsi05',
+                    url: '@Url.Action("Index", "Main")',
+                    type: 'POST',
+                    secureuri: false,
+                    fileElementId: 'id_fileUpload',//file标签的id
+                    dataType: 'json',//返回数据的类型
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            alert(serverData[1]);
+                        }
+                        else {
+                            window.location = '@Url.Action("Index", "Main")';
+                        }
+                    },
+                    error: function (data, status, e) {
+                        alert(e);
+                    }
+                });
+            }
+        });
+
+    });
+</script>
+
+<section class="content-header">
+    <h1>行事曆維護</h1>
+</section>
+<section class="content">
+    <div class="text-right">
+        <button type="button" class="btn btn-primary" aria-label="Left Align" data-toggle="modal" data-target="#imageUploader">
+            <span class="glyphicon glyphicon-import" aria-hidden="true"></span> 匯入
+        </button>
+    </div>
+    <br />
+    <div class="box box-success">
+        <div class="box-body" style="padding-left: 5px; padding-right: 5px;">
+            <div id="calendar"></div>
+        </div>        
+    </div>    
+    <script>
+        $('#calendar').fullCalendar({
+            eventClick: function (calEvent, jsEvent, view) {
+                $("#dataTitle").val(calEvent.title);
+                $("#dataStart").val(calEvent.start.format('YYYY/MM/DD'));
+                var urlid = calEvent.id;
+                var url = '@Url.Action("DelEvents", "Main")'
+                $("#del").attr('href', url+"?id="+urlid);
+                $(".data-modal-lg").modal();
+            },
+            events: function (start, end, timezone, callback) {
+                $(".fc-sat").css('backgroundColor', '#FFF7FB');//这个是周六的TD
+                $(".fc-sun").css('backgroundColor', '#FFF7FB');//这个是周日的TD
+                $(".fc-sat").css('borderColor', '#E0E0E0');//这个是周六的TD
+                $(".fc-sun").css('borderColor', '#E0E0E0');//这个是周日的TD
+                $.ajax({
+                    url: '@Url.Action("GetEventsByMonth", "Main")',
+                    data: JSON.stringify({ "month": $('#calendar').fullCalendar('getDate').format('YYYYMM') }),
+                    type: "POST",
+                    datatype: 'JSON',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (doc) {
+                        var events = [];
+                        var Maintain = eval(doc);
+                        if (Maintain.length > 0)
+                        {
+                            for (var i = 0; i < Maintain.length; i++) {
+                                events.push({
+                                    id: Maintain[i].guID,
+                                    title: Maintain[i].Title,
+                                    start: Maintain[i].StartDate,
+                                    end: Maintain[i].StartDate,
+                                    //backgroundColor: "red"
+                                });
+                                //if (Maintain[i].Holiday == "Y")
+                                //{
+                                //    $("td[data-date='" + Maintain[i].StartDate + "']").css('backgroundColor', '#FFFF37');
+                                //}
+                                //if (Maintain[i].InCounting == "Y") {
+                                //    $("td[data-date='" + Maintain[i].StartDate + "']").css('backgroundColor', '#E0E0E0');
+                                //}
+                            }
+                        }
+                        callback(events);
+                    }
+                });
+            }
+        });
+    </script>
+</section>
+<input type="hidden" title="module" value="CMSI06" />
+@RenderPage("~/Areas/CMSI06/Views/Shared/data-dialog.cshtml")
+@using REGAL.MVC.UI.Bootstrap;
+@(Html.REGAL().FileUpload(name: "imageUploader", description: "The maximum file upload size is 500 KB.", cssClass: "modal-vertical-center"))

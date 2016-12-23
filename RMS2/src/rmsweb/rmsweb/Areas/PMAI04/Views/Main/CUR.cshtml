@@ -1,0 +1,2390 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#from-PurchasedSerial').bootstrapValidator({
+            fields: {
+                ProductNo: {
+                    validators: {
+                        notEmpty: {
+                            message: '品號不能為空！'
+                        }
+                    }
+                },
+                SerialNo: {
+                    validators: {
+                        notEmpty: {
+                            message: '序號不能為空！'
+                        },
+                        callback: {
+                            message: '輸入的商品序號已存在，請重新輸入!',
+                            callback: function (value, validator) {
+                                var res = true;
+                                if (value != "") {
+                                    $.ajax({
+                                        url: '@Url.Action("SerialNo", "Main")',
+                                        data: JSON.stringify({ "SerialNo": value }),
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function (data) {
+                                            if (data == false) {
+                                                res = false;
+                                            }
+                                        }
+                                    })
+                                }
+                                return res;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        $("#id_OrderDate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+
+        $("#id_SaleDate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+
+        $("#id_ConfirmedDate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+
+        $("#id_WarrantySDate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+
+        $("#id_WarrantyEDate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+
+        $("#id_SupportApl_ProcessDProcessDate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+    });
+
+    $(function () {
+        $('#id_RoutineSerOrderType').blur(function () {
+            if (document.getElementById("id_RoutineSerOrderType").readOnly == true) {
+                return;
+            }
+            if ($("#id_RoutineSerOrderType").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Action("GetOrderTypeName", "Main", new { Area = "CONI01" })',
+                    data: JSON.stringify({ "OrderType": $("#id_RoutineSerOrderType").val(), "OrderCategory": "D2" }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            $('#ordersname').text(serverData[1]);
+                            $('#id_RoutineSerOrderNo').val("");
+                        } else {
+                            $('#ordersname').text(serverData[1]);
+                            $.ajax({
+                                url: '@Url.Action("GetOrderTypeNo", "Main",new { Area = "SUPI05"})',
+                                data: JSON.stringify({ "OrderType": $("#id_RoutineSerOrderType").val().trim() }),
+                                type: 'POST',
+                                contentType: 'application/json; charset=utf-8',
+                                success: function (data) {
+                                    var strData = data.split('-');
+                                    if (strData[0] == "YES") {
+                                        $('#id_RoutineSerOrderNo').val(strData[1]);
+                                    } else {
+                                        $('#id_RoutineSerOrderNo').val(strData[1]);
+                                    }
+                                }
+                            })
+                        }
+                    }
+                })
+            } else {
+                $('#ordersname').text("");
+            }
+        });
+        @*$("#btnRoutineSerOrderType").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchOrderType", "Main", new { Area = "CONI01" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "Col": ",OrderCategory", "Condition": ",=", "conditionValue": ",D2", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divOrderCategoryGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divOrderCategoryGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectOrderType(this)'>選擇</a>" +
+                                    "<td class='OrderTypeType'>" + Maintain[i].OrderType + "</td>" +
+                                    "<td class='OrderSNameType'>" + Maintain[i].OrderSName + "</td>" +
+                                    "<td><input type='hidden' class='OrderCategoryType' name='version' value='" + Maintain[i].OrderCategoryID + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='OrderFNameType' name='version' value='" + Maintain[i].OrderFName + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='CodeModeType' name='version' value='" + Maintain[i].CodeMode + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='SerialNrCodeLengthType' name='version' value='" + Maintain[i].SerialNrCodeLength + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='AutoConfirmType' name='version' value='" + Maintain[i].AutoConfirm + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='CheckExOrderType' name='version' value='" + Maintain[i].CheckExOrder + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='RemarkType' name='version' value='" + Maintain[i].Remark + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='DaysAfterCreateType' name='version' value='" + Maintain[i].DaysAfterCreate + "'>" + "</td>" +
+                                    "</tr>");
+                    }
+                }
+            });
+            $("#txtOrderType").val("");
+            $("#txtOrderSName").val("");
+            $("#OrderCategoryPage").val("1");
+            $(".record-selector-orderCategory-modal").modal();
+
+        });
+
+        $("#btnOrderTypeInfo").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchOrderType", "Main", new { Area = "CONI01" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "OrderType": $("#txtOrderType").val(), "OrderSName": $("#txtOrderSName").val(), "OrderCategory": "D2", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divOrderCategoryGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divOrderCategoryGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectOrderType(this)'>選擇</a>" +
+                                    "<td class='OrderTypeType'>" + Maintain[i].OrderType + "</td>" +
+                                    "<td class='OrderSNameType'>" + Maintain[i].OrderSName + "</td>" +
+                                    "<td><input type='hidden' class='OrderCategoryType' name='version' value='" + Maintain[i].OrderCategoryID + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='OrderFNameType' name='version' value='" + Maintain[i].OrderFName + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='CodeModeType' name='version' value='" + Maintain[i].CodeMode + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='SerialNrCodeLengthType' name='version' value='" + Maintain[i].SerialNrCodeLength + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='AutoConfirmType' name='version' value='" + Maintain[i].AutoConfirm + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='CheckExOrderType' name='version' value='" + Maintain[i].CheckExOrder + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='RemarkType' name='version' value='" + Maintain[i].Remark + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='DaysAfterCreateType' name='version' value='" + Maintain[i].DaysAfterCreate + "'>" + "</td>" +
+                                    "</tr>");
+                    }
+                }
+            });
+            $("#OrderCategoryPage").val("1");
+        });
+
+        $("#divOrderCategoryGrid").scroll(function () {
+            var Page = document.getElementById("OrderCategoryPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchOrderType", "Main", new { Area = "CONI01" })',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "OrderType": $("#txtOrderType").val(), "OrderSName": $("#txtOrderSName").val(), "OrderCategory": "D2", Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divOrderCategoryGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectOrderType(this)'>選擇</a>" +
+                                    "<td class='OrderTypeType'>" + Maintain[i].OrderType + "</td>" +
+                                    "<td class='OrderSNameType'>" + Maintain[i].OrderSName + "</td>" +
+                                    "<td><input type='hidden' class='OrderCategoryType' name='version' value='" + Maintain[i].OrderCategoryID + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='OrderFNameType' name='version' value='" + Maintain[i].OrderFName + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='CodeModeType' name='version' value='" + Maintain[i].CodeMode + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='SerialNrCodeLengthType' name='version' value='" + Maintain[i].SerialNrCodeLength + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='AutoConfirmType' name='version' value='" + Maintain[i].AutoConfirm + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='CheckExOrderType' name='version' value='" + Maintain[i].CheckExOrder + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='RemarkType' name='version' value='" + Maintain[i].Remark + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='DaysAfterCreateType' name='version' value='" + Maintain[i].DaysAfterCreate + "'>" + "</td>" +
+                                    "</tr>");
+                            }
+                        }
+                    });
+                    $("#OrderCategoryPage").val(Page);
+                }
+            }
+
+        });*@
+
+        @*$("#btnCustomer").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchCustomer", "Main", new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "CustomerId": $("#id_CustomerId").val().trim(), "Col": "", "Condition": "", "conditionValue": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divCustGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divCustGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectCustomer(this)'>選擇</a>" +
+                                "<td class='CustomerIdType'>" + Maintain[i].CustomerId + "</td>" +
+                                "<td class='CustomerNameType'>" + Maintain[i].CustomerName + "</td>" +
+                                "<td class='CustomerTypeType'>" + Maintain[i].CustomerType + "</td>" +
+                                "<td class='ContactType'>" + Maintain[i].Contact + "</td>" +
+                                "<td class='TelNoType'>" + Maintain[i].TelNo + "</td>" +
+                                "<td class='SalesType'>" + Maintain[i].SalesName + "</td><td><input type='hidden' class='SalesIDType' name='sales' value='"
+                                + Maintain[i].Sales + "'>" + "</td>" +
+                                "<td><input type='hidden' class='CurrencyIdType' name='version' value='" + Maintain[i].CurrencyId + "'>" + "</td>" +
+                                "<td><input type='hidden' class='TaxRateType' name='version' value='" + Maintain[i].TaxRate + "'>" + "</td>" +
+                                "<td><input type='hidden' class='FaxNoType' name='version' value='" + Maintain[i].FaxNo + "'>" + "</td>" +
+                                "<td><input type='hidden' class='EmailType' name='version' value='" + Maintain[i].Email + "'>" + "</td>" +
+                                "<td><input type='hidden' class='AddressSNameType' name='version' value='" + Maintain[i].AddressSName + "'>" + "</td>" +
+                                "<td><input type='hidden' class='AddressType' name='version' value='" + Maintain[i].Address + "'>" + "</td>" +
+                                "<td><input type='hidden' class='RemarkType' name='version' value='" + Maintain[i].Remark + "'>" + "</td>" +
+                                "<td><input type='hidden' class='CustomerFNameType' name='version' value='" + Maintain[i].CustomerFName + "'>" + "</td>" +
+                                "</tr>");
+
+                    }
+                }
+            });
+            $("#txtCustomerId").val("");
+            $("#txtCustomerName").val("");
+            $("#CustPage").val("1");
+            $(".record-selector-customer-modal").modal();
+        });
+
+        $("#btncustomerInfo").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchCustomer", "Main", new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "CustomerId": $("#txtCustomerId").val(), "Col": $("#addCustomer_Col").val(), "Condition": $("#addCustomer_Condition").val(), "conditionValue": $("#addCustomer_conditionValue").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divCustGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divCustGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectCustomer(this)'>選擇</a>" +
+                                "<td class='CustomerIdType'>" + Maintain[i].CustomerId + "</td>" +
+                                "<td class='CustomerNameType'>" + Maintain[i].CustomerName + "</td>" +
+                                "<td class='CustomerTypeType'>" + Maintain[i].CustomerType + "</td>" +
+                                "<td class='ContactType'>" + Maintain[i].Contact + "</td>" +
+                                "<td class='TelNoType'>" + Maintain[i].TelNo + "</td>" +
+                                "<td class='SalesType'>" + Maintain[i].SalesName + "</td><td><input type='hidden' class='SalesIDType' name='sales' value='"
+                                + Maintain[i].Sales + "'>" + "</td>" +
+                                "<td><input type='hidden' class='CurrencyIdType' name='version' value='" + Maintain[i].CurrencyId + "'>" + "</td>" +
+                                "<td><input type='hidden' class='TaxRateType' name='version' value='" + Maintain[i].TaxRate + "'>" + "</td>" +
+                                "<td><input type='hidden' class='FaxNoType' name='version' value='" + Maintain[i].FaxNo + "'>" + "</td>" +
+                                "<td><input type='hidden' class='EmailType' name='version' value='" + Maintain[i].Email + "'>" + "</td>" +
+                                "<td><input type='hidden' class='AddressSNameType' name='version' value='" + Maintain[i].AddressSName + "'>" + "</td>" +
+                                "<td><input type='hidden' class='AddressType' name='version' value='" + Maintain[i].Address + "'>" + "</td>" +
+                                "<td><input type='hidden' class='RemarkType' name='version' value='" + Maintain[i].Remark + "'>" + "</td>" +
+                                "<td><input type='hidden' class='CustomerFNameType' name='version' value='" + Maintain[i].CustomerFName + "'>" + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#CustPage").val("1");
+        });
+
+        $("#divCustGrid").scroll(function () {
+            var Page = document.getElementById("CustPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchCustomer", "Main", new { Area = "CONI02" })',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "CustomerId": $("#txtCustomerId").val(), "Col": $("#addCustomer_Col").val(), "Condition": $("#addCustomer_Condition").val(), "conditionValue": $("#addCustomer_conditionValue").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divCustGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectCustomer(this)'>選擇</a>" +
+                                "<td class='CustomerIdType'>" + Maintain[i].CustomerId + "</td>" +
+                                "<td class='CustomerNameType'>" + Maintain[i].CustomerName + "</td>" +
+                                "<td class='CustomerTypeType'>" + Maintain[i].CustomerType + "</td>" +
+                                "<td class='ContactType'>" + Maintain[i].Contact + "</td>" +
+                                "<td class='TelNoType'>" + Maintain[i].TelNo + "</td>" +
+                                "<td class='SalesType'>" + Maintain[i].SalesName + "</td><td><input type='hidden' class='SalesIDType' name='sales' value='"
+                                + Maintain[i].Sales + "'>" + "</td>" +
+                                "<td><input type='hidden' class='CurrencyIdType' name='version' value='" + Maintain[i].CurrencyId + "'>" + "</td>" +
+                                "<td><input type='hidden' class='TaxRateType' name='version' value='" + Maintain[i].TaxRate + "'>" + "</td>" +
+                                "<td><input type='hidden' class='FaxNoType' name='version' value='" + Maintain[i].FaxNo + "'>" + "</td>" +
+                                "<td><input type='hidden' class='EmailType' name='version' value='" + Maintain[i].Email + "'>" + "</td>" +
+                                "<td><input type='hidden' class='AddressSNameType' name='version' value='" + Maintain[i].AddressSName + "'>" + "</td>" +
+                                "<td><input type='hidden' class='AddressType' name='version' value='" + Maintain[i].Address + "'>" + "</td>" +
+                                "<td><input type='hidden' class='RemarkType' name='version' value='" + Maintain[i].Remark + "'>" + "</td>" +
+                                "<td><input type='hidden' class='CustomerFNameType' name='version' value='" + Maintain[i].CustomerFName + "'>" + "</td>" +
+                                "</tr>");
+                            }
+                        }
+                    });
+                    $("#CustPage").val(Page);
+                }
+            }
+
+        });*@
+
+        $("#btnContact").click(function () {
+             if ($("#id_CustomerId").val().trim() == "") {
+                $("#msg_information").html("請先選擇客戶！");
+                $('.msg-modal-lg').modal();
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("SearchCustomerContact", "Main", new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "Col": ",CustomerId", "Condition": ",=", "conditionValue": "," + $("#id_CustomerId").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divContacttGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divContacttGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectContact(this)'>選擇</a>" +
+                                "<td class='ContactIdType'>" + Maintain[i].ContactId + "</td>" +
+                                "<td class='ContactType'>" + Maintain[i].Contact + "</td>" +
+                                "<td class='DepartmentType'>" + Maintain[i].Department + "</td>" +
+                                "<td class='OccupationType'>" + Maintain[i].Occupation + "</td>" +
+                                "<td class='TelNoType'>" + Maintain[i].TelNo + "</td>" +
+                                "<td class='FaxNoType'>" + Maintain[i].FaxNo + "</td>" +
+                                "<td class='EmailType'>" + Maintain[i].Email + "</td>" +
+                                "<td class='RemarkType'>" + Maintain[i].Remark + "</td>" +
+                                "</tr>");
+
+                    }
+                }
+            });
+            $("#id_txtCondition").val("");
+            $("#ContactPage").val("1");
+            $(".record-selector-contact-modal").modal();
+        });
+
+        $("#btnSearchContact").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchCustomerContact", "Main", new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "CustomerId": $("#id_CustomerId").val(), "ContactId": $("#id_txtCondition").val(), "Contact": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divContacttGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divContacttGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectContact(this)'>選擇</a>" +
+                                "<td class='ContactIdType'>" + Maintain[i].ContactId + "</td>" +
+                                "<td class='ContactType'>" + Maintain[i].Contact + "</td>" +
+                                "<td class='DepartmentType'>" + Maintain[i].Department + "</td>" +
+                                "<td class='OccupationType'>" + Maintain[i].Occupation + "</td>" +
+                                "<td class='TelNoType'>" + Maintain[i].TelNo + "</td>" +
+                                "<td class='FaxNoType'>" + Maintain[i].FaxNo + "</td>" +
+                                "<td class='EmailType'>" + Maintain[i].Email + "</td>" +
+                                "<td class='RemarkType'>" + Maintain[i].Remark + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#ContactPage").val("1");
+        });
+
+        $("#divDepartmentGrid").scroll(function () {
+            var Page = document.getElementById("ContactPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchCustomerContact", "Main", new { Area = "CONI02" })',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "CustomerId": $("#id_CustomerId").val(), "ContactId": $("#id_txtCondition").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divContacttGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectContact(this)'>選擇</a>" +
+                                    "<td class='ContactIdType'>" + Maintain[i].ContactId + "</td>" +
+                                    "<td class='ContactType'>" + Maintain[i].Contact + "</td>" +
+                                    "<td class='DepartmentType'>" + Maintain[i].Department + "</td>" +
+                                    "<td class='OccupationType'>" + Maintain[i].Occupation + "</td>" +
+                                    "<td class='TelNoType'>" + Maintain[i].TelNo + "</td>" +
+                                    "<td class='FaxNoType'>" + Maintain[i].FaxNo + "</td>" +
+                                    "<td class='EmailType'>" + Maintain[i].Email + "</td>" +
+                                    "<td class='RemarkType'>" + Maintain[i].Remark + "</td>" +
+                                    "</tr>");
+                            }
+                        }
+                    });
+                    $("#ContactPage").val(Page);
+                }
+            }
+
+        });
+
+        $("#btnSourceOrder").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchContract", "Main", new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ContractType": "", "ContractNo": "", "CustomerId": $("#id_CustomerId").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divContractGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divContractGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectContractType(this)'>選擇</a>" +
+                                "<td class='ContractTypeType'>" + Maintain[i].ContractType + "</td>" +
+                                "<td class='OrderSNameType'>" + Maintain[i].OrderSName + "</td>" +
+                                "<td class='ContractNoType'>" + Maintain[i].ContractNo + "</td>" +
+                                "<td class='VersionType'>" + Maintain[i].Version + "</td>" +
+                                "<td class='CustomerIdType'>" + Maintain[i].CustomerId + "</td>" +
+                                "<td class='CustomerNameType'>" + Maintain[i].CustomerName + "</td>" +
+                                "<td class='CustomerTypeType'>" + Maintain[i].CustomerType + "</td>" +
+                                "<td class='ConfirmedDateType'>" + Maintain[i].ConfirmedDate + "</td>" +
+                                "<td class='ContractSDateType'>" + Maintain[i].ContractSDate + "</td>" +
+                                "<td class='ContractEDateType'>" + Maintain[i].ContractEDate + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#txtContractType").val("");
+            $("#txtContractNo").val("");
+            $("#ContractPage").val("1");
+            $(".record-selector-contract-modal").modal();
+
+        });
+
+        $("#btnSelectContract").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchContract", "Main", new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ContractType": $("#txtContractType").val(), "ContractNo": $("#txtContractNo").val(), "CustomerId": $("#id_CustomerId").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divContractGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divContractGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectContractType(this)'>選擇</a>" +
+                                "<td class='ContractTypeType'>" + Maintain[i].ContractType + "</td>" +
+                                "<td class='OrderSNameType'>" + Maintain[i].OrderSName + "</td>" +
+                                "<td class='ContractNoType'>" + Maintain[i].ContractNo + "</td>" +
+                                "<td class='VersionType'>" + Maintain[i].Version + "</td>" +
+                                "<td class='CustomerIdType'>" + Maintain[i].CustomerId + "</td>" +
+                                "<td class='CustomerNameType'>" + Maintain[i].CustomerName + "</td>" +
+                                "<td class='CustomerTypeType'>" + Maintain[i].CustomerType + "</td>" +
+                                "<td class='ConfirmedDateType'>" + Maintain[i].ConfirmedDate + "</td>" +
+                                "<td class='ContractSDateType'>" + Maintain[i].ContractSDate + "</td>" +
+                                "<td class='ContractEDateType'>" + Maintain[i].ContractEDate + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#ContractPage").val("1");
+        });
+
+        $("#divContractGrid").scroll(function () {
+            var Page = document.getElementById("ContractPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchContract", "Main", new { Area = "CONI02" })',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "ContractType": $("#txtContractType").val(), "ContractNo": $("#txtContractNo").val(), "CustomerId": $("#id_CustomerId").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divContractGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectContractType(this)'>選擇</a>" +
+                                    "<td class='ContractTypeType'>" + Maintain[i].ContractType + "</td>" +
+                                    "<td class='OrderSNameType'>" + Maintain[i].OrderSName + "</td>" +
+                                    "<td class='ContractNoType'>" + Maintain[i].ContractNo + "</td>" +
+                                    "<td class='VersionType'>" + Maintain[i].Version + "</td>" +
+                                    "<td class='CustomerIdType'>" + Maintain[i].CustomerId + "</td>" +
+                                    "<td class='CustomerNameType'>" + Maintain[i].CustomerName + "</td>" +
+                                    "<td class='CustomerTypeType'>" + Maintain[i].CustomerType + "</td>" +
+                                    "<td class='ConfirmedDateType'>" + Maintain[i].ConfirmedDate + "</td>" +
+                                    "<td class='ContractSDateType'>" + Maintain[i].ContractSDate + "</td>" +
+                                    "<td class='ContractEDateType'>" + Maintain[i].ContractEDate + "</td>" +
+                                    "</tr>");
+                            }
+                        }
+                    });
+                    $("#ContractPage").val(Page);
+                }
+            }
+        });
+
+        $("#btnAddressSName").click(function () {
+            if ($("#id_CustomerId").val().trim() == "") {
+                $("#msg_information").html("請先選擇客戶！");
+                $('.msg-modal-lg').modal();
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("SearchCustomerAddress", "Main", new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "Col": ",CustomerId", "Condition": ",=", "conditionValue": "," + $("#id_CustomerId").val().trim(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divCustomerAddressGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divCustomerAddressGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectAddress(this)'>選擇</a>" +
+                                "<td class='AddressIdType'>" + Maintain[i].AddressId + "</td>" +
+                                "<td class='Address1Type'>" + Maintain[i].AddressSName + "</td>" +
+                                "<td class='Address2Type'>" + Maintain[i].Address + "</td>" +
+                                "<td class='ContactType'>" + Maintain[i].Contact + "</td>" +
+                                "<td class='TelNoType'>" + Maintain[i].TelNo + "</td>" +
+                                "<td class='FaxNoType'>" + Maintain[i].FaxNo + "</td>" +
+                                "<td class='RemarkType'>" + Maintain[i].Remark + "</td>" +
+                                "</tr>");
+
+                    }
+                }
+            });
+            $("#txtAddressId").val("");
+            $("#txtAddress1").val("");
+            $("#CustomerAddressPage").val("1");
+            $(".record-selector-customeraddress-modal").modal();
+        });
+
+        $("#btnAddressInfo").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchCustomerAddress", "Main", new { Area = "SUPI05" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "CustomerId": $("#id_CustomerId").val(), "Col": $("#addAddress_Col").val(), "Condition": $("#addAddress_Condition").val(), "conditionValue": $("#addAddress_conditionValue").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divCustomerAddressGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divCustomerAddressGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectAddress(this)'>選擇</a>" +
+                                "<td class='AddressIdType'>" + Maintain[i].AddressId + "</td>" +
+                                "<td class='Address1Type'>" + Maintain[i].AddressSName + "</td>" +
+                                "<td class='Address2Type'>" + Maintain[i].Address + "</td>" +
+                                "<td class='ContactType'>" + Maintain[i].Contact + "</td>" +
+                                "<td class='TelNoType'>" + Maintain[i].TelNo + "</td>" +
+                                "<td class='FaxNoType'>" + Maintain[i].FaxNo + "</td>" +
+                                "<td class='RemarkType'>" + Maintain[i].Remark + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#CustomerAddressPage").val("1");
+        });
+
+        $("#divCustomerAddressGrid").scroll(function () {
+            var Page = document.getElementById("CustomerAddressPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchCustomerAddress", "Main", new { Area = "SUPI05" })',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "CustomerId": $("#id_CustomerId").val(), "Col": $("#addAddress_Col").val(), "Condition": $("#addAddress_Condition").val(), "conditionValue": $("#addAddress_conditionValue").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divCustomerAddressGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectAddress(this)'>選擇</a>" +
+                                    "<td class='AddressIdType'>" + Maintain[i].AddressId + "</td>" +
+                                    "<td class='Address1Type'>" + Maintain[i].AddressSName + "</td>" +
+                                    "<td class='Address2Type'>" + Maintain[i].Address + "</td>" +
+                                    "<td class='ContactType'>" + Maintain[i].Contact + "</td>" +
+                                    "<td class='TelNoType'>" + Maintain[i].TelNo + "</td>" +
+                                    "<td class='FaxNoType'>" + Maintain[i].FaxNo + "</td>" +
+                                    "<td class='RemarkType'>" + Maintain[i].Remark + "</td>" +
+                                    "</tr>");
+                            }
+                        }
+                    });
+                    $("#CustomerAddressPage").val(Page);
+                }
+            }
+
+        });
+
+        $('#id_SerialNo').blur(function () {
+            if (document.getElementById("id_SerialNo").readOnly == true) {
+                return;
+            }
+            if ($("#id_SerialNo").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Action("SearchWarrantyDInfo", "Main", new { Area = "SERI06" })',
+                    data: JSON.stringify({ "ProductNo": $("#id_ProductNo").val().trim(), "SerialNo": $("#id_SerialNo").val().trim(), "ChangeDate": $("#id_OrderDate").val().trim(), "TargetId": $("#id_CustomerId").val(), "WarrantyType": "23" }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#ProductNo").val(data.ProductNo);        //品號
+                        $("#ProductName").val(data.ProductName);        //品號
+                        $("#SerialNo").val(data.SerialNo);        //品號
+                        $("#VendorWarrantyStartDate").val("");        //品號
+                        $("#VendorWarrantyExpiryDate").val("");        //品號
+                        $("#WarrantyStartDate").val(data.WarrantySDate);        //品號
+                        $("#WarrantyExpiryDate").val(data.WarrantyEDate);        //品號
+                        if (data.WarrantySDate < $("#id_OrderDate").val()
+                            && $("#id_OrderDate").val() < data.WarrantyEDate)        //續約
+                        {
+                            document.getElementById('UnderWarranty').checked = true;
+                        } else {
+                            document.getElementById('UnderWarranty').checked = false;
+                        }
+                        $("#CustomerId").val(data.TargetId);        //客戶代號
+                        $("#customername").html(data.TargetName);     //客戶名稱
+                        $.ajax({
+                            url: '@Url.Action("SearchCustomerInfo", "Main", new { Area = "CONI02" })',
+                            data: JSON.stringify({ "CustomerId": $("#CustomerId").val().trim() }),
+                            type: 'POST',
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                $('#CustomerType').val(data.CustomerType);
+                            }, error: function () {
+                                $('#CustomerType').val("");
+                            }
+                        })
+                        $.ajax({
+                            url: '@Url.Action("SearchWarrantyDInfo", "Main", new { Area = "SERI06" })',
+                            data: JSON.stringify({ "ProductNo": $("#id_ProductNo").val(), "SerialNo": $("#id_SerialNo").val(), "ChangeDate": "", "WarrantyType": "01" }),
+                            type: 'POST',
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                $("#VendorWarrantyStartDate").val(data.WarrantySDate);     //品名
+                                $("#VendorWarrantyExpiryDate").val(data.WarrantyEDate);     //品名
+                            }
+                        })
+
+                    },
+                    error: function () {
+                        $("#msg_information").html("序號不存在！");
+                        $('.msg-modal-lg').modal();
+                        $("#ProductNo").val("");        //品號
+                        $("#ProductName").val("");        //品號
+                        $("#SerialNo").val("");        //品號
+                        $("#WarrantyStartDate").val("");        //品號
+                        $("#WarrantyExpiryDate").val("");        //品號
+                        $("#VendorWarrantyStartDate").val("");        //品號
+                        $("#VendorWarrantyExpiryDate").val("");        //品號
+                        document.getElementById('UnderWarranty').checked = false;
+                        $("#CustomerId").val("");        //客戶代號
+                        $("#customername").html("");     //客戶名稱
+                        return;
+                    }
+                })
+            } else {
+                $("#SerialNo").val("");        //品號
+                $("#SaleDate").val("");        //品號
+                $("#PurchaseDate").val("");        //品號
+                $("#WarrantyStartDate").val("");        //品號
+                $("#WarrantyExpiryDate").val("");        //品號
+                $("#VendorWarrantyStartDate").val("");        //品號
+                $("#VendorWarrantyExpiryDate").val("");        //品號
+            }
+        });
+
+         $("#btnSerialNo").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchWarrantySerialNo", "Main",new { Area = "SERI06" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "Col": ",d.ProductNo,WarrantySDate,WarrantyEDate,TargetId,SerialNo", "Condition": ",=,<,>,=,%like%", "conditionValue": "," + $("#id_ProductNo").val() + "," + $("#id_OrderDate").val().replace(/\//g, "") + "," + $("#id_OrderDate").val().replace(/\//g, "") + "," + $("#id_CustomerId").val() + "," + $("#id_SerialNo").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divWarrantySerialNoGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                            $("#divWarrantySerialNoGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectSerialNo(this)'>選擇</a>" +
+                                "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SerialNoType'>" + Maintain[i].SerialNo + "</td>" +
+                                "<td class='ChangeDateType'>" + Maintain[i].ChangeDate + "</td>" +
+                                "<td class='TargetIdType'>" + Maintain[i].TargetId + "</td>" +
+                                "<td class='TargetNameType'>" + Maintain[i].TargetName + "</td>" +
+                                "<td class='WarrantySDateType'>" + Maintain[i].WarrantySDate + "</td>" +
+                                "<td class='WarrantyEDateType'>" + Maintain[i].WarrantyEDate + "</td>" +
+                                "<td class='WarrantyTypeType'>" + Maintain[i].WarrantyType + "</td>" +
+                                "</tr>");
+
+                    }
+                }
+            });
+            $("#txtWarrantyProductNo").val($("#ProductNo").val());
+            $("#txtWarrantySerialNo").val("");
+            $("#txtWarrantyTargetId").val($("#id_CustomerId").val());
+            $("#WarrantySerialNoPage").val("1");
+            $(".record-selector-WarrantySerialNo-modal").modal();
+        });
+
+        $("#btnWarrantySerialNo").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchWarrantySerialNo", "Main", new { Area = "SERI06" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "Col": ",d.ProductNo,WarrantySDate,WarrantyEDate,TargetId," + $("#addWarrantySerialNoCol").val(), "Condition": ",=,<,>,=," + $("#addWarrantySerialNoCondition").val(), "conditionValue": "," + $("#id_ProductNo").val() + "," + $("#id_OrderDate").val().replace(/\//g, "") + "," + $("#id_OrderDate").val().replace(/\//g, "") + "," + $("#id_CustomerId").val() + "," + $("#addWarrantySerialNoconditionValue").val(), Page: 1 }),
+                //data: JSON.stringify({ "ProductNo": $("#txtWarrantyProductNo").val(), "SerialNo": $("#txtWarrantySerialNo").val(), "ChangeDate": $("#id_OrderDate").val(), "WarrantyType": "23", "TargetId": $("#txtWarrantyTargetId").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divWarrantySerialNoGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divWarrantySerialNoGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectSerialNo(this)'>選擇</a>" +
+                            "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                            "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                            "<td class='SerialNoType'>" + Maintain[i].SerialNo + "</td>" +
+                            "<td class='ChangeDateType'>" + Maintain[i].ChangeDate + "</td>" +
+                            "<td class='TargetIdType'>" + Maintain[i].TargetId + "</td>" +
+                            "<td class='TargetNameType'>" + Maintain[i].TargetName + "</td>" +
+                            "<td class='WarrantySDateType'>" + Maintain[i].WarrantySDate + "</td>" +
+                            "<td class='WarrantyEDateType'>" + Maintain[i].WarrantyEDate + "</td>" +
+                            "<td class='WarrantyTypeType'>" + Maintain[i].WarrantyType + "</td>" +
+                            "</tr>");
+                    }
+                }
+            });
+            $("#WarrantySerialNoPage").val("1");
+        });
+
+        $("#divWarrantySerialNoGrid").scroll(function () {
+            var Page = document.getElementById("WarrantySerialNoPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchWarrantySerialNo", "Main", new { Area = "SERI06" })',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "Col": ",d.ProductNo,WarrantySDate,WarrantyEDate,TargetId," + $("#addWarrantySerialNoCol").val(), "Condition": ",=,<,>,=," + $("#addWarrantySerialNoCondition").val(), "conditionValue": "," + $("#id_ProductNo").val() + "," + $("#id_OrderDate").val().replace(/\//g, "") + "," + $("#id_OrderDate").val().replace(/\//g, "") + "," + $("#id_CustomerId").val() + "," + $("#addWarrantySerialNoconditionValue").val(), Page: Page }),
+                        //data: JSON.stringify({ "ProductNo": $("#txtWarrantyProductNo").val(), "SerialNo": $("#txtWarrantySerialNo").val(), "ChangeDate": $("#id_OrderDate").val(), "WarrantyType": "23", "TargetId": $("#txtWarrantyTargetId").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divWarrantySerialNoGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectSerialNo(this)'>選擇</a>" +
+                                    "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                    "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                    "<td class='SerialNoType'>" + Maintain[i].SerialNo + "</td>" +
+                                    "<td class='ChangeDateType'>" + Maintain[i].ChangeDate + "</td>" +
+                                    "<td class='TargetIdType'>" + Maintain[i].TargetId + "</td>" +
+                                    "<td class='TargetNameType'>" + Maintain[i].TargetName + "</td>" +
+                                    "<td class='WarrantySDateType'>" + Maintain[i].WarrantySDate + "</td>" +
+                                    "<td class='WarrantyEDateType'>" + Maintain[i].WarrantyEDate + "</td>" +
+                                    "<td class='WarrantyTypeType'>" + Maintain[i].WarrantyType + "</td>" +
+                                    "</tr>");
+                            }
+                        }
+                    });
+                    $("#WarrantySerialNoPage").val(Page);
+                }
+            }
+        });
+
+        $('#id_ProductNo').blur(function () {
+            if (document.getElementById("id_ProductNo").readOnly == true) {
+                return;
+            }
+            if ($("#id_ProductNo").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Action("SearchProductInfo", "Main")',
+                    data: JSON.stringify({ "ProductNo": $("#id_ProductNo").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#id_ProductNo").val(data.ProductNo);        //品號
+                        $("#id_ProductName").val(data.ProductName);     //品名
+                    },
+                    error: function () {
+                        $("#msg_information").html("品號不存在！");
+                        $('.msg-modal-lg').modal();
+                        $("#id_ProductNo").val("");        //品號
+                        $("#id_ProductName").val("");     //品名
+                    }
+                })
+            } else {
+                $("#id_ProductNo").val("");        //品號
+                $("#id_ProductName").val("");     //品名
+            }
+        });
+
+        $("#btnProductNo").click(function () {
+            $.ajax({
+                  url: '@Url.Action("SearchProduct", "Main", new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ProductNo": ","+$("#id_ProductNo").val(), "Col": "", "Condition": "", "conditionValue": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divProductGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divProductGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProduct(this)'>選擇</a>" +
+                                "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                "<td class='ProductTypeId1NameType'>" + Maintain[i].ProductTypeId1Name + "</td>" +
+                                "<td class='VendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                                "</tr>");
+
+                    }
+                }
+            });
+            $("#txtProductNo").val("");
+            $("#txtProductName").val("");
+            $("#ProductPage").val("1");
+            $(".record-selector-product-modal").modal();
+        });
+
+        $("#btnSearchProduct").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchProduct", "Main",new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ProductNo": $("#txtProductNo").val(), "Col": "," + $("#addProduct_Col").val(), "Condition": "," + $("#addProduct_Condition").val(), "conditionValue": "," + $("#addProduct_conditionValue").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divProductGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divProductGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProduct(this)'>選擇</a>" +
+                                "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                "<td class='ProductTypeId1NameType'>" + Maintain[i].ProductTypeId1Name + "</td>" +
+                                "<td class='VendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#ProductPage").val("1");
+        });
+
+        $("#divProductGrid").scroll(function () {
+            var Page = document.getElementById("ProductPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchProduct", "Main", new { Area = "CONI02" })',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "ProductNo": $("#txtProductNo").val(), "Col": "," + $("#addProduct_Col").val(), "Condition": "," + $("#addProduct_Condition").val(), "conditionValue": "," + $("#addProduct_conditionValue").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divProductGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProduct(this)'>選擇</a>" +
+                                    "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                    "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                    "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                    "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                    "<td class='ProductTypeId1NameType'>" + Maintain[i].ProductTypeId1Name + "</td>" +
+                                    "<td class='VendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                                    "</tr>");
+                            }
+                        }
+                    });
+                    $("#ProductPage").val(Page);
+                }
+            }
+
+        });
+
+        $("#btnSelectSerial").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchServiceArrangeSerial", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ProductNo": $("#txtProductNoSerial").val(), "SerialNo": $("#id_SerialNo").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divServiceArrangeSerialGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divServiceArrangeSerialGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProductSerialNo(this)'>選擇</a>" +
+                                "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SerialNoType'>" + Maintain[i].SerialNo + "</td>" +
+                                "<td class='CustomerIdType'>" + Maintain[i].CustomerId + "</td>" +
+                                "<td class='CustomerNameType'>" + Maintain[i].CustomerName + "</td>" +
+                                "<td class='SaleDateType'>" + Maintain[i].SaleDate + "</td>" +
+                                "<td class='WarrantySDateType'>" + Maintain[i].WarrantySDate + "</td>" +
+                                "<td class='WarrantyEDateType'>" + Maintain[i].WarrantyEDate + "</td>" +
+                                "<td class='SerArrangeOrderTypeType'>" + Maintain[i].SerArrangeOrderType + "</td>" +
+                                "<td class='SerArrangeOrderNoType'>" + Maintain[i].SerArrangeOrderNo + "</td>" +
+                                "<td class='ItemIdType'>" + Maintain[i].ItemId + "</td>" +
+                                "<td class='ArrangeMonthType'>" + Maintain[i].ArrangeMonth + "</td>" +
+                                //"<td class='RemarkType'>" + Maintain[i].Remark + "</td>" +
+                                //"<td class='InternalRemarkType'>" + Maintain[i].InternalRemark + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#ServiceArrangeSerialPage").val("1");
+        });
+
+        $("#divServiceArrangeSerialGrid").scroll(function () {
+            var Page = document.getElementById("ServiceArrangeSerialPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchServiceArrangeSerial", "Main", new { Area = "CONI02" })',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "ProductNo": $("#txtProductNoSerial").val(), "SerialNo": $("#id_SerialNo").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divServiceArrangeSerialGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProductSerialNo(this)'>選擇</a>" +
+                                "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SerialNoType'>" + Maintain[i].SerialNo + "</td>" +
+                                "<td class='CustomerIdType'>" + Maintain[i].CustomerId + "</td>" +
+                                "<td class='CustomerNameType'>" + Maintain[i].CustomerName + "</td>" +
+                                "<td class='SaleDateType'>" + Maintain[i].SaleDate + "</td>" +
+                                "<td class='WarrantySDateType'>" + Maintain[i].WarrantySDate + "</td>" +
+                                "<td class='WarrantyEDateType'>" + Maintain[i].WarrantyEDate + "</td>" +
+                                "<td class='SerArrangeOrderTypeType'>" + Maintain[i].SerArrangeOrderType + "</td>" +
+                                "<td class='SerArrangeOrderNoType'>" + Maintain[i].SerArrangeOrderNo + "</td>" +
+                                "<td class='ItemIdType'>" + Maintain[i].ItemId + "</td>" +
+                                "<td class='ArrangeMonthType'>" + Maintain[i].ArrangeMonth + "</td>" +
+                                //"<td class='RemarkType'>" + Maintain[i].Remark + "</td>" +
+                                //"<td class='InternalRemarkType'>" + Maintain[i].InternalRemark + "</td>" +
+                                "</tr>");
+                            }
+                            }
+
+                    });
+                    $("#ServiceArrangeSerialPage").val(Page);
+                }
+            }
+        });
+
+        $('#id_ProductNo').blur(function () {
+            if (document.getElementById("id_ProductNo").readOnly == true) {
+                return;
+            }
+            if ($("#id_ProductNo").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Action("SearchProductInfo", "Main")',
+                    data: JSON.stringify({ "ProductNo": $("#id_ProductNo").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#id_ProductNo").val(data.ProductNo);        //品號
+                        $("#id_ProductName").val(data.ProductName);     //品名
+                    },
+                    error: function () {
+                        $("#msg_information").html("品號不存在！");
+                        $('.msg-modal-lg').modal();
+                        $("#id_ProductNo").val("");        //品號
+                        $("#id_ProductName").val("");     //品名
+                    }
+                })
+            } else {
+                $("#id_ProductNo").val("");        //品號
+                $("#id_ProductName").val("");     //品名
+            }
+        });
+
+        $("#btnServiceArrange_D").click(function () {
+
+            if (document.getElementById("id_CustomerId").value == "") {
+                $("#msg_information").html("客戶代號不能為空！");
+                $('.msg-modal-lg').modal();
+                return;
+            }
+
+            if (document.getElementById("id_RoutineServiceFreq").value == "") {
+                $("#msg_information").html("定期保養不能為空！");
+                $('.msg-modal-lg').modal();
+                return;
+            }
+
+            if (document.getElementById("id_WarrantyPeriod").value == "") {
+                $("#msg_information").html("保固期限不能為空！");
+                $('.msg-modal-lg').modal();
+                return;
+            }
+
+            if (document.getElementById("id_WarrantySDate").value == "") {
+                $("#msg_information").html("保固起日不能為空！");
+                $('.msg-modal-lg').modal();
+                return;
+            }
+
+            if (document.getElementById("id_WarrantyEDate").value == "") {
+                $("#msg_information").html("保固迄日不能為空！");
+                $('.msg-modal-lg').modal();
+                return;
+            }
+
+            var AddressSName = "";
+            var Address = "";
+
+            //查找客戶基本信息
+            $.ajax({
+                url: '@Url.Action("SearchCustomerInfo", "Main", new { Area = "CMSI09" })',
+                data: JSON.stringify({ "CustomerId": $("#id_CustomerId").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    AddressSName = data.AddressSName;     //地址簡稱
+                    Address = data.Address;    //地址
+                }
+            })
+
+            var avgMonth = parseInt($("#id_WarrantyPeriod").val()) / parseInt($("#id_RoutineServiceFreq").val());
+
+            var Amonth = new Date(document.getElementById("id_WarrantySDate").value);
+
+            for (var i = 0; i < parseInt($("#id_RoutineServiceFreq").val()) ; i++) {
+                Amonth.setMonth(Amonth.getMonth() + parseInt(avgMonth));
+                var year = Amonth.getFullYear();//当前年份
+                var month = Amonth.getMonth() + 1;//当前月份
+                if (month.toString().length == 1) {
+                    month = "0" + month;
+                }
+                var arrMonth = year.toString() + month.toString();
+                $("#divServiceArrange_DGrid table tbody").append("<tr>" +
+                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='ProductDExit(this)'>編輯</a>|<a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>" +
+                    "<td class='ItemId'>" + addZero((parseInt(i) + 1).toString(), 4) + "<input type='hidden' class='strCItemId' name='strCItemId' value='" + addZero((parseInt(i) + 1).toString(), 4) + "'></td>" +
+                    "<td class='ArrangeMonth'>" + arrMonth + "<input type='hidden' class='strCArrangeMonth' name='strCArrangeMonth' value='" + arrMonth + "'></td>" +
+                    "<td class='AddressSName'>" + AddressSName + "<input type='hidden' class='strCAddressSName' name='strCAddressSName' value='" + AddressSName + "'></td>" +
+                    "<td class='Address'>" + Address + "<input type='hidden' class='strCAddress' name='strCAddress' value='" + Address + "'></td>" +
+                    "<td class='IsClosed'> N.未結案<input type='hidden' class='strCIsClosed' name='strCIsClosed' value='N.未結案'></td>" +
+                    "<td class='DRemark'>" + $("#id_Remark").val() + "<input type='hidden' class='strCRemark' name='strCRemark' value='" + $("#id_Remark").val() + "'></td>" +
+                    "</tr>");
+            }
+
+            $('#btnServiceArrange_D').attr('disabled', true);
+            $('#btnCleanServiceArrange_D').removeAttr("disabled");
+        });
+
+        $("#btnCleanServiceArrange_D").click(function () {
+            $("#divServiceArrange_DGrid table tbody").empty();
+            $('#btnCleanServiceArrange_D').attr('disabled', true);
+            $('#btnServiceArrange_D').removeAttr("disabled");
+        });
+
+        $("#btnChooseTargetId").click(function () {
+            $('.choose-modal').modal();
+        });
+
+        $("#btnAddProcess").click(function () {
+            var stritemid = addZero(document.getElementById("divRoutineService_ProcessDGrid").getElementsByTagName('tr').length.toString(), 4);
+            $("#id_SupportApl_ProcessDItemId").val(stritemid);
+            $("#id_SupportApl_ProcessDProcessDate").val("");
+            $("#id_SupportApl_ProcessDProcessExplanation").val("");
+            $("#id_SupportApl_ProcessDProcessMan").val("");
+            $("#id_SupportApl_ProcessDProcessManName").html("");
+            $("#id_SupportApl_ProcessDRemark").val("");
+            $('.SupportApl_ProcessD-modal').modal();
+        });
+
+        $("#btnAddProduct").click(function () {
+            var stritemid = addZero(document.getElementById("divRoutineService_ProductDGrid").getElementsByTagName('tr').length.toString(), 4);
+            $("#id_SupportApl_ProductDItemId").val(stritemid);
+            $("#id_SupportApl_ProductDProductNo").val("");
+            $("#id_SupportApl_ProductDProductName").val("");
+            $("#id_SupportApl_ProductDQTY").val("0");
+            $("#id_SupportApl_ProductDUnit").val("");
+            $("#id_SupportApl_ProductDRemark").val("");
+            $('.SupportApl_ProductD-modal').modal();
+        });
+
+        $("#btnSupportAplProductDProductNo").click(function () {
+            $('.SupportApl_ProductD-modal').modal("hide");
+            $.ajax({
+                url: '@Url.Action("SearchProduct", "Main", new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ProductNo": "", "ProductName": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divProductGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divProductGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProduct(this)'>選擇</a>" +
+                                "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                "<td class='ProductTypeId1NameType'>" + Maintain[i].ProductTypeId1Name + "</td>" +
+                                "<td class='VendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                                "</tr>");
+
+                    }
+                }
+            });
+            $("#txtProductNo").val("");
+            $("#txtProductName").val("");
+            $("#ProductPage").val("1");
+            $(".record-selector-product-modal").modal();
+
+        });
+
+        $("#btnSearchProduct").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchProduct", "Main", new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ProductNo": $("#txtProductNo").val(), "ProductName": $("#txtProductName").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divProductGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divProductGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProduct(this)'>選擇</a>" +
+                                "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                "<td class='ProductTypeId1NameType'>" + Maintain[i].ProductTypeId1Name + "</td>" +
+                                "<td class='VendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#ProductPage").val("1");
+        });
+
+        $("#divProductGrid").scroll(function () {
+            var Page = document.getElementById("ProductPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchProduct", "Main", new { Area = "CONI02" })',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "ProductNo": $("#txtProductNo").val(), "ProductName": $("#txtProductName").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divProductGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProduct(this)'>選擇</a>" +
+                                    "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                    "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                    "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                    "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                    "<td class='ProductTypeId1NameType'>" + Maintain[i].ProductTypeId1Name + "</td>" +
+                                    "<td class='VendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                                    "</tr>");
+                            }
+                        }
+                    });
+                    $("#ProductPage").val(Page);
+                }
+            }
+
+        });
+
+    });
+
+    function RemoveProcessD(id) {
+        $(id).parents('tr:first').remove();
+        var table = document.getElementById("divRoutineService_ProcessDGrid");
+        var trs = table.getElementsByTagName('tr');
+        var stritem = "";
+        for (var i = 1; i < trs.length; i++) {
+            stritem = addZero((i).toString(), 4);
+            trs[i].cells[1].innerHTML = stritem + "<input type='hidden' class='strPItemId' name='strPItemId' value='" + stritem + "'>";
+
+        }
+    }
+
+
+    function RemoveProductD(id) {
+        $(id).parents('tr:first').remove();
+        var table = document.getElementById("divRoutineService_ProductDGrid");
+        var trs = table.getElementsByTagName('tr');
+        var stritem = "";
+        for (var i = 1; i < trs.length; i++) {
+            stritem = addZero((i).toString(), 4);
+            trs[i].cells[1].innerHTML = stritem + "<input type='hidden' class='strDItemId' name='strDItemId' value='" + stritem + "'>";
+
+        }
+    }
+
+    function ProductDExit(id) {
+        $("#id_SupportApl_ProductDItemId").val($(id).closest('tr').find(".stritemId").val());        //品號
+        $("#id_SupportApl_ProductDProductNo").val($(id).closest('tr').find(".strproductno").val());        //品號
+        $("#id_SupportApl_ProductDProductName").val($(id).closest('tr').find(".strproductname").val());        //品名
+        $("#id_SupportApl_ProductDQTY").val($(id).closest('tr').find(".strqty").val());        //數量
+        $("#id_SupportApl_ProductDUnit").val($(id).closest('tr').find(".strunit").val());        //單位
+        $("#id_SupportApl_ProductDRemark").val($(id).closest('tr').find(".ststrproductdremark").val());        //保固期限
+        $('.SupportApl_ProductD-modal').modal();
+    };
+
+    function checkProductD() {
+        if ($("#id_SupportApl_ProductDProductNo").val() == '') {
+            $("#msg_information").html("请输入品號！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        var ajaxType = true;
+        $.ajax({
+            url: '@Url.Action("SearchProductInfo", "Main", new { Area = "PSMI01" })',
+            data: JSON.stringify({ "ProductNo": $("#id_SupportApl_ProductDProductNo").val().trim() }),
+            type: 'POST',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $("#id_SupportApl_ProductDProductNo").val(data.ProductNo);        //品號
+                $("#id_SupportApl_ProductDProductName").val(data.ProductName);     //品名
+                $("#id_SupportApl_ProductDUnit").val(data.Unit);     //商品類別
+            },
+            error: function () {
+                alert("品號不存在！");
+                $("#id_SupportApl_ProductDProductNo").val("");        //品號
+                $("#id_SupportApl_ProductDProductName").val("");     //品名
+                $("#id_SupportApl_ProductDUnit").val("");     //商品類別
+                ajaxType = false;
+                return;
+            }
+        })
+
+        if (ajaxType) {
+            if ($("#id_SupportApl_ProductDQTY").val() == '') {
+                $("#id_SupportApl_ProductDQTY").val("0");
+            }
+
+            var table = document.getElementById("divRoutineService_ProductDGrid");
+            var trs = table.getElementsByTagName('tr');
+            for (var i = 0; i < trs.length; i++) {
+                if ($(trs[i]).closest('tr').find(".stritemId").val() == $("#id_SupportApl_ProductDItemId").val()) {
+                    trs[i].innerHTML = "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='ProductDExit(this)'>編輯</a><a class='btn btn-link' data-dismiss='modal' onclick='RemoveProductD(this)'>刪除</a>" +
+                        "<td class='ItemId'>" + $("#id_SupportApl_ProductDItemId").val() + "<input type='hidden' class='strDItemId' name='strDItemId' value='" + $("#id_SupportApl_ProductDItemId").val() + "'></td>" +
+                        "<td class='ProductNo'>" + $("#id_SupportApl_ProductDProductNo").val() + "<input type='hidden' class='strDProductNo' name='strDProductNo' value='" + $("#id_SupportApl_ProductDProductNo").val() + "'></td>" +
+                        "<td class='ProductName'>" + $("#id_SupportApl_ProductDProductName").val() + "<input type='hidden' class='strDProductName' name='strDProductName' value='" + $("#id_SupportApl_ProductDProductName").val() + "'></td>" +
+                        "<td class='QTY'>" + $("#id_SupportApl_ProductDQTY").val() + "<input type='hidden' class='strDQTY' name='strDQTY' value='" + $("#id_SupportApl_ProductDQTY").val() + "'></td>" +
+                        "<td class='Unit'>" + $("#id_SupportApl_ProductDUnit").val() + "<input type='hidden' class='strDUnit' name='strDUnit' value='" + $("#id_SupportApl_ProductDUnit").val() + "'></td>" +
+                        "<td class='Remark'>" + $("#id_SupportApl_ProductDRemark").val() + "<input type='hidden' class='strDRemark' name='strDRemark' value='" + $("#id_SupportApl_ProductDRemark").val() + "'></td>";
+                    $(".SupportApl_ProductD-modal").modal("hide");
+                    return;
+                }
+
+            }
+
+            $("#divRoutineService_ProductDGrid table tbody").append("<tr>" +
+               "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='ProductDExit(this)'>編輯</a><a class='btn btn-link' data-dismiss='modal' onclick='RemoveProductD(this)'>刪除</a>" +
+                        "<td class='ItemId'>" + $("#id_SupportApl_ProductDItemId").val() + "<input type='hidden' class='strDItemId' name='strDItemId' value='" + $("#id_SupportApl_ProductDItemId").val() + "'></td>" +
+                        "<td class='ProductNo'>" + $("#id_SupportApl_ProductDProductNo").val() + "<input type='hidden' class='strDProductNo' name='strDProductNo' value='" + $("#id_SupportApl_ProductDProductNo").val() + "'></td>" +
+                        "<td class='ProductName'>" + $("#id_SupportApl_ProductDProductName").val() + "<input type='hidden' class='strDProductName' name='strDProductName' value='" + $("#id_SupportApl_ProductDProductName").val() + "'></td>" +
+                        "<td class='QTY'>" + $("#id_SupportApl_ProductDQTY").val() + "<input type='hidden' class='strDQTY' name='strDQTY' value='" + $("#id_SupportApl_ProductDQTY").val() + "'></td>" +
+                        "<td class='Unit'>" + $("#id_SupportApl_ProductDUnit").val() + "<input type='hidden' class='strDUnit' name='strDUnit' value='" + $("#id_SupportApl_ProductDUnit").val() + "'></td>" +
+                        "<td class='Remark'>" + $("#id_SupportApl_ProductDRemark").val() + "<input type='hidden' class='strDRemark' name='strDRemark' value='" + $("#id_SupportApl_ProductDRemark").val() + "'></td>" +
+                "</tr>");
+
+            $(".SupportApl_ProductD-modal").modal("hide");
+        }
+
+    };
+
+    function ProcessDExit(id) {
+        $("#id_SupportApl_ProcessDItemId").val($(id).closest('tr').find(".strPItemId").val());        //品號
+        $("#id_SupportApl_ProcessDProcessDate").val($(id).closest('tr').find(".strPProcessDate").val());        //品號
+        $("#id_SupportApl_ProcessDProcessExplanation").val($(id).closest('tr').find(".strPProcessExplanation").val());        //品名
+        $("#id_SupportApl_ProcessDProcessMan").val($(id).closest('tr').find(".strPProcessMan").val());        //數量
+        $("#id_SupportApl_ProcessDProcessManName").val($(id).closest('tr').find(".strPProcessMan").html());        //單位
+        $("#id_SupportApl_ProcessDRemark").val($(id).closest('tr').find(".strPRemark").val());        //保固期限
+        $('.SupportApl_ProcessD-modal').modal();
+    };
+    function checkProcessD() {
+        if ($("#id_SupportApl_ProcessDProcessDate").val() == '') {
+            $("#msg_information").html("请選擇時間！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+        if ($("#id_SupportApl_ProcessDProcessExplanation").val() == '') {
+            $("#msg_information").html("请輸入描述！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+        var table = document.getElementById("divRoutineService_ProcessDGrid");
+        var trs = table.getElementsByTagName('tr');
+        for (var i = 0; i < trs.length; i++) {
+            if ($(trs[i]).closest('tr').find(".strPItemId").val() == $("#id_SupportApl_ProcessDItemId").val()) {
+                trs[i].innerHTML = "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='ProcessDExit(this)'>編輯</a><a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcessD(this)'>刪除</a>" +
+            "<td class='ItemId'>" + $("#id_SupportApl_ProcessDItemId").val() + "<input type='hidden' class='strPItemId' name='strPItemId' value='" + $("#id_SupportApl_ProcessDItemId").val() + "'></td>" +
+            "<td class='ProcessDate'>" + $("#id_SupportApl_ProcessDProcessDate").val() + "<input type='hidden' class='strPProcessDate' name='strPProcessDate' value='" + $("#id_SupportApl_ProcessDProcessDate").val() + "'></td>" +
+            "<td class='ProcessExplanation'>" + $("#id_SupportApl_ProcessDProcessExplanation").val() + "<input type='hidden' class='strPProcessExplanation' name='strPProcessExplanation' value='" + $("#id_SupportApl_ProcessDProcessExplanation").val() + "'></td>" +
+            "<td class='ProcessMan'>" + $("#id_SupportApl_ProcessDProcessManName").html() + "<input type='hidden' class='strPProcessMan' name='strPProcessMan' value='" + $("#id_SupportApl_ProcessDProcessMan").val() + "'></td>" +
+            "<td class='Remark'>" + $("#id_SupportApl_ProcessDRemark").val() + "<input type='hidden' class='strPRemark' name='strPRemark' value='" + $("#id_SupportApl_ProcessDRemark").val() + "'></td>";
+                $(".SupportApl_ProcessD-modal").modal("hide");
+                return;
+            }
+
+        }
+        $("#divRoutineService_ProcessDGrid table tbody").append("<tr>" +
+            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='ProcessDExit(this)'>編輯</a><a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcessD(this)'>刪除</a>" +
+            "<td class='ItemId'>" + $("#id_SupportApl_ProcessDItemId").val() + "<input type='hidden' class='strPItemId' name='strPItemId' value='" + $("#id_SupportApl_ProcessDItemId").val() + "'></td>" +
+            "<td class='ProcessDate'>" + $("#id_SupportApl_ProcessDProcessDate").val() + "<input type='hidden' class='strPProcessDate' name='strPProcessDate' value='" + $("#id_SupportApl_ProcessDProcessDate").val() + "'></td>" +
+            "<td class='ProcessExplanation'>" + $("#id_SupportApl_ProcessDProcessExplanation").val() + "<input type='hidden' class='strPProcessExplanation' name='strPProcessExplanation' value='" + $("#id_SupportApl_ProcessDProcessExplanation").val() + "'></td>" +
+            "<td class='ProcessMan'>" + $("#id_SupportApl_ProcessDProcessManName").html() + "<input type='hidden' class='strPProcessMan' name='strPProcessMan' value='" + $("#id_SupportApl_ProcessDProcessMan").val() + "'></td>" +
+            "<td class='Remark'>" + $("#id_SupportApl_ProcessDRemark").val() + "<input type='hidden' class='strPRemark' name='strPRemark' value='" + $("#id_SupportApl_ProcessDRemark").val() + "'></td>" +
+            "</tr>");
+
+        $(".SupportApl_ProcessD-modal").modal("hide");
+
+    };
+    function SelectProduct(id) {
+        $("#id_SupportApl_ProductDProductNo").val($(id).closest('tr').find(".ProductNoType").html());
+        $("#id_SupportApl_ProductDProductName").val($(id).closest('tr').find(".ProductNameType").html());
+        $("#id_SupportApl_ProductDUnit").val($(id).closest('tr').find(".UnitType").html());
+        $('.SupportApl_ProductD-modal').modal();
+        $(".record-selector-product-modal").modal("hide");
+    }
+
+    function btnAdd() {
+        if (document.getElementById("id_ProductNo").value == "") {
+            $("#msg_information").html("品號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        if (document.getElementById("id_SerialNo").value == "") {
+            $("#msg_information").html("序號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("Add", "Main")',
+            data: $('#from-ServiceArrange').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("Index", "Main")';
+                }
+
+            }
+        })
+    };
+
+    function btnAddAgain() {
+        if (document.getElementById("id_ProductNo").value == "") {
+            $("#msg_information").html("品號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        if (document.getElementById("id_SerialNo").value == "") {
+            $("#msg_information").html("序號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("SerialNo", "Main")',
+            data: JSON.stringify({ "SerialNo": document.getElementById("id_SerialNo").value }),
+            type: 'POST',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data == false) {
+                    $("#msg_information").html("輸入的商品序號已存在，請重新輸入！");
+                    $('.msg-modal-lg').modal();
+                    return;
+                }
+            }
+        })
+
+        $.ajax({
+            url: '@Url.Action("Add", "Main")',
+            data: $('#from-ServiceArrange').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("CUR", "Main")';
+                }
+
+            }
+        })
+    };
+
+    function btnExit() {
+        $.ajax({
+            url: '@Url.Action("Exit", "Main")',
+            data: $('#from-ServiceArrange').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("Index", "Main")';
+                }
+
+            }
+        })
+    };
+
+    function btnExitAgain() {
+        $.ajax({
+            url: '@Url.Action("Exit", "Main")',
+            data: $('#from-ServiceArrange').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("CUR", "Main")';
+                }
+
+            }
+        })
+    };
+
+    function check() {
+        if ($("#id_Warranty_DChangeDate").val() == '') {
+            $("#msg_information").html("異動日期不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        if ($("#id_Warranty_DTargetId").val() == '') {
+            $("#msg_information").html("異動對象不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        if ($("#id_Warranty_DWarrantyPeriod").val() == '') {
+            $("#msg_information").html("保固期限不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+        if (parseInt($("#id_Warranty_DWarrantyPeriod").val()) == 0) {
+            $("#msg_information").html("保固期限須大於0！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+        if ($("#id_Warranty_DWarrantySDate").val() == '') {
+            $("#msg_information").html("请输入保固起日！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        if ($("#id_Warranty_DWarrantyEDate").val() == '') {
+            $("#msg_information").html("请输入保固迄日！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        $("#divServiceArrange_DGrid table tbody").append("<tr>" +
+            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='ProductDExit(this)'>編輯</a>|<a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>" +
+            "<td class='ChangeDate'>" + $("#id_Warranty_DChangeDate").val() + "<input type='hidden' class='strCChangeDate' name='strCChangeDate' value='" + $("#id_Warranty_DChangeDate").val() + "'></td>" +
+            "<td class='ChangeOrderType'>" + $("#id_Warranty_DChangeOrderType").val() + "<input type='hidden' class='strCChangeOrderType' name='strCChangeOrderType' value='" + $("#id_Warranty_DChangeOrderType").val() + "'></td>" +
+            "<td class='ChangeOrderNo'>" + $("#id_Warranty_DChangeOrderNo").val() + "<input type='hidden' class='strCChangeOrderNo' name='strCChangeOrderNo' value='" + $("#id_Warranty_DChangeOrderNo").val() + "'></td>" +
+            "<td class='ChangeOrderItemId'>" + $("#id_Warranty_DChangeOrderItemId").val() + "<input type='hidden' class='strCChangeOrderItemId' name='strCChangeOrderItemId' value='" + $("#id_Warranty_DChangeOrderItemId").val() + "'></td>" +
+            "<td class='TargetId'>" + $("#id_Warranty_DTargetId").val() + "<input type='hidden' class='strCTargetId' name='strCTargetId' value='" + $("#id_Warranty_DTargetId").val() + "'></td>" +
+            "<td class='TargetName'>" + $("#id_Warranty_DTargetName").val() + "<input type='hidden' class='strCTargetName' name='strCTargetName' value='" + $("#id_Warranty_DTargetName").val() + "'></td>" +
+            "<td class='WarrantyPeriod'>" + $("#id_Warranty_DWarrantyPeriod").val() + "<input type='hidden' class='strCWarrantyPeriod' name='strCWarrantyPeriod' value='" + $("#id_Warranty_DWarrantyPeriod").val() + "'></td>" +
+            "<td class='WarrantySDate'>" + $("#id_Warranty_DWarrantySDate").val() + "<input type='hidden' class='strCWarrantySDate' name='strCWarrantySDate' value='" + $("#id_Warranty_DWarrantySDate").val() + "'></td>" +
+            "<td class='WarrantyEDate'>" + $("#id_Warranty_DWarrantyEDate").val() + "<input type='hidden' class='strCWarrantyEDate' name='strCWarrantyEDate' value='" + $("#id_Warranty_DWarrantyEDate").val() + "'></td>" +
+            "<td class='WarrantyType'>" + $("#id_Warranty_DWarrantyType").val() + "<input type='hidden' class='strCWarrantyType' name='strCWarrantyType' value='" + $("#id_Warranty_DWarrantyType").val() + "'></td>" +
+            "<td class='remark'>" + $("#id_Warranty_DRemark").val() + "<input type='hidden' class='strCRemark' name='strCRemark' value='" + $("#id_Warranty_DRemark").val() + "'></td>" +
+            "</tr>");
+
+        $(".Warranty_D-modal").modal("hide");
+    };
+
+    function updateProductDWarrantyEDate() {
+        if ($("#id_Warranty_DWarrantyPeriod").val() == "") {
+            return
+        }
+        if ($("#id_Warranty_DWarrantySDate").val() == "") {
+            //$("#id_WarrantyPeriod").val("0")
+            return;
+        }
+        var Edate = new Date($("#id_Warranty_DWarrantySDate").val());
+        Edate.setMonth(Edate.getMonth() + parseInt($("#id_Warranty_DWarrantyPeriod").val()));
+        var year = Edate.getFullYear();//当前年份
+        var month = Edate.getMonth() + 1;//当前月份
+        var day = Edate.getDate();//当前日
+        if (month.toString().length == 1) {
+            month = "0" + month;
+        }
+        if (day.toString().length == 1) {
+            day = "0" + day;
+        }
+        $("#id_Warranty_DWarrantyEDate").val(year + "/" + month + "/" + day);
+
+    };
+
+    function SelectCustomer(id) {
+        $("#id_CustomerId").val($(id).closest('tr').find(".CustomerIdType").html());        //客戶代號
+        $("#customername").html($(id).closest('tr').find(".CustomerNameType").html());     //客戶名稱
+        $("#id_CustomerType").val($(id).closest('tr').find(".CustomerTypeType").html());     //客戶形態
+        $("#id_Contact").val($(id).closest('tr').find(".ContactType").html());   //連絡人ID
+        $("#id_TelNo").val($(id).closest('tr').find(".TelNoType").html());              //電話
+        $("#id_FaxNo").val($(id).closest('tr').find(".FaxNoType").html());    //傳真
+        $("#id_AddressSName").val("");    //地址簡稱
+        $("#id_Address").val("");    //地址
+        $("#id_SourceOrderType").val("");      //來源單別
+        $("#id_SourceOrderNo").val("");    //來源單號
+        $("#id_SourceOrderItemId").val("");    //來源項次
+        $("#id_SerialNo").val("");      //序號
+        $("#id_ProductNo").val("");    //品號
+        $("#id_ProductName").val("");    //品名
+        $("#id_WarrantySDate").val("");    //保固起日
+        $("#id_WarrantyEDate").val("");    //保固迄日
+    };
+
+    function SelectAddress(id) {
+        $("#id_AddressSName").val($(id).closest('tr').find(".Address1Type").html());
+        $("#id_Address").val($(id).closest('tr').find(".Address2Type").html());
+        $('#id_Contact').val($(id).closest('tr').find(".ContactType").html());
+        $('#id_TelNo').val($(id).closest('tr').find(".TelNoType").html());
+        $('#id_FaxNo').val($(id).closest('tr').find(".FaxNoType").html());
+    }
+
+    function SelectContact(id) {
+        $("#id_Contact").val($(id).closest('tr').find(".ContactIdType").html());   //連絡人ID
+        $("#id_ContactName").html($(id).closest('tr').find(".ContactType").html());    //連絡人
+        $("#id_TelNo").val($(id).closest('tr').find(".TelNoType").html());              //電話
+        $("#id_FaxNo").val($(id).closest('tr').find(".FaxNoType").html());    //傳真
+    }
+
+    function SelectVendor(id) {
+        $("#id_Warranty_DTargetId").val($(id).closest('tr').find(".vendorIdType").html());      //廠商代號
+        $("#id_Warranty_DTargetName").val($(id).closest('tr').find(".vendorNameType").html());    //廠商簡稱
+        $('.choose-modal').modal("hide");
+    }
+
+    function SelectContractType(id) {
+        $("#id_SourceOrderType").val($(id).closest('tr').find(".ContractTypeType").html());      //來源單別
+        $("#id_SourceOrderNo").val($(id).closest('tr').find(".ContractNoType").html());    //來源單號
+        $("#id_SourceOrderItemId").val("");    //來源項次
+        $("#id_CustomerId").val($(id).closest('tr').find(".CustomerIdType").html());        //客戶代號
+        $("#customername").html($(id).closest('tr').find(".CustomerNameType").html());     //客戶名稱
+        $("#id_CustomerType").val($(id).closest('tr').find(".CustomerTypeType").html());     //客戶形態
+        $('.record-selector-Contract-modal').modal("hide");
+    }
+
+    function SelectSerialNo(id) {
+        //$("#id_SourceOrderItemId").val($(id).closest('tr').find(".ItemIdType").html());    //來源項次
+        $("#id_SerialNo").val($(id).closest('tr').find(".SerialNoType").html());      //序號
+        $("#id_ProductNo").val($(id).closest('tr').find(".ProductNoType").html());    //品號
+        $("#id_ProductName").val($(id).closest('tr').find(".ProductNameType").html());    //品名
+        //$("#id_RoutineServiceFreq").val($(id).closest('tr').find(".RoutineServiceFreqType").html());    //定期保養
+        $("#id_WarrantyPeriod").val($(id).closest('tr').find(".WarrantyPeriodType").html());    //保固期限
+        $("#id_WarrantySDate").val($(id).closest('tr').find(".WarrantySDateType").html());    //保固起日
+        $("#id_WarrantyEDate").val($(id).closest('tr').find(".WarrantyEDateType").html());    //保固迄日
+        $('.record-selector-ContractSerial-modal').modal("hide");
+    }
+
+    function SelectProductSerialNo(id) {
+        $("#id_SourceOrderItemId").val($(id).closest('tr').find(".ItemIdType").html());    //來源項次
+        $("#id_SerialNo").val($(id).closest('tr').find(".SerialNoType").html());      //序號
+        $("#id_ProductNo").val($(id).closest('tr').find(".ProductNoType").html());    //品號
+        $("#id_ProductName").val($(id).closest('tr').find(".ProductNameType").html());    //品名
+        $("#id_RoutineServiceFreq").val($(id).closest('tr').find(".RoutineServiceFreqType").html());    //定期保養
+        $("#id_WarrantyPeriod").val($(id).closest('tr').find(".WarrantyPeriodType").html());    //保固期限
+        $("#id_WarrantySDate").val($(id).closest('tr').find(".WarrantySDateType").html());    //保固起日
+        $("#id_WarrantyEDate").val($(id).closest('tr').find(".WarrantyEDateType").html());    //保固迄日
+        $('.record-selector-ProductSerial-modal').modal("hide");
+    }
+
+    function SelectOrderType(id) {
+        $("#id_RoutineSerOrderType").val($(id).closest('tr').find(".OrderTypeType").html());
+        $("#ordersname").html($(id).closest('tr').find(".OrderSNameType").html());
+        $.ajax({
+            url: '@Url.Action("GetOrderTypeNo", "Main", new { Area = "SUPI05" })',
+            data: JSON.stringify({ "OrderType": $("#id_RoutineSerOrderType").val().trim() }),
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "YES") {
+                    $('#id_RoutineSerOrderNo').val(strData[1]);
+                } else {
+                    $('#id_RoutineSerOrderNo').val(strData[1]);
+                }
+            }
+        })
+    };
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function ($scope, $http) {
+        $scope.OrderCategoryitems = null;
+        $scope.customeritems = null;
+        $scope.OrderCategoryList = function () {
+            $http({
+                url: '@Url.Action("SearchOrderType", "Main", new { Area = "CONI01" })',
+                params: { Col: ",OrderCategory", Condition: ",=", conditionValue: ",D2", Page: 0 }
+            }).success(function (data, status) {
+                $scope.OrderCategoryitems = data;
+            })
+        };
+        $scope.SearchOrderCategoryList = function () {
+            $http({
+                url: '@Url.Action("SearchOrderType", "Main", new { Area = "CONI01" })',
+                params: { Col: ",OrderCategory," + $("#addOrderCategoryCol").val(), Condition: ",=," + $("#addOrderCategoryCondition").val(), conditionValue: ",D2," + $("#addOrderCategoryconditionValue").val(), Page: 0 }
+            }).success(function (data, status) {
+                $scope.OrderCategoryitems = data;
+            })
+        };
+        $scope.customerList = function () {
+            $http({
+                method: 'POST',
+                url: '@Url.Action("SearchCustomer", "Main", new { Area = "CONI02" })',
+                params: { Col: "", Condition: "", conditionValue: "", Page: 0 }
+            }).success(function (data, status) {
+                $scope.customeritems = data;
+            })
+        };
+        $scope.SearchcustomerList = function () {
+            $http({
+                method: 'POST',
+                url: '@Url.Action("SearchCustomer", "Main", new { Area = "CONI02" })',
+                params: { Col: "," + $("#addCustomer_Col").val(), Condition: "," + $("#addCustomer_Condition").val(), conditionValue: "," + $("#addCustomer_conditionValue").val(), Page: 0 }
+            }).success(function (data, status) {
+                $scope.customeritems = data;
+            })
+        };
+    });
+</script>
+<section class="content-header">
+    <h1>定保單維護</h1>
+</section>
+<section class="content" ng-app="myApp" ng-controller="myCtrl">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            <form id="from-ServiceArrange" method="post">
+                <div class="row">
+                    <div class="form-group">
+                            <label for="id_RoutineSerOrderType" class="col-md-3 col-lg-3 control-label">定保單別</label>
+                            <div class="col-md-5 col-lg-5">
+                                @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Details")
+                                {
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="id_RoutineSerOrderType" name="RoutineSerOrderType"  value="@ViewBag.RoutineSerOrderType" readonly />
+                                        <span class="input-group-addon" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                    </div>
+                                    
+                                }
+                                else
+                                {
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="id_RoutineSerOrderType" name="RoutineSerOrderType" value="@ViewBag.RoutineSerOrderType" maxlength="5" tabindex="1" />
+                                        <span class="input-group-addon" id="btnRoutineSerOrderType" style="cursor:pointer;" data-toggle="modal" data-target="#modal-orderCategory" ng-click="OrderCategoryList()"><span class="fa fa-hand-pointer-o"></span></span>
+                                    </div>
+                                }
+                                <span style="display:inline;" id="ordersname">@ViewBag.OrderSName</span>
+                            </div>
+                            <label for="id_OrderDate" class="col-md-3 col-lg-3 control-label">單據日期</label>
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <div class="col-md-5 col-lg-5 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_OrderDate" data-link-format="yyyy/mm/dd">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="OrderDate" readonly="readonly" value="@ViewBag.OrderDate" />
+                                        <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-5 col-lg-5 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_OrderDate" data-link-format="yyyy/mm/dd">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="id_OrderDate" name="OrderDate" readonly="readonly" value="@ViewBag.OrderDate" />
+                                        <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                </div>
+                            }
+                            <label for="id_Confirmed" class="col-md-3 col-lg-3 control-label">狀態碼</label>
+                            <div class="col-md-5 col-lg-5">
+                                @if (ViewBag.Type == "Details")
+                                {
+                                    <select class="form-control" name="Confirmed" disabled>
+                                        @if (@ViewBag.Confirmed == "N")
+                                        {
+                                            <option value="N" selected>N:未確認</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="N">N:未確認</option>
+                                        }
+
+                                        @if (@ViewBag.Confirmed == "Y")
+                                        {
+                                            <option value="Y" selected>Y:已確認</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="Y">Y:已確認</option>
+                                        }
+
+                                        @if (@ViewBag.OrderStatus == "V")
+                                        {
+                                            <option value="V" selected>V:作廢</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="V">V:作廢</option>
+                                        }
+
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select class="form-control" name="Confirmed" tabindex="3">
+                                        @if (@ViewBag.Confirmed == "N")
+                                        {
+                                            <option value="N" selected>N:未確認</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="N">N:未確認</option>
+                                        }
+
+                                        @if (@ViewBag.Confirmed == "Y")
+                                        {
+                                            <option value="Y" selected>Y:已確認</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="Y">Y:已確認</option>
+                                        }
+
+                                        @if (@ViewBag.OrderStatus == "V")
+                                        {
+                                            <option value="V" selected>V:作廢</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="V">V:作廢</option>
+                                        }
+
+                                    </select>
+                                }
+                            </div>
+
+                        </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                            <label for="id_RoutineSerOrderNo" class="col-md-3 col-lg-3 control-label">定保單號</label>
+                            <div class="col-md-5 col-lg-5">
+                                @if (ViewBag.Type == "Details")
+                                {
+                                    <input type="text" class="form-control" id="id_RoutineSerOrderNo" name="RoutineSerOrderNo" value="@ViewBag.RoutineSerOrderNo" readonly />
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="id_RoutineSerOrderNo" name="RoutineSerOrderNo" value="@ViewBag.RoutineSerOrderNo" maxlength="12" tabindex="4" />
+                                }
+                            </div>
+                            <label for="id_SerArrangeOrderNo" class="col-md-3 col-lg-3 control-label">合約類別</label>
+                            <div class="col-md-5 col-lg-5">
+                                <input type="text" class="form-control" id="id_SerArrangeOrderNo" name="SerArrangeOrderNo" value="@ViewBag.SerArrangeOrderNo" readonly />
+                            </div>
+                            <label for="id_NoOfPrints" class="col-md-3 col-lg-3 control-label">列印次數</label>
+                            <div class="col-md-5 col-lg-5">
+                                <input type="text" class="form-control" id="id_NoOfPrints" name="NoOfPrints" value="@ViewBag.NoOfPrints" readonly />
+                            </div>
+                        </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                            <label for="id_SourceOrder" class="col-md-3 col-lg-3 control-label">來源單號</label>
+                            <div class="col-md-13 col-lg-13">
+                                <input type="text" class="form-control" id="id_SourceOrderType" name="SourceOrderType" style="width: 30%; display: inline;" value="@ViewBag.SourceOrderType" readonly />
+                                <input type="text" class="form-control" id="id_SourceOrderNo" name="SourceOrderNo" style="width: 35%; display: inline;" value="@ViewBag.SourceOrderNo" readonly />
+                                <input type="text" class="form-control" id="id_SourceOrderItemId" name="SourceOrderItemId" style="width: 30%; display: inline;" value="@ViewBag.SourceOrderItemId" readonly />
+                            </div>
+                            <label for="id_ArrangeMonth" class="col-md-3 col-lg-3 control-label">保養月份</label>
+                            <div class="col-md-5 col-lg-5">
+                                <input type="text" class="form-control" id="id_ArrangeMonth" name="ArrangeMonth" value="@ViewBag.ArrangeMonth" readonly />
+                            </div>
+                        </div>
+                </div>
+
+                <h5>客戶資訊</h5>
+                <hr />
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_CustomerId" class="col-md-3 col-lg-3 control-label">客戶代號</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Details")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_CustomerId" name="CustomerId" value="@ViewBag.CustomerId" readonly />
+                                    <span class="input-group-addon" id="btnCustomer" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_CustomerId" name="CustomerId" value="@ViewBag.CustomerId" maxlength="10" tabindex="5" />
+                                    <span class="input-group-addon" id="btnCustomer" style="cursor:pointer;" data-toggle="modal" data-target="#modal-customer" ng-click="customerList()"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                            }
+                            <span style="display:inline;" id="customername">@ViewBag.CustomerName</span>
+                        </div>
+
+                        <label for="id_CustomerType" class="col-md-3 col-lg-3 control-label">客戶形態</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_CustomerType" name="CustomerType" value="@ViewBag.CustomerType" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_AddressSName" class="col-md-3 col-lg-3 control-label">地址簡稱</label>
+                        <div class="col-md-13 col-lg-13">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_AddressSName" name="AddressSName" value="@ViewBag.AddressSName" readonly />
+                                    <span class="input-group-addon" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>   
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_AddressSName" name="AddressSName" value="@ViewBag.AddressSName" maxlength="255" tabindex="7" />
+                                    <span class="input-group-addon" id="btnAddressSName" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_Address" class="col-md-3 col-lg-3 control-label">地址</label>
+                        <div class="col-md-13 col-lg-13">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_Address" name="Address" value="@ViewBag.Address" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_Address" name="Address" value="@ViewBag.Address" maxlength="255" tabindex="9" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_Contact" class="col-md-3 col-lg-3 control-label">聯絡人</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_Contact" name="Contact" value="@ViewBag.Contact" readonly />
+                                    <span class="input-group-addon" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                                
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_Contact" name="Contact" value="@ViewBag.Contact" maxlength="30" tabindex="10" />
+                                    <span class="input-group-addon" id="btnContact" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                            }
+                        </div>
+                        <label for="id_TelNo" class="col-md-3 col-lg-3 control-label">電話</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_TelNo" name="TelNo" value="@ViewBag.TelNo" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_TelNo" name="TelNo" value="@ViewBag.TelNo" maxlength="20" tabindex="12" />
+                            }
+                        </div>
+                        <label for="id_FaxNo" class="col-md-3 col-lg-3 control-label">傳真</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_FaxNo" name="FaxNo" value="@ViewBag.FaxNo" maxlength="20" tabindex="13" />
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <h5>定保資訊</h5>
+                <hr />
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SerialNo" class="col-md-3 col-lg-3 control-label">序號</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Details")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_SerialNo" name="SerialNo" value="@ViewBag.SerialNo" readonly />
+                                    <span class="input-group-addon" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_SerialNo" name="SerialNo" value="@ViewBag.SerialNo" maxlength="60" tabindex="14" />
+                                    <span class="input-group-addon" id="btnSerialNo" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                                
+                            }
+
+                        </div>
+                        <label for="id_ProductNo" class="col-md-3 col-lg-3 control-label">品號</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Details")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_ProductNo" name="ProductNo" value="@ViewBag.ProductNo" readonly />
+                                    <span class="input-group-addon" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_ProductNo" name="ProductNo" value="@ViewBag.ProductNo" maxlength="40" tabindex="16" />
+                                    <span class="input-group-addon" id="btnProductNo" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                            }
+                        </div>
+                        <label for="id_ProductName" class="col-md-3 col-lg-3 control-label">品名</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_ProductName" name="ProductName" value="@ViewBag.ProductName" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SaleDate" class="col-md-3 col-lg-3 control-label">銷貨日期</label>
+                        @if (ViewBag.Type == "Details")
+                        {
+                            <div class="col-md-5 col-lg-5 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_SaleDate" data-link-format="yyyy/mm/dd">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="SaleDate" readonly="readonly" value="@ViewBag.SaleDate" />
+                                    <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-5 col-lg-5 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_SaleDate" data-link-format="yyyy/mm/dd">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_SaleDate" name="SaleDate" readonly="readonly" value="@ViewBag.SaleDate" />
+                                    <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_WarrantySDate" class="col-md-3 col-lg-3 control-label">保固起日</label>
+                        @if (ViewBag.Type == "Details")
+                        {
+                            <div class="col-md-5 col-lg-5 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_WarrantySDate" data-link-format="yyyy/mm/dd">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="WarrantySDate" readonly="readonly" value="@ViewBag.WarrantySDate" />
+                                    <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-5 col-lg-5 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_WarrantySDate" data-link-format="yyyy/mm/dd">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_WarrantySDate" name="WarrantySDate" readonly="readonly" value="@ViewBag.WarrantySDate" />
+                                    <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        }
+                        <label for="id_WarrantyEDate" class="col-md-3 col-lg-3 control-label">保固迄日</label>
+                        @if (ViewBag.Type == "Details")
+                        {
+                            <div class="col-md-5 col-lg-5 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_WarrantyEDate" data-link-format="yyyy/mm/dd">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="WarrantyEDate" readonly="readonly" value="@ViewBag.WarrantyEDate" />
+                                    <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-5 col-lg-5 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_WarrantyEDate" data-link-format="yyyy/mm/dd">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_WarrantyEDate" name="WarrantyEDate" readonly="readonly" value="@ViewBag.WarrantyEDate" />
+                                    <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_Remark" class="col-md-3 col-lg-3 control-label">備註</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <textarea class="form-control" id="id_Remark" name="Remark" cols="40" rows="5" maxlength="255" readonly>@ViewBag.Remark</textarea>
+                            }
+                            else
+                            {
+                                <textarea class="form-control" id="id_Remark" name="Remark" cols="40" rows="5" maxlength="255" tabindex="19">@ViewBag.Remark</textarea>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_InternalRemark" class="col-md-3 col-lg-3 control-label">內部備註</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <textarea class="form-control" id="id_InternalRemark" name="InternalRemark" cols="40" rows="5" maxlength="255" readonly>@ViewBag.InternalRemark</textarea>
+                            }
+                            else
+                            {
+                                <textarea class="form-control" id="id_InternalRemark" name="InternalRemark" cols="40" rows="5" maxlength="255" tabindex="20">@ViewBag.InternalRemark</textarea>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_Remark" class="col-md-3 col-lg-3 control-label">附件</label>
+                    </div>
+                </div>
+
+
+                <h5>定保零件資訊</h5>
+                <hr />
+                <div class="text-right">
+                    @if (@ViewBag.Type == "Details")
+                    {
+                        <button type="button" class="btn btn-primary" id="btnAddProduct" name="action" value="btnAddProduct" aria-label="Left Align" tabindex="21" disabled>
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增品項
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" id="btnAddProduct" name="action" value="btnAddProduct" aria-label="Left Align" tabindex="21">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增品項
+                        </button>
+                    }
+                </div>
+                <div id="divRoutineService_ProductDGrid" style="height: 100px;overflow-y: auto;">
+                    @{
+                        var webGrid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.RoutineService_ProductD>)ViewData["RoutineService_ProductD"], canPage: false, canSort: false, ajaxUpdateContainerId: "divRoutineService_ProductDGrid");
+                    }
+                    @webGrid.GetHtml(
+
+                        tableStyle: "table table-striped table-hover",
+                        columns: webGrid.Columns(
+                            webGrid.Column(columnName: "", header: "動作", style: "actioncolumn",
+                                format:
+                                @<text>
+                                    @if (@ViewBag.Type == "Details")
+                                    {
+                                        <a class='btn btn-link' data-dismiss='modal'>編輯</a>
+                                        <a class='btn btn-link' data-dismiss='modal'>刪除</a>
+                                    }
+                                    else
+                                    {
+                                        <a class='btn btn-link' data-dismiss='modal' onclick='ProductDExit(this)'>編輯</a>
+                                        <a class='btn btn-link' data-dismiss='modal' onclick='RemoveProductD(this)'>刪除</a>
+                                    }
+                                </text>),
+                                webGrid.Column(columnName: "ItemId", header: "項次", style: "ItemId",
+                                format:
+                                @<text>
+                                    @item.ItemId
+                                    <input type="hidden" class="strDItemId" name="strDItemId" value='@item.ItemId' tabindex="31">
+                                </text>),
+                                webGrid.Column(columnName: "ProductNo", header: "品號", style: "ProductNo",
+                                format:
+                                @<text>
+                                    @item.ProductNo
+                                    <input type="hidden" class="strDProductNo" name="strDProductNo" value='@item.ProductNo' tabindex="32">
+                                </text>),
+                                webGrid.Column(columnName: "ProductName", header: "品名", style: "ProductName",
+                                format:
+                                @<text>
+                                    @item.ProductName
+                                    <input type="hidden" class="strDProductName" name="strDProductName" value='@item.ProductName' tabindex="33">
+                                </text>),
+                                webGrid.Column(columnName: "QTY", header: "數量", style: "QTY",
+                                format:
+                                @<text>
+                                    @item.QTY
+                                    <input type="hidden" class="strDQTY" name="strDQTY" value='@item.QTY' tabindex="34">
+                                </text>),
+                                webGrid.Column(columnName: "Unit", header: "單位", style: "Unit",
+                                format:
+                                @<text>
+                                    @item.Unit
+                                    <input type="hidden" class="strDUnit" name="strDUnit" value='@item.Unit' tabindex="34">
+                                </text>),
+                                webGrid.Column(columnName: "Remark", header: "備註", style: "Remark",
+                                format:
+                                @<text>
+                                    @item.Remark
+                                    <input type="hidden" class="strDRemark" name="strDRemark" value='@item.Remark' tabindex="35">
+                                </text>)
+)
+)
+                </div>
+
+                <h5>處理狀況</h5>
+                <hr />
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_AssignDate" class="col-md-3 col-lg-3 control-label">派工日期</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_AssignDate" name="AssignDate" value="@ViewBag.AssignDate" readonly />
+                        </div>
+                        <label for="id_ConfirmedDate" class="col-md-3 col-lg-3 col-md-offset-8 col-lg-offset-8 control-label">完工日期</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_ConfirmedDate" name="ConfirmedDate" value="@ViewBag.ConfirmedDate" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_RoutineSerManName" class="col-md-3 col-lg-3 control-label">派工人員</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_RoutineSerManName" name="RoutineSerManName" value="@ViewBag.RoutineSerManName" readonly />
+                        </div>
+                        <label for="id_RoutineSerManName" class="col-md-3 col-lg-3 control-label">定保人員</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_RoutineSerManName" name="RoutineSerManName" value="@ViewBag.RoutineSerManName" readonly />
+                        </div>
+                        <label for="id_ConfirmorName" class="col-md-3 col-lg-3 control-label">完工人員</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_ConfirmorName" name="Confirmor" value="@ViewBag.Confirmor" readonly />
+                        </div>
+                    </div>
+                </div>
+                        
+                <h5>定保回報</h5>
+                <hr />
+                <div class="form-group">
+                    <div class="text-right">
+                        @if (@ViewBag.Type == "Details")
+                        {
+                            <button type="button" class="btn btn-primary" id="btnAddProcess" name="action" value="btnAddProcess" aria-label="Left Align" tabindex="21" disabled>
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增回報
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-primary" id="btnAddProcess" name="action" value="btnAddProcess" aria-label="Left Align" tabindex="21">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增回報
+                            </button>
+                        }
+                    </div>
+                    <div id="divRoutineService_ProcessDGrid" style="height: 100px;overflow-y: auto;">
+                        @{
+                            var webGridP = new WebGrid(source: (IEnumerable<BusinessLayer.Models.RoutineService_ProcessD>)ViewData["RoutineService_ProcessD"], canPage: false, canSort: false, ajaxUpdateContainerId: "divRoutineService_ProcessDGrid");
+                        }
+                        @webGridP.GetHtml(
+
+                                        tableStyle: "table table-striped table-hover",
+                                        columns: webGrid.Columns(
+                                            webGrid.Column(columnName: "", header: "動作", style: "actioncolumn",
+                                                format:
+                                                @<text>
+                                                    @if (@ViewBag.Type == "Details")
+                                                    {
+                                                        <a class='btn btn-link' data-dismiss='modal'>編輯</a>
+                                                        <a class='btn btn-link' data-dismiss='modal'>刪除</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class='btn btn-link' data-dismiss='modal' onclick='ProcessDExit(this)'>編輯</a>
+                                                        <a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcessD(this)'>刪除</a>
+                                                    }
+                                                </text>),
+                                                webGrid.Column(columnName: "ItemId", header: "項次", style: "ItemId",
+                                                format:
+                                                @<text>
+                                                    @item.ItemId
+                                                    <input type="hidden" class="strPItemId" name="strPItemId" value='@item.ItemId' tabindex="37">
+                                                </text>),
+                                                webGrid.Column(columnName: "ProcessDate", header: "處理日期", style: "ProcessDate",
+                                                format:
+                                                @<text>
+                                                    @item.ProcessDate
+                                                    <input type="hidden" class="strPProcessDate" name="strPProcessDate" value='@item.ProcessDate' tabindex="38">
+                                                </text>),
+                                                webGrid.Column(columnName: "ProcessExplanation", header: "處理描述", style: "ProcessExplanation",
+                                                format:
+                                                @<text>
+                                                    @item.ProcessExplanation
+                                                    <input type="hidden" class="strPProcessExplanation" name="strPProcessExplanation" value='@item.ProcessExplanation' tabindex="39">
+                                                </text>),
+                                                webGrid.Column(columnName: "ProcessMan", header: "處理人員", style: "ProcessMan",
+                                                format:
+                                                @<text>
+                                                    @item.ProcessMan
+                                                    <input type="hidden" class="strPProcessMan" name="strPProcessMan" value='@item.ProcessMan' tabindex="40">
+                                                </text>),
+                                                webGrid.Column(columnName: "Remark", header: "備註", style: "Remark",
+                                                format:
+                                                @<text>
+                                                    @item.Remark
+                                                    <input type="hidden" class="strPRemark" name="strPRemark" value='@item.Remark' tabindex="41">
+                                                </text>)
+)
+)
+                    </div>
+                </div>
+
+                <p style="color: red;">@ViewBag.Msg</p>
+                <div class="text-right">
+                    @if (@ViewBag.Type == "Edit")
+                    {
+                        <button type="button" class="btn btn-primary" name="action" value="Edit" onclick="btnExit()" tabindex="23">存檔</button>
+                        <button type="button" class="btn btn-primary" name="action" value="EditAgain" onclick="btnExitAgain()" tabindex="24">存檔並新增</button>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+                    else if (@ViewBag.Type == "Details")
+                    {
+                        <a class="btn btn-primary" href="@Url.Action("Edit", "Main", new { ProductNo = @ViewBag.ProductNo, SerialNo = @ViewBag.SerialNo, CustomerId = @ViewBag.CustomerId, SaleDate = @ViewBag.SaleDate })">編輯</a>
+                        <a class="btn btn-primary">保固設定</a>
+                        <a class="btn btn-primary" onclick="deleteInfo('@Url.Action("Delete", "Main", new { ProductNo = @ViewBag.ProductNo, SerialNo = @ViewBag.SerialNo, CustomerId = @ViewBag.CustomerId, SaleDate = @ViewBag.SaleDate })', '@ViewBag.ContractNo')">刪除</a>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">返回列表</a>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" name="action" value="Save" onclick="btnAdd()" tabindex="25">存檔</button>
+                        <button type=button class="btn btn-primary" name="action" value="SaveAgain" onclick="btnAddAgain()" tabindex="26">存檔並新增</button>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_OrderCategory.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_customer.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_contract_h.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_ServiceArrangeSerial.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_ProductSerial.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_product.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")
+    @RenderPage("~/Areas/PMAI04/Views/Shared/SupportApl_ProductD-modal.cshtml")
+    @RenderPage("~/Areas/PMAI04/Views/Shared/SupportApl_ProcessD-modal.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_address.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_contact.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_WarrantySerial.cshtml")
+</section>
+<input type="hidden" title="module" value="PMAI04" />

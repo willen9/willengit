@@ -1,0 +1,41 @@
+﻿<script type="text/javascript">
+    function checkAgain(from) {
+
+        if ($("#id_EmployeeIdAgain").val() == '') {
+            alert("请输入派工代號!");
+            return false;
+        }
+
+        if ($("#id_EmployeeNameAgain").val() == '') {
+            alert("请確認派工人員是否存在!");
+            return false;
+        }
+        return true;
+    }
+</script>
+@*@using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions {UpdateTargetId = "DivGrid"}))
+{*@
+    <div class='modal fade again-allot-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+        <div class='modal-dialog'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <h4 class='modal-title'>重新派工</h4>
+                </div>
+                <div class='modal-body'>
+                    <label for="id_EmployeeIdAgain" class="control-label">人員代號</label>
+                    <input type="text" class="form-control" id="id_EmployeeIdAgain" name="EmployeeIdAgain" style="width: 200px; display: inline;"/>
+                    <button type="button" class="btn btn-default" style="display: inline;" name="action" id="btnEmployeeAgain">Q</button>
+                    <br/>
+                    <label for="id_EmployeeNameAgain" class="control-label">人員名稱</label>
+                    <input type="text" class="form-control" id="id_EmployeeNameAgain" name="EmployeeNameAgain" style="width: 200px; display: inline;" readonly/>
+                    <label for="id_remark" class="control-label">重新派工原因</label>
+                    <textarea id="id_remark" class="form-control" name="remarkAgain" rows="4" cols="40"></textarea>
+                </div>
+                <div class='modal-footer'>
+                    <button type='submit' class='btn btn-default' name="action" value="btnAllotAgain" onclick="return checkAgain(this)">確定</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal'>取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+@*}*@

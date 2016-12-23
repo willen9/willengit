@@ -1,0 +1,13 @@
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccess.MySQL\bin\DataAccess.MySQL.dll.config
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccess.MySQL\bin\DataAccess.MySQL.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccess.MySQL\bin\DataAccess.MySQL.pdb
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccess.MySQL\bin\EntityFramework.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccess.MySQL\bin\EntityFramework.SqlServer.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccess.MySQL\bin\MySql.Data.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccess.MySQL\bin\MySql.Data.Entity.EF6.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccess.MySQL\bin\System.Linq.Dynamic.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccess.MySQL\bin\EntityFramework.xml
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccess.MySQL\bin\EntityFramework.SqlServer.xml
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccess.MySQL\obj\Debug\DataAccess.MySQL.csprojResolveAssemblyReference.cache
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccess.MySQL\obj\Debug\DataAccess.MySQL.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccess.MySQL\obj\Debug\DataAccess.MySQL.pdb

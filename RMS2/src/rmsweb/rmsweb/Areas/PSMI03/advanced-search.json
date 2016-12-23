@@ -1,0 +1,15 @@
+﻿{
+  "w.ProductNo": "品號",
+  "p.ProductName": "品名",
+  "w.SerialNo": "序號",
+  "w.LastWarrantyType": "最新保固類型",
+  "w.LastWarrantySDate": "最新保固起日",
+  "w.LastWarrantyEDate": "最新保固迄日",
+  "w.Remark": "備註",
+  "w.Company": "公司別",
+  "w.UserGroup": "群組",
+  "w.Creator": "建立人員",
+  "w.CreateDate": "建立日期",
+  "w.Modifier": "修改人員",
+  "w.ModiDate": "修改日期"
+}

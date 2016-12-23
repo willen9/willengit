@@ -1,0 +1,96 @@
+﻿
+<div class='modal fade ProductD-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>商品資料</h4>
+            </div>
+            <div class='modal-body'>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label for="id_ProductDItemId" class="control-label col-sm-4">項次</label>
+                            <div class="col-sm-20">
+                                <input type="text" class="form-control" id="id_ProductDItemId" name="ProductDItemId" readonly tabindex="24"/>
+                            </div> 
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_ProductDProductNo" class="control-label col-sm-4">品號</label>
+                            <div class="col-sm-20">
+                                <input type="text" class="form-control" id="id_ProductDProductNo" name="ProductDProductNo" tabindex="25" style="width: 90%; display: inline;" maxlength="40" />
+                                <button type="button" class="btn btn-default" id="btnProductDProductNo" name="action" aria-label="Left Align" style="display: inline;" tabindex="26">
+                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                </button>
+                                <span style="display:inline;" id="id_ProductDProductName"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_ProductDQTY" class="control-label col-sm-4">數量</label>
+                            <div class="col-sm-20">
+                                <input type="text" class="form-control" id="id_ProductDQTY" name="QTY" onblur="if(isNaN(this.value))this.value=''" tabindex="27"/>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_ProductDUnit" class="control-label col-sm-4">單位</label>
+                            <div class="col-sm-20">
+                                <input type="text" class="form-control" id="id_ProductDUnit" name="ProductDUnit" readonly />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_ProductDWarrantyPeriod" class="control-label col-sm-4">保固期限</label>
+                            <div class="col-sm-20">
+                                <input type="text" class="form-control" id="id_ProductDWarrantyPeriod" name="ProductDWarrantyPeriod" onchange="updateProductDWarrantyEDate()" onkeydown="onlyNumber();" maxlength="3" tabindex="29"/>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_ProductDWarrantySDate" class="control-label col-sm-4">保固起日</label>
+                            <div class="col-sm-20 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_ProductDWarrantySDate" data-link-format="yyyy-mm-dd">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_ProductDWarrantySDate" name="ProductDWarrantySDate" onchange="updateProductDWarrantyEDate()" readonly tabindex="30"/>
+                                    <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_ProductDWarrantyEDate" class="control-label col-sm-4">保固迄日</label>
+                            <div class="col-sm-20 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_ProductDWarrantyEDate" data-link-format="yyyy-mm-dd">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_ProductDWarrantyEDate" name="ProductDWarrantyEDate" readonly tabindex="31"/>
+                                    <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_ProductDRoutineServiceFreq" class="control-label col-sm-4">定保次數</label>
+                            <div class="col-sm-20">
+                                <input type="text" class="form-control" id="id_ProductDRoutineServiceFreq" name="ProductDRoutineServiceFreq" onkeydown="onlyNumber();" maxlength="3" tabindex="34"/>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_ProductDRemark" class="control-label col-sm-4">單身備註</label>
+                            <div class="col-sm-20">
+                                <textarea class="form-control" id="id_ProductDRemark" name="ProductDRemark" cols="40" rows="5" maxlength="255" tabindex="35"></textarea>
+                            </div>
+                        </div>
+                        
+
+                        <input type="hidden" class="form-control" id="id_ProductDSerial" name="ProductDSerial" readonly />
+                        <input type="hidden" class="form-control" id="id_ProductDItemId" name="ProductDItemId" readonly />
+
+                    </div> 
+            <div class='modal-footer'>
+                    <button type="button" class="btn btn-default" name="action" value="btnAllot" onclick="check()" tabindex="36">確定</button>
+                    @*<button type="button" class='btn btn-default' data-dismiss='modal' onclick='numModel()' tabindex="37">序號管理</button>*@
+                    <button type='button' class='btn btn-default' data-dismiss='modal' tabindex="38">取消</button>
+                </div>
+        </div>
+    </div>
+</div>
+    </div>

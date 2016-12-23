@@ -1,0 +1,86 @@
+﻿<script type="text/javascript">
+
+    function addCondition() {
+        var limitCount = 6;
+        var optionCount = $(".baseRow #condition-keys > option").length;
+
+        if (optionCount <= 5)
+            limitCount = optionCount + 1;
+
+        if ($("#search-condition-area .form-group").length < limitCount) {
+            $("#search-condition-area").append($(".baseRow").clone(true).removeClass("baseRow").removeAttr('style')); 
+        }
+    }
+
+    function removeCondition(selfObject) {
+        if ($("#search-condition-area .form-group").length > 2)
+            $(selfObject).parents('.form-group').remove();
+    }
+
+    function ClearCondition() {
+        $('#search-condition-area [class="form-group"]').remove();
+        addCondition();
+    }
+
+    $(document).ready(function () {
+        $(".advanced-search-modal").on('show.bs.modal', function () {
+            $('#search-condition-area [class="form-group"]').remove();
+            addCondition();
+        });
+    });
+
+</script>
+<div class='modal fade advanced-search-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>進階查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <p class="text-right">
+                    <a class="btn btn-link" href="#" role="button" onclick=" addCondition() ">新增條件</a>
+                </p>
+                <div class="form-horizontal" id="search-condition-area">
+                    <div class="form-group baseRow" style="display: none;">
+                        <div class="col-sm-24">
+                            <select class="form-control" name="slCol" style="width: 200px; display: inline;" id="condition-keys">
+                                <option value="r.RMAAplType">單別</option>
+                                <option value="r.RMAAplNo">單號</option>
+                                <option value="r.CustomerId">客戶代號</option>
+                                <option value="r.ProductNo">品號</option>
+                                <option value="r.ProductName">品名</option>
+                                <option value="r.SerialNo">序號</option>
+                                <option value="r.StatusCode">狀態碼</option>
+                                <option value="r.Confirmor">確認人員</option>
+                                <option value="Company">公司別</option>
+                                <option value="UserGroup">群組</option>
+                                <option value="Creator">建立人員</option>
+                                <option value="CreateDate">建立日期</option>
+                                <option value="Modifier">修改人員</option>
+                                <option value="ModiDate">修改日期</option>
+                            </select>
+                            <select class="form-control" name="slCondition" style="width: 100px; display: inline;">
+                                <option value="=">=</option>
+                                <option value=">">></option>
+                                <option value=">=">>=</option>
+                                <option value=">"><</option>
+                                <option value="<="><=</option>
+                                <option value="<>"><></option>
+                                <option value="like%">like%</option>
+                                <option value="%like">%like</option>
+                                <option value="%like%">%like%</option>
+                            </select>
+                            <input type="text" class="form-control" name="conditionValue" style="width: 200px; display: inline;" />
+                            <a class="btn btn-link" href="#" onclick="removeCondition(this)"><i class="fa fa-times deleteRow"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class='modal-footer'>
+                <button type="submit" class="btn btn-default" name="action" value="Advanced">查詢</button>
+                <button type='reset' class='btn btn-default' onclick="ClearCondition()">重置</button>
+            </div>
+        </div>
+    </div>
+</div>

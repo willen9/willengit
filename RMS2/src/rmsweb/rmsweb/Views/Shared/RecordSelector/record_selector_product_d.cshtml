@@ -1,0 +1,110 @@
+﻿<style type="text/css">
+    .table .actioncolumn {
+        width: 50px;
+    }
+
+    .record-selector-brand-modal table .ProductNoType {
+        width: 150px;
+    }
+
+    .record-selector-brand-modal table .ProductNameType {
+        width: 200px;
+    }
+
+    .record-selector-brand-modal table .SpecificationType {
+        width: 200px;
+    }
+
+    .record-selector-brand-modal table .UnitType {
+        width: 200px;
+    }
+
+    .record-selector-brand-modal table .ProductTypeId1NameType {
+        width: 200px;
+    }
+
+    .record-selector-brand-modal table .VendorNameType {
+        width: 200px;
+    }
+</style>
+<div class='modal fade record-selector-product_d-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title'>品項查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-inline">
+                    <div class="form-group">
+                        @*<label for="txtCondition" class="control-label">商品代號</label>
+            <input type="text" class="form-control" id="txtProductNo_d" name="txtProductNo_d" style="width: 200px; display: inline;" />
+            <label for="txtCondition" class="control-label">品名名稱</label>
+            <input type="text" class="form-control" id="txtProductName_d" name="txtProductName_d" style="width: 200px; display: inline;" />*@
+                        <select class="form-control" style="width: 200px; display: inline;" name="addCol" id="addCol">
+                            <option value="ProductNo">品號</option>
+                            <option value="ProductName">品名</option>
+                            <option value="Specification">規格</option>
+                            <option value="ProductTypeId1">商品類別1</option>
+                            <option value="ProductTypeId2">商品類別2</option>
+                            <option value="ProductTypeId3">商品類別3</option>
+                            <option value="ProductTypeId4">商品類別4</option>
+                            <option value="Explanation">商品描述</option>
+                            <option value="VendorId">主供應商</option>
+                            <option value="SerialControl">產品序號管理</option>
+                            <option value="Unit">單位</option>
+                            <option value="BrandId">品牌代號</option>
+                        </select>
+
+                        <select class="form-control" style="width: 100px; display: inline;" name="addCondition" id="addCondition">
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>">&lt;&gt;</option>
+                            <option value="like%">like%</option>
+                            <option value="%like">%like</option>
+                            <option value="%like%">%like%</option>
+                        </select>
+                        <input type="text" class="form-control" id="addconditionValue" name="addconditionValue" style="width: 200px; display: inline;" />
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" id="btnSearchProduct_d" style="display: inline;">查詢</button>
+                    </div>
+                </div>
+            </div>
+                <div id="divProduct_dGrid" style="height: 500px;overflow-y: auto;">
+                    <table class="table table-striped table-hover table-condensed" data-swhgajax="true" data-swhgcontainer="divProduct_dGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                    商品代號
+                                </th>
+                                <th scope="col">
+                                    品名名稱
+                                </th>
+                                <th scope="col">
+                                    規格
+                                </th>
+                                <th scope="col">
+                                    單位
+                                </th>
+                                <th scope="col">
+                                    類別一
+                                </th>
+                                <th scope="col">
+                                    廠商
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <input type="hidden" id="Product_dPage" name="Product_dPage" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

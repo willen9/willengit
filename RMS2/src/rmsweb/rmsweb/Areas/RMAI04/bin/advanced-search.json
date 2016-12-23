@@ -1,0 +1,15 @@
+﻿{
+  "o.OrderSName": "單據名稱",
+  "c.CustomerName": "客戶簡稱",
+  "r.ProductNo": "品號",
+  "r.ProductName": "品名",
+  "r.SerialNo": "序號",
+  "r.ChangeReason": "變更原因",
+  "r.Confirmed": "確認碼",
+  "r.Company": "公司別",
+  "r.UserGroup": "群組",
+  "r.Creator": "建立人員",
+  "r.CreateDate": "建立日期",
+  "r.Modifier": "修改人員",
+  "r.ModiDate": "修改日期"
+}

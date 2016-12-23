@@ -1,0 +1,1526 @@
+﻿<link type="text/css" href="~/AreasStyle/CMSI05_CUR.css" rel="stylesheet" />
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#from-Product').bootstrapValidator({
+            fields: {
+                ProductNo: {
+                    validators: {
+                        notEmpty: {
+                            message: '品號不能為空！'
+                        },
+                        callback: {
+                            message: '品號已存在！',
+                            callback: function (value, validator) {
+                                var res = true;
+                                if (value.length > 0) {
+                                    $.ajax({
+                                        //url: '/cmsi05/productno',
+                                        url: '@Url.Action("ProductNo", "Main")',
+                                        data: JSON.stringify({ "ProductNo": value }),
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function (data) {
+                                            res = data;
+                                        }
+                                    });
+                                }
+                                return res;
+                            }
+                        }
+                    }
+                },
+                unit: {
+                    validators: {
+                        notEmpty: {
+                            message: '單位不能為空！'
+                        }
+                    }
+                },
+                productName: {
+                    validators: {
+                        notEmpty: {
+                            message: '品名不能為空！'
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    $(function () {
+        $('#id_brand').blur(function () {
+            if (document.getElementById("id_brand").readOnly == true) {
+                return;
+            }
+            if ($("#id_brand").val().trim() != "") {
+                $.ajax({
+                    //url: '/cmsi05/getbrandname',
+                    url: '@Url.Action("GetBrandName", "Main")',
+                    data: JSON.stringify({ "BrandId": $("#id_brand").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            $('#brandname').text(serverData[1]);
+                            $('#btn_Save').attr('disabled', true);
+                            $('#btn_SaveAgain').attr('disabled', true);
+                        } else {
+                            $('#brandname').text(serverData[1]);
+                            $('#btn_Save').removeAttr("disabled");
+                            $('#btn_SaveAgain').removeAttr("disabled");
+                        }
+                    }
+                })
+            } else {
+                $('#brandname').text("");
+                $('#btn_Save').removeAttr("disabled");
+                $('#btn_SaveAgain').removeAttr("disabled");
+            }
+
+        });
+
+        $('#id_prodType1').blur(function () {
+            if (document.getElementById("id_prodType1").readOnly == true) {
+                return;
+            }
+            if ($("#id_prodType1").val().trim() != "") {
+                $.ajax({
+                    //url: '/cmsi05/getproducttype',
+                    url: '@Url.Action("GetProductType", "Main")',
+                    data: JSON.stringify({ "ProductCategoryType": "1", "ProductTypeId": $("#id_prodType1").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            $('#idprodType1').text(serverData[1]);
+                            $('#btn_Save').attr('disabled', true);
+                            $('#btn_SaveAgain').attr('disabled', true);
+                        } else {
+                            $('#idprodType1').text(serverData[1]);
+                            $('#btn_Save').removeAttr("disabled");
+                            $('#btn_SaveAgain').removeAttr("disabled");
+                        }
+                    }
+                })
+            } else {
+                $('#idprodType1').text("");
+                $('#btn_Save').removeAttr("disabled");
+                $('#btn_SaveAgain').removeAttr("disabled");
+            }
+
+        });
+
+        $('#id_prodType2').blur(function () {
+            if (document.getElementById("id_prodType2").readOnly == true) {
+                return;
+            }
+            if ($("#id_prodType2").val().trim() != "") {
+                $.ajax({
+                    //url: '/cmsi05/getproducttype',
+                    url: '@Url.Action("GetProductType", "Main")',
+                    data: JSON.stringify({ "ProductCategoryType": "2", "ProductTypeId": $("#id_prodType2").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            $('#idprodType2').text(serverData[1]);
+                            $('#btn_Save').attr('disabled', true);
+                            $('#btn_SaveAgain').attr('disabled', true);
+                        } else {
+                            $('#idprodType2').text(serverData[1]);
+                            $('#btn_Save').removeAttr("disabled");
+                            $('#btn_SaveAgain').removeAttr("disabled");
+                        }
+                    }
+                })
+            } else {
+                $('#idprodType2').text("");
+                $('#btn_Save').removeAttr("disabled");
+                $('#btn_SaveAgain').removeAttr("disabled");
+            }
+
+        });
+
+        $('#id_prodType3').blur(function () {
+            if (document.getElementById("id_prodType3").readOnly == true) {
+                return;
+            }
+            if ($("#id_prodType3").val().trim() != "") {
+                $.ajax({
+                    //url: '/cmsi05/getproducttype',
+                    url: '@Url.Action("GetProductType", "Main")',
+                    data: JSON.stringify({ "ProductCategoryType": "3", "ProductTypeId": $("#id_prodType3").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            $('#idprodType3').text(serverData[1]);
+                            $('#btn_Save').attr('disabled', true);
+                            $('#btn_SaveAgain').attr('disabled', true);
+                        } else {
+                            $('#idprodType3').text(serverData[1]);
+                            $('#btn_Save').removeAttr("disabled");
+                            $('#btn_SaveAgain').removeAttr("disabled");
+                        }
+                    }
+                })
+            } else {
+                $('#idprodType3').text("");
+                $('#btn_Save').removeAttr("disabled");
+                $('#btn_SaveAgain').removeAttr("disabled");
+            }
+
+        });
+
+        $('#id_prodType4').blur(function () {
+            if (document.getElementById("id_prodType4").readOnly == true) {
+                return;
+            }
+            if ($("#id_prodType4").val().trim() != "") {
+                $.ajax({
+                    //url: '/cmsi05/getproducttype',
+                    url: '@Url.Action("GetProductType", "Main")',
+                    data: JSON.stringify({ "ProductCategoryType": "4", "ProductTypeId": $("#id_prodType4").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            $('#idprodType4').text(serverData[1]);
+                            $('#btn_Save').attr('disabled', true);
+                            $('#btn_SaveAgain').attr('disabled', true);
+                        } else {
+                            $('#idprodType4').text(serverData[1]);
+                            $('#btn_Save').removeAttr("disabled");
+                            $('#btn_SaveAgain').removeAttr("disabled");
+                        }
+                    }
+                })
+            } else {
+                $('#idprodType4').text("");
+                $('#btn_Save').removeAttr("disabled");
+                $('#btn_SaveAgain').removeAttr("disabled");
+            }
+
+        });
+
+        $('#id_vender').blur(function () {
+            if (document.getElementById("id_vender").readOnly == true) {
+                return;
+            }
+            if ($("#id_vender").val().trim() != "") {
+                $.ajax({
+                    //url: '/cmsi05/getvendorname',
+                    url: '@Url.Action("GetVendorName", "Main")',
+                    data: JSON.stringify({ "VendorId": $("#id_vender").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            $('#idvender').text(serverData[1]);
+                            $('#btn_Save').attr('disabled', true);
+                            $('#btn_SaveAgain').attr('disabled', true);
+                        } else {
+                            $('#idvender').text(serverData[1]);
+                            $('#btn_Save').removeAttr("disabled");
+                            $('#btn_SaveAgain').removeAttr("disabled");
+                        }
+                    }
+                })
+            } else {
+                $('#idprodType4').text("");
+                $('#btn_Save').removeAttr("disabled");
+                $('#btn_SaveAgain').removeAttr("disabled");
+            }
+
+        });
+
+        $("#btnBrandId").click(function () {
+            $.ajax({
+                //url: '/cmsi05/add/searchbrand',
+                url: '@Url.Action("SearchBrand", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "BrandId": "", "Col": "", "Condition": "", "conditionValue": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divBrandGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divBrandGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectBrand(this)'>選擇</a>" +
+                            "<td class='brandIdType'>" + Maintain[i].BrandId + "</td>" +
+                            "<td class='brandTyep'>" + Maintain[i].BrandName + "</td>" +
+                            "</tr>");
+                    }
+                }
+            });
+            $("#txtBrandId").val("");
+            //$("#txtBrandName").val("");
+            $("#BrandPage").val("1");
+            $(".record-selector-brand-modal").modal();
+
+        });
+
+        $(document).ready(function () {
+            $("#divBrandGrid").scroll(function () {
+                var Page = document.getElementById("BrandPage").value;;
+                if (Page != 0) {
+                    var scrollTop = $(this).scrollTop();
+                    //var scrollHeight = $(document).height();
+                    //var windowHeight = $(this).height();
+                    if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                        //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                        Page = parseInt(Page) + 1;
+                        $.ajax({
+                            //url: '/cmsi05/add/searchbrand',
+                            url: '@Url.Action("SearchBrand", "Main")',
+                            type: "POST",
+                            datatype: 'JSON',
+                            data: JSON.stringify({ "BrandId": $("#txtBrandId").val(), "Col": $("#addBrand_Col").val(), "Condition": $("#addBrand_Condition").val(), "conditionValue": $("#addBrand_conditionValue").val(), Page: Page }),
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                var Maintain = eval(data);
+                                for (var i = 0; i < Maintain.length; i++) {
+                                    $("#divBrandGrid table tbody").append("<tr>" +
+                                        "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectBrand(this)'>選擇</a>" +
+                                        "<td class='brandIdType'>" + Maintain[i].BrandId + "</td>" +
+                                        "<td class='brandTyep'>" + Maintain[i].BrandName + "</td>" +
+                                        "</tr>");
+                                }
+                            }
+                        });
+                        $("#BrandPage").val(Page);
+                    }
+                }
+
+            });
+        });
+
+        $("#btnVendor").click(function () {
+            $.ajax({
+                //url: '/cmsi05/add/searchvendor',
+                url: '@Url.Action("SearchVendor", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "VendorId": "", "VendorName": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divVendorGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divVendorGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectVendor(this)'>選擇</a>" +
+                            "<td class='vendorIdType'>" + Maintain[i].VendorId + "</td>" +
+                            "<td class='vendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                            "<td class='contactType'>" + Maintain[i].Contact + "</td>" +
+                            "<td class='telNoType'>" + Maintain[i].TelNo + "</td>" +
+                            "<td class='faxNoType'>" + Maintain[i].FaxNo + "</td>" +
+                            "<td class='address1Type'>" + Maintain[i].AddressSName + "</td>" +
+                            "<td class='remarkType'>" + Maintain[i].Remark + "</td>" +
+                            "</tr>");
+                    }
+                }
+            });
+            $("#VendorPage").val("1");
+            $(".record-selector-Vendor-modal").modal();
+        });
+
+        $(document).ready(function () {
+            $("#divVendorGrid").scroll(function () {
+                var Page = document.getElementById("VendorPage").value;;
+                if (Page != 0) {
+                    var scrollTop = $(this).scrollTop();
+                    //var scrollHeight = $(document).height();
+                    //var windowHeight = $(this).height();
+                    if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                        //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                        Page = parseInt(Page) + 1;
+                        $.ajax({
+                            //url: '/cmsi05/add/searchvendor',
+                            url: '@Url.Action("SearchVendor", "Main")',
+                            type: "POST",
+                            datatype: 'JSON',
+                            data: JSON.stringify({ "VendorId": $("#txtVendorId").val(), "VendorName": $("#txtVendorName").val(), Page: Page }),
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                var Maintain = eval(data);
+                                for (var i = 0; i < Maintain.length; i++) {
+                                    $("#divVendorGrid table tbody").append("<tr>" +
+                                        "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectVendor(this)'>選擇</a>" +
+                                        "<td class='vendorIdType'>" + Maintain[i].VendorId + "</td>" +
+                                        "<td class='vendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                                        "<td class='contactType'>" + Maintain[i].Contact + "</td>" +
+                                        "<td class='telNoType'>" + Maintain[i].TelNo + "</td>" +
+                                        "<td class='faxNoType'>" + Maintain[i].FaxNo + "</td>" +
+                                        "<td class='address1Type'>" + Maintain[i].AddressSName + "</td>" +
+                                        "<td class='remarkType'>" + Maintain[i].Remark + "</td>" +
+                                        "</tr>");
+                                }
+                            }
+                        });
+                        $("#VendorPage").val(Page);
+                    }
+                }
+
+            });
+        });
+
+        $("#btnProdType1").click(function () {
+            $.ajax({
+                //url: '/cmsi05/add/searchprodtype',
+                url: '@Url.Action("SearchProdType", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ProductCategoryType": "1", "ProductTypeId": "", "ProductType": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divProductCategoryGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divProductCategoryGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProdType1(this)'>選擇</a>" +
+                            "<td class='ProductTypeIdType'>" + Maintain[i].ProductTypeId + "</td>" +
+                            "<td class='ProductTypeType'>" + Maintain[i].ProductType + "</td>" +
+                            "</tr>");
+                    }
+                }
+            });
+            $("#txtProductTypeId").val("");
+            $("#txtProductType").val("");
+            $("#txtCategoryType").val("1");
+            $("#ProdPage").val("1");
+            $(".record-selector-productcategory-modal").modal();
+        });
+
+        $("#btnProdType2").click(function () {
+            $.ajax({
+                //url: '/cmsi05/add/searchprodtype',
+                url: '@Url.Action("SearchProdType", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ProductCategoryType": "2", "ProductTypeId": "", "ProductType": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divProductCategoryGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divProductCategoryGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProdType2(this)'>選擇</a>" +
+                            "<td class='ProductTypeIdType'>" + Maintain[i].ProductTypeId + "</td>" +
+                            "<td class='ProductTypeType'>" + Maintain[i].ProductType + "</td>" +
+                            "</tr>");
+                    }
+                }
+            });
+            $("#txtProductTypeId").val("");
+            $("#txtProductType").val("");
+            $("#txtCategoryType").val("2");
+            $("#ProdPage").val("1");
+            $(".record-selector-productcategory-modal").modal();
+        });
+
+        $("#btnProdType3").click(function () {
+            $.ajax({
+                //url: '/cmsi05/add/searchprodtype',
+                url: '@Url.Action("SearchProdType", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ProductCategoryType": "3", "ProductTypeId": "", "ProductType": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divProductCategoryGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divProductCategoryGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProdType3(this)'>選擇</a>" +
+                            "<td class='ProductTypeIdType'>" + Maintain[i].ProductTypeId + "</td>" +
+                            "<td class='ProductTypeType'>" + Maintain[i].ProductType + "</td>" +
+                            "</tr>");
+                    }
+                }
+            });
+            $("#txtProductTypeId").val("");
+            $("#txtProductType").val("");
+            $("#txtCategoryType").val("3");
+            $("#ProdPage").val("1");
+            $(".record-selector-productcategory-modal").modal();
+        });
+
+        $("#btnProdType4").click(function () {
+            $.ajax({
+                //url: '/cmsi05/add/searchprodtype',
+                url: '@Url.Action("SearchProdType", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ProductCategoryType": "4", "ProductTypeId": "", "ProductType": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divProductCategoryGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divProductCategoryGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProdType4(this)'>選擇</a>" +
+                            "<td class='ProductTypeIdType'>" + Maintain[i].ProductTypeId + "</td>" +
+                            "<td class='ProductTypeType'>" + Maintain[i].ProductType + "</td>" +
+                            "</tr>");
+                    }
+                }
+            });
+            $("#txtProductTypeId").val("");
+            $("#txtProductType").val("");
+            $("#txtCategoryType").val("4");
+            $("#ProdPage").val("1");
+            $(".record-selector-productcategory-modal").modal();
+        });
+
+        $(document).ready(function () {
+            $("#divProductCategoryGrid").scroll(function () {
+                var Page = document.getElementById("ProdPage").value;;
+                if (Page != 0) {
+                    var scrollTop = $(this).scrollTop();
+                    //var scrollHeight = $(document).height();
+                    //var windowHeight = $(this).height();
+                    if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                        //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                        Page = parseInt(Page) + 1;
+                        $.ajax({
+                            //url: '/cmsi05/add/searchprodtype',
+                            url: '@Url.Action("SearchProdType", "Main")',
+                            type: "POST",
+                            datatype: 'JSON',
+                            data: JSON.stringify({ "ProductCategoryType": $("#txtCategoryType").val(), "ProductTypeId": $("#txtProductTypeId").val(), "ProductType": $("#txtProductType").val(), Page: Page }),
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                var Maintain = eval(data);
+                                for (var i = 0; i < Maintain.length; i++) {
+                                    $("#divProductCategoryGrid table tbody").append("<tr>" +
+                                        "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProdType4(this)'>選擇</a>" +
+                                        "<td class='ProductTypeIdType'>" + Maintain[i].ProductTypeId + "</td>" +
+                                        "<td class='ProductTypeType'>" + Maintain[i].ProductType + "</td>" +
+                                        "</tr>");
+                                }
+                            }
+                        });
+                        $("#ProdPage").val(Page);
+                    }
+                }
+
+            });
+        });
+    });
+
+
+
+
+    /*
+        保存
+    */
+    function btnAdd() {
+        if (document.getElementById("id_ProductNo").value == "") {
+            $("#msg_information").html("品號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        };
+        if (document.getElementById("id_unit").value == "") {
+            $("#msg_information").html("單位不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        };
+        if (document.getElementById("id_productName").value == "") {
+            $("#msg_information").html("品名不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        };
+        $.ajax({
+            //url: '/cmsi05/productno',
+            url: '@Url.Action("ProductNo", "Main")',
+            data: JSON.stringify({ "ProductNo": $("#id_ProductNo").val().trim() }),
+            type: 'POST',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data == false) {
+                    $("#msg_information").html("品號已存在！");
+                    $('.msg-modal-lg').modal();
+                    return;
+                }
+            }
+        });
+
+        if ($("#id_brand").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getbrandname',
+                url: '@Url.Action("GetBrandName", "Main")',
+                data: JSON.stringify({ "BrandId": $("#id_brand").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#brandname').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#brandname').text(serverData[1]);
+                    }
+                }
+            });
+        }
+
+
+        if ($("#id_prodType1").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "1", "ProductTypeId": $("#id_prodType1").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType1').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType1').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        if ($("#id_prodType2").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "2", "ProductTypeId": $("#id_prodType2").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType2').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType2').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        if ($("#id_prodType3").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "3", "ProductTypeId": $("#id_prodType3").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType3').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType3').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        if ($("#id_prodType4").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "4", "ProductTypeId": $("#id_prodType4").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType4').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType4').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        $.ajax({
+            //url: '/cmsi05/add',
+            url: '@Url.Action("Add", "Main")',
+            data: $('#from-Product').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("Index", "Main")'
+                }
+
+            }
+        })
+    };
+
+    function btnAddAgain() {
+        if (document.getElementById("id_ProductNo").value == "") {
+            $("#msg_information").html("品號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        };
+        if (document.getElementById("id_unit").value == "") {
+            $("#msg_information").html("單位不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        };
+        if (document.getElementById("id_productName").value == "") {
+            $("#msg_information").html("品名不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        };
+
+        $.ajax({
+            //url: '/cmsi05/productno',
+            url: '@Url.Action("ProductNo", "Main")',
+            data: JSON.stringify({ "ProductNo": $("#id_ProductNo").val().trim() }),
+            type: 'POST',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data == false) {
+                    $("#msg_information").html("品號已存在！");
+                    $('.msg-modal-lg').modal();
+                    return;
+                }
+            }
+        });
+
+        if ($("#id_brand").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getbrandname',
+                url: '@Url.Action("GetBrandName", "Main")',
+                data: JSON.stringify({ "BrandId": $("#id_brand").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#brandname').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#brandname').text(serverData[1]);
+                    }
+                }
+            });
+        }
+
+
+        if ($("#id_prodType1").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "1", "ProductTypeId": $("#id_prodType1").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType1').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType1').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        if ($("#id_prodType2").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "2", "ProductTypeId": $("#id_prodType2").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType2').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType2').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        if ($("#id_prodType3").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "3", "ProductTypeId": $("#id_prodType3").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType3').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType3').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        if ($("#id_prodType4").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "4", "ProductTypeId": $("#id_prodType4").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType4').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType4').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        $.ajax({
+            //url: '/cmsi05/add',
+            url: '@Url.Action("Add", "Main")',
+            data: $('#from-Product').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("CUR", "Main")'
+                }
+
+            }
+        })
+    };
+
+    function btnExit() {
+
+        if (document.getElementById("id_unit").value == "") {
+            $("#msg_information").html("單位不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        };
+        if (document.getElementById("id_productName").value == "") {
+            $("#msg_information").html("品名不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        };
+
+        if ($("#id_brand").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getbrandname',
+                url: '@Url.Action("GetBrandName", "Main")',
+                data: JSON.stringify({ "BrandId": $("#id_brand").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#brandname').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#brandname').text(serverData[1]);
+                    }
+                }
+            });
+        }
+
+
+        if ($("#id_prodType1").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "1", "ProductTypeId": $("#id_prodType1").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType1').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType1').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        if ($("#id_prodType2").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "2", "ProductTypeId": $("#id_prodType2").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType2').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType2').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        if ($("#id_prodType3").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "3", "ProductTypeId": $("#id_prodType3").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType3').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType3').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        if ($("#id_prodType4").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "4", "ProductTypeId": $("#id_prodType4").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType4').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType4').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        $.ajax({
+            //url: '/cmsi05/exit',
+            url: '@Url.Action("Exit", "Main")',
+            data: $('#from-Product').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("Index", "Main")'
+                }
+
+            }
+        })
+    };
+
+    function btnExitAgain() {
+
+        if (document.getElementById("id_unit").value == "") {
+            $("#msg_information").html("單位不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        };
+        if (document.getElementById("id_productName").value == "") {
+            $("#msg_information").html("品名不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        };
+
+        if ($("#id_brand").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getbrandname',
+                url: '@Url.Action("GetBrandName", "Main")',
+                data: JSON.stringify({ "BrandId": $("#id_brand").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#brandname').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#brandname').text(serverData[1]);
+                    }
+                }
+            });
+        }
+
+
+        if ($("#id_prodType1").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "1", "ProductTypeId": $("#id_prodType1").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType1').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType1').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        if ($("#id_prodType2").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "2", "ProductTypeId": $("#id_prodType2").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType2').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType2').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        if ($("#id_prodType3").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "3", "ProductTypeId": $("#id_prodType3").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType3').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType3').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        if ($("#id_prodType4").val().trim() != "") {
+            $.ajax({
+                //url: '/cmsi05/getproducttype',
+                url: '@Url.Action("GetProductType", "Main")',
+                data: JSON.stringify({ "ProductCategoryType": "4", "ProductTypeId": $("#id_prodType4").val().trim() }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html(erverData[1]);
+                        $('#idprodType4').text("");
+                        $('.msg-modal-lg').modal();
+                        return
+                    } else {
+                        $('#idprodType4').text(serverData[1]);
+                    }
+                }
+            })
+        };
+
+        $.ajax({
+            //url: '/cmsi05/exit',
+            url: '@Url.Action("Exit", "Main")',
+            data: $('#from-Product').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("CUR", "Main")'
+                }
+
+            }
+        })
+    };
+</script>
+<section class="content-header">
+    <h1>品號基本資料維護</h1>
+</section>
+<section class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            <form id="from-Product" method="post">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_ProductNo" class="col-md-3 col-lg-3 control-label">品號</label>
+                        <div class="col-md-9 col-lg-9">
+                            @if (ViewBag.Type == "Edit" || ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_ProductNo" name="ProductNo" value="@ViewBag.ProductNo" autocomplete="off" maxlength="40" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_ProductNo" name="ProductNo" autocomplete="off" maxlength="40" value="@ViewBag.ProductNo" />
+                            }
+                        </div>
+                        <label for="id_unit" class="col-md-3 col-lg-3 control-label">單位</label>
+                        <div class="col-md-9 col-lg-9">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_unit" name="unit" maxlength="6" value="@ViewBag.Unit" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_unit" name="unit" maxlength="6" value="@ViewBag.Unit" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_productName" class="col-md-3 col-lg-3 control-label">品名</label>
+                        <div class="col-md-9 col-lg-9">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_productName" name="productName" maxlength="120" value="@ViewBag.ProductName" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_productName" name="productName" maxlength="120" value="@ViewBag.ProductName" />
+                            }
+
+                        </div>
+                        <label for="id_brand" class="col-md-3 col-lg-3 control-label">品牌</label>
+                        <div class="col-md-9 col-lg-9">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_brand" name="brand" style="display: inline;" maxlength="10" value="@ViewBag.BrandId" readonly="readonly" />
+                                    @*<span class="input-group-addon" id="btnSearchDepart" style="cursor: pointer;"><span class="fa fa-hand-pointer-o"></span></span>*@
+                                    <span class="input-group-addon" style="cursor:pointer;"><i class="fa fa-hand-pointer-o"></i></span>
+                                </div>
+                                        <span style="display:inline;" id="brandname">@ViewBag.BrandName</span>
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_brand" name="brand" style="display: inline;" maxlength="10" value="@ViewBag.BrandId" />
+                                    <span class="input-group-addon" style="cursor:pointer;" id="btnBrandId"><i class="fa fa-hand-pointer-o"></i></span>
+                                </div>
+                                <span style="display:inline;" id="brandname">@ViewBag.BrandName</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_productSpec" class="col-md-3 col-lg-3 control-label">規格</label>
+                        <div class="col-md-9 col-lg-9">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_productSpec" name="productSpec" maxlength="120" value="@ViewBag.Specification" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_productSpec" name="productSpec" maxlength="120" value="@ViewBag.Specification" />
+                            }
+
+                        </div>
+                        <label for="id_vender" class="col-md-3 col-lg-3 control-label">供應商</label>
+                        <div class="col-md-9 col-lg-9">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_vender" name="vender" style="display: inline;" maxlength="10" value="@ViewBag.VendorId" readonly="readonly" />
+                                    @*<span class="input-group-addon" id="btnSearchDepart" style="cursor: pointer;"><span class="fa fa-hand-pointer-o"></span></span>*@
+                                    <span class="input-group-addon" style="cursor:pointer;"><i class="fa fa-hand-pointer-o"></i></span>
+                                </div>
+                                @*<input type="text" class="form-control" id="id_vender" name="vender" style="width: 60%; display: inline;" maxlength="10" value="@ViewBag.VendorId" readonly />
+                                <button type="button" class="btn btn-default" style="display:inline;" disabled><i class="fa fa-hand-pointer-o"></i></button>*@
+                                        <span style="display:inline;" id="idvender">@ViewBag.VendorName</span>
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_vender" name="vender" style="display: inline;" maxlength="10" value="@ViewBag.VendorId" />
+                                    <span class="input-group-addon" style="cursor:pointer;" id="btnVendor"><i class="fa fa-hand-pointer-o"></i></span>
+                                </div>
+                                        <span style="display:inline;" id="idvender">@ViewBag.VendorName</span>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_prodType1" class="col-md-3 col-lg-3 control-label">類別一</label>
+                        <div class="col-md-9 col-lg-9">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_prodType1" name="prodType1" style="display: inline;" maxlength="10" value="@ViewBag.ProductTypeId1" readonly="readonly" />
+                                    @*<span class="input-group-addon" id="btnSearchDepart" style="cursor: pointer;"><span class="fa fa-hand-pointer-o"></span></span>*@
+                                    <span class="input-group-addon" style="cursor:pointer;"><i class="fa fa-hand-pointer-o"></i></span>
+                                </div>
+                                        <span style="display:inline;" id="idprodType1">@ViewBag.ProductTypeId1Name</span>
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_prodType1" name="prodType1" style="display: inline;" maxlength="10" value="@ViewBag.ProductTypeId1" />
+                                    <span class="input-group-addon" style="cursor:pointer;" id="btnProdType1"><i class="fa fa-hand-pointer-o"></i></span>
+                                </div>
+                                        <span style="display:inline;" id="idprodType1">@ViewBag.ProductTypeId1Name</span>
+                            }
+
+                        </div>
+                        <label for="id_prodType2" class="col-md-3 col-lg-3 control-label">類別二</label>
+                        <div class="col-md-9 col-lg-9">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_prodType2" name="prodType2" style="display: inline;" maxlength="10" value="@ViewBag.ProductTypeId2" readonly="readonly" />
+                                    @*<span class="input-group-addon" id="btnSearchDepart" style="cursor: pointer;"><span class="fa fa-hand-pointer-o"></span></span>*@
+                                    <span class="input-group-addon" style="cursor:pointer;"><i class="fa fa-hand-pointer-o"></i></span>
+                                </div>
+                                <span style="display:inline;" id="idprodType2">@ViewBag.ProductTypeId2Name</span>
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_prodType2" name="prodType2" style="display: inline;" maxlength="10" value="@ViewBag.ProductTypeId2" />
+                                    <span class="input-group-addon" style="cursor:pointer;" id="btnProdType2"><i class="fa fa-hand-pointer-o"></i></span>
+                                </div>
+                                <span style="display:inline;" id="idprodType2">@ViewBag.ProductTypeId2Name</span>
+                            }
+
+                        </div>                        
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_prodType3" class="col-md-3 col-lg-3 control-label">類別三</label>
+                        <div class="col-md-9 col-lg-9">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_prodType3" name="prodType3" style="display: inline;" maxlength="10" value="@ViewBag.ProductTypeId3" readonly="readonly" />
+                                    @*<span class="input-group-addon" id="btnSearchDepart" style="cursor: pointer;"><span class="fa fa-hand-pointer-o"></span></span>*@
+                                    <span class="input-group-addon" style="cursor:pointer;"><i class="fa fa-hand-pointer-o"></i></span>
+                                </div>
+                                <span style="display:inline;" id="idprodType3">@ViewBag.ProductTypeId3Name</span>
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_prodType3" name="prodType3" style="display: inline;" maxlength="10" value="@ViewBag.ProductTypeId3" />
+                                    <span class="input-group-addon" style="cursor:pointer;" id="btnProdType3"><i class="fa fa-hand-pointer-o"></i></span>
+                                </div>
+                                <span style="display:inline;" id="idprodType3">@ViewBag.ProductTypeId3Name</span>
+                            }
+
+                        </div>
+                        <label for="id_prodType4" class="col-md-3 col-lg-3 control-label">類別四</label>
+                        <div class="col-md-9 col-lg-9">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_prodType4" name="prodType4" style="display: inline;" maxlength="10" value="@ViewBag.ProductTypeId4" readonly="readonly" />
+                                    @*<span class="input-group-addon" id="btnSearchDepart" style="cursor: pointer;"><span class="fa fa-hand-pointer-o"></span></span>*@
+                                    <span class="input-group-addon" style="cursor:pointer;"><i class="fa fa-hand-pointer-o"></i></span>
+                                </div>
+                                        <span style="display:inline;" id="idprodType4">@ViewBag.ProductTypeId4Name</span>
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_prodType4" name="prodType4" style="display: inline;" maxlength="10" value="@ViewBag.ProductTypeId4" />
+                                    <span class="input-group-addon" style="cursor:pointer;" id="btnProdType4"><i class="fa fa-hand-pointer-o"></i></span>
+                                </div>
+                                        <span style="display:inline;" id="idprodType4">@ViewBag.ProductTypeId4Name</span>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SerialControl" class="col-md-3 col-lg-3 control-label">序號管理</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                if (ViewBag.SerialControl == "Y")
+                                {
+                                    <input type="checkbox" id="id_SerialControl" name="SerialControl" checked disabled />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="id_SerialControl" name="SerialControl" disabled />
+                                }
+
+                            }
+                            else
+                            {
+                                if (ViewBag.SerialControl == "Y")
+                                {
+                                    <input type="checkbox" id="id_SerialControl" name="SerialControl" checked />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="id_SerialControl" name="SerialControl" />
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_remark" class="col-md-3 col-lg-3 control-label">商品描述</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <textarea class="form-control" id="id_remark" name="remark" cols="40" rows="5" maxlength="255" readonly>@ViewBag.Explanation</textarea>
+                            }
+                            else
+                            {
+                                <textarea class="form-control" id="id_remark" name="remark" cols="40" rows="5" maxlength="255">@ViewBag.Explanation</textarea>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <p style="color: red;">@ViewBag.Msg</p>
+                <div class="text-right">
+                    @if (ViewBag.Type == "Edit")
+                    {
+                        <button type="button" class="btn btn-primary" name="action" value="Edit" onclick="btnExit()">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i> 存檔
+                        </button>
+                            <button type="button" class="btn btn-primary" name="action" value="EditAgain" onclick="btnExitAgain()">存檔並新增</button>
+                                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+                    else if (ViewBag.Type == "Details")
+                    {
+                        <a class="btn btn-primary" href="@Url.Action("Edit", "Main", new { ProductNo = @ViewBag.ProductNo })">編輯</a>
+                            <a class="btn btn-primary" href="@Url.Action("Copy", "Main", new { ProductNo = @ViewBag.ProductNo })">複製並新增</a>
+                                    <a class="btn btn-primary" onclick="deleteInfo('@Url.Action("Delete", "Main", new { ProductNo = @ViewBag.ProductNo })','@ViewBag.ProductName')" href="#">刪除</a>
+                                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">返回列表</a>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" name="action" value="Save" onclick="btnAdd()">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i> 存檔
+                        </button>
+                            <button type=button class="btn btn-primary" name="action" value="SaveAgain" onclick="btnAddAgain()">存檔並新增</button>
+                                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+                </div>
+            </form>
+
+        </div>
+    </div>
+</section>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btnBrand").click(function () {
+                $.ajax({
+                    url: '@Url.Action("SearchBrand", "Main")',
+                    type: "POST",
+                    datatype: 'JSON',
+                    data: JSON.stringify({ "BrandId": $("#txtBrandId").val(), "Col": "", "Condition": "", "conditionValue": "", Page: 1 }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#divBrandGrid table tbody").empty();
+                        var Maintain = eval(data);
+                        for (var i = 0; i < Maintain.length; i++) {
+                            $("#divBrandGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectBrand(this)'>選擇</a>" +
+                                "<td class='brandIdType'>" + Maintain[i].BrandId + "</td>" +
+                                "<td class='brandTyep'>" + Maintain[i].BrandName + "</td>" +
+                                "</tr>");
+                        }
+                    }
+                });
+                $("#BrandPage").val("1");
+            });
+
+            $("#btnSelectVendor").click(function () {
+                $.ajax({
+                    url: '@Url.Action("SearchVendor", "Main")',
+                    type: "POST",
+                    datatype: 'JSON',
+                    data: JSON.stringify({ "VendorId": $("#txtVendorId").val(), "VendorName": $("#txtVendorName").val(), Page: 1 }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#divVendorGrid table tbody").empty();
+                        var Maintain = eval(data);
+                        for (var i = 0; i < Maintain.length; i++) {
+                            $("#divVendorGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectVendor(this)'>選擇</a>" +
+                                "<td class='vendorIdType'>" + Maintain[i].VendorId + "</td>" +
+                                "<td class='vendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                                "<td class='contactType'>" + Maintain[i].Contact + "</td>" +
+                                "<td class='telNoType'>" + Maintain[i].TelNo + "</td>" +
+                                "<td class='faxNoType'>" + Maintain[i].FaxNo + "</td>" +
+                                "<td class='address1Type'>" + Maintain[i].AddressSName + "</td>" +
+                                "<td class='remarkType'>" + Maintain[i].Remark + "</td>" +
+                                "</tr>");
+                        }
+                    }
+                });
+                $("#VendorPage").val("1");
+            });
+
+            $("#btnPro").click(function () {
+                $.ajax({
+                    url: '@Url.Action("SearchProdType", "Main")',
+                    type: "POST",
+                    datatype: 'JSON',
+                    data: JSON.stringify({ "ProductCategoryType": $("#txtCategoryType").val(), "ProductTypeId": $("#txtProductTypeId").val(), "ProductType": $("#txtProductType").val(), Page: 1 }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#divProductCategoryGrid table tbody").empty();
+                        var Maintain = eval(data);
+                        for (var i = 0; i < Maintain.length; i++) {
+                            $("#divProductCategoryGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectProdType1(this)'>選擇</a>" +
+                                "<td class='ProductTypeIdType'>" + Maintain[i].ProductTypeId + "</td>" +
+                                "<td class='ProductTypeType'>" + Maintain[i].ProductType + "</td>" +
+                                "</tr>");
+                        }
+                    }
+                });
+                $("#ProdPage").val("1");
+            });
+        });
+
+
+
+        function SelectBrand(id) {
+            $("#id_brand").val($(id).closest('tr').find(".brandIdType").html());
+            $("#brandname").html($(id).closest('tr').find(".brandTyep").html());
+        }
+
+        function SelectVendor(id) {
+            $("#id_vender").val($(id).closest('tr').find(".vendorIdType").html());
+            $("#idvender").html($(id).closest('tr').find(".vendorNameType").html());
+        }
+
+        function SelectProdType1(id) {
+            $("#id_prodType1").val($(id).closest('tr').find(".ProductTypeIdType").html());
+            $("#idprodType1").html($(id).closest('tr').find(".ProductTypeType").html());
+        }
+
+        function SelectProdType2(id) {
+            $("#id_prodType2").val($(id).closest('tr').find(".ProductTypeIdType").html());
+            $("#idprodType2").html($(id).closest('tr').find(".ProductTypeType").html());
+        }
+
+        function SelectProdType3(id) {
+            $("#id_prodType3").val($(id).closest('tr').find(".ProductTypeIdType").html());
+            $("#idprodType3").html($(id).closest('tr').find(".ProductTypeType").html());
+        }
+
+        function SelectProdType4(id) {
+            $("#id_prodType4").val($(id).closest('tr').find(".ProductTypeIdType").html());
+            $("#idprodType4").html($(id).closest('tr').find(".ProductTypeType").html());
+        }
+
+    </script>
+<input type="hidden" title="module" value="CMSI05" />
+    @RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_brand.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_productcategory.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_vendor.cshtml")

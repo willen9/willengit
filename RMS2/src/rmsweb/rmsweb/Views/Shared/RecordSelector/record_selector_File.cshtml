@@ -1,0 +1,136 @@
+﻿<style type="text/css">
+    .record-selector-file-modal table .actioncolumn {
+        width: 50px;
+    }
+
+    .record-selector-file-modal table .FileNameType {
+        width: 150px;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#submitButton-imageUploader").click(function () {
+            var url = $("#id_fileUpload").val();
+            if (url.trim() == "") {
+                alert('請選擇要上傳的文件');
+                return false;
+            } else {
+                $.ajaxFileUpload({
+                    url: '@Url.Action("UpFile", "Main", new { Area = "SUPI05" })',
+                    data: { "fileOrderType": $("#fileOrderType").val(), "fileOrderNo": $("#fileOrderNo").val() },
+                    type: 'POST',
+                    secureuri: true,
+                    fileElementId: 'id_fileUpload',//file标签的id
+                    dataType: 'json',//返回数据的类型
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            alert(serverData[1]);
+                        }else
+                        {
+                            $.ajax({
+                                url: '@Url.Action("SearchFile", "Main", new { Area = "SUPI05" })',
+                                type: "POST",
+                                datatype: 'JSON',
+                                data: JSON.stringify({ "FileKey": $("#fileOrderType").val() + "-" + $("#fileOrderNo").val() }),
+                                contentType: 'application/json; charset=utf-8',
+                                success: function (data) {
+                                    $("#divFileArchiveGrid table tbody").empty();
+                                    var Maintain = eval(data);
+                                    for (var i = 0; i < Maintain.length; i++) {
+                                        var file = eval(Maintain[i].FileContent);
+                                        $("#divFileArchiveGrid table tbody").append("<tr>" +
+                                                "<td class='actioncolumn'><a href='#' onclick='deleteFile(this)'>删除</a><a href='#' onclick='DownFile(this)'>下载</a>" +
+                                                "<td class='FileNameType'>" + file[0].FileName + "</td>" +
+                                                "<td><input type='hidden' class='FileKeyType' value='" + Maintain[i].FileKey + "'><input type='hidden' class='FilePathType' value='" + file[0].FilePath + "'>" + "</td>" +
+                                                "</tr>");
+
+                                    }
+                                }
+                            });
+                            alert(serverData[1]);
+                        }
+                    },
+                    error: function (data, status, e) {
+                        alert(e);
+                    }
+                });
+            }
+        });
+
+    });
+
+    function deleteFile(id) {
+        $.ajax({
+            url: '@Url.Action("DelFile", "Main", new { Area = "SUPI05" })',
+            type: "POST",
+            datatype: 'JSON',
+            data: JSON.stringify({ "FileKey": $(id).closest('tr').find(".FileKeyType").val() }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var serverData = data.split('-');
+                if (serverData[0] == "NO") {
+                    alert(serverData[1]);
+                } else {
+                    alert(serverData[1]);
+                    $(id).parents('tr:first').remove();
+                }
+            }
+        });
+    }
+
+    function DownFile(id) {
+        $.ajax({
+            url: '@Url.Action("DownFile", "Main", new { Area = "SUPI05" })',
+            type: "POST",
+            data: { "FilePath": $(id).closest('tr').find(".FilePathType").val(), "FileName": $(id).closest('tr').find(".FileNameType").html() }
+            //contentType: 'application/json; charset=utf-8',
+            //success: function (data) {
+            //    var serverData = data.split('-');
+            //    if (serverData[0] == "NO") {
+            //        alert(serverData[1]);
+            //    } else {
+            //        alert(serverData[1]);
+            //        $(id).parents('tr:first').remove();
+            //    }
+            //}
+        });
+    }
+</script>
+
+<div class='modal fade record-selector-file-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title'>文件查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <input type="hidden" id="fileOrderType" />
+                <input type="hidden" id="fileOrderNo" />
+                <div id="divFileArchiveGrid" style="height: 500px;overflow-y: auto;">
+                    <table class="table table-striped table-hover table-condensed" data-swhgajax="true" data-swhgcontainer="divFileArchiveGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    動作
+                                </th>
+                                <th scope="col">
+                                    檔名
+                                </th>
+                                <th scope="col">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <button type="button" class="btn btn-primary" aria-label="Left Align" data-toggle="modal" data-target="#imageUploader">
+                        <span class="glyphicon glyphicon-import" aria-hidden="true"></span> 新增
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@using REGAL.MVC.UI.Bootstrap;
+@(Html.REGAL().FileUpload(name: "imageUploader", description: "The maximum file upload size is 500 KB.", cssClass: "modal-vertical-center"))

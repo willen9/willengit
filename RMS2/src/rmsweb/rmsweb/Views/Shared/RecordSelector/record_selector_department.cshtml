@@ -1,0 +1,81 @@
+﻿<style type="text/css">
+        .record-selector-department-modal table .DepartmentIdType {
+        width: 250px;
+    }
+
+    .record-selector-department-modal table .DepartmentNameType {
+        width: 250px;
+    }
+
+    .record-selector-department-modal table .RemarkTyep {
+        width: 250px;
+    }
+</style>
+﻿<div class='modal fade record-selector-department-modal' tabindex='-1' id="modal-department" role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title'>部門查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <select class="form-control" style="width: 200px; display: inline;" name="addDepartment_Col" id="addDepartment_Col">
+                            <option value="DepartmentId">部門代號</option>
+                            <option value="DepartmentName">部門名稱</option>
+                            <option value="CompanyId">公司代號</option>
+                            <option value="Remark">備註</option>
+                        </select>
+
+                        <select class="form-control" style="width: 100px; display: inline;" name="addDepartment_Condition" id="addDepartment_Condition">
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>">&lt;&gt;</option>
+                            <option value="like%">like%</option>
+                            <option value="%like">%like</option>
+                            <option value="%like%">%like%</option>
+                        </select>
+                        <input type="text" class="form-control" id="addDepartment_conditionValue" name="addDepartment_conditionValue" style="width: 200px; display: inline;" />
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" id="btncustomerInfo" style="display: inline;" ng-click="SearchDepartment()">查詢</button>
+                    </div>
+                </div>
+            </div>
+                <div id="divDepartmentGrid">
+                    <table class="table table-striped table-hover table-condensed table-header-fixed" data-swhgajax="true" data-swhgcontainer="divEmployeeGriddivEmployeeGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th class="actioncolumn">
+                                    選擇
+                                </th>
+                                <th class="DepartmentIdType">
+                                    部門代號
+                                </th>
+                                <th class="DepartmentNameType">
+                                    部門名稱
+                                </th>
+                                <th class="RemarkType">
+                                    備註
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in Department">
+                                <td class='column-one-action'><a data-dismiss='modal' onclick='SelectDepartment(this)' href="#">選擇</a></td>
+                                <td class='DepartmentIdType'>{{ item.DepartmentId }}</td>
+                                <td class='DepartmentNameType'>{{ item.DepartmentName }}</td>
+                                <td class='RemarkType'>{{ item.Remark }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <input type="hidden" id="DepartmentPage" name="DepartmentPage" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

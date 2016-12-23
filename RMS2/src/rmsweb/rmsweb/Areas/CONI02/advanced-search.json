@@ -1,0 +1,15 @@
+﻿{
+  "h.ContractType": "合約單別",
+  "o.OrderSName": "單據名稱",
+  "h.ContractNo": "合約單號",
+  "h.CustomerId": "客戶代號",
+  "c.CustomerName": "客戶名稱",
+  "h.ContractSDate": "合約起日",
+  "h.ContractEDate": "合約迄日",
+  "h.Company": "公司別",
+  "h.UserGroup": "群組",
+  "h.Creator": "建立人員",
+  "h.CreateDate": "建立日期",
+  "h.Modifier": "修改人員",
+  "h.ModiDate": "修改日期"
+}

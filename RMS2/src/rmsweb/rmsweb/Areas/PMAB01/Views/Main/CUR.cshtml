@@ -1,0 +1,188 @@
+﻿<section class="content-header">
+    <h1>定保計畫轉定保單作業</h1>
+</section>
+<section class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            <form id="from-ServiceArrangeChange" method="post">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SerArrangeOrderType" class="col-md-3 col-lg-3 control-label">計劃單別</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_SerArrangeOrderType" name="SerArrangeOrderType" value="@ViewBag.SerArrangeOrderType" readonly />
+                            <span style="display:inline;" id="ordersname">@ViewBag.OrderSName</span>
+                        </div>
+                        <label for="id_OrderDate" class="col-md-3 col-lg-3 control-label">單據日期</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_OrderDate" name="OrderDate" readonly="readonly" value="@ViewBag.OrderDate" />
+                        </div>
+                        <label for="id_Confirmed" class="col-md-3 col-lg-3 control-label">狀態碼</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_Confirmed" name="Confirmed" readonly="readonly" value="@ViewBag.Confirmed" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SerArrangeOrderNo" class="col-md-3 col-lg-3 control-label">計畫單號</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_SerArrangeOrderNo" name="SerArrangeOrderNo" value="@ViewBag.SerArrangeOrderNo" readonly />
+                        </div>
+                        <label for="id_CustomerId" class="col-md-3 col-lg-3 control-label">客戶代號</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_CustomerId" name="CustomerId" value="@ViewBag.CustomerId" readonly />
+                            <span style="display:inline;" id="customername">@ViewBag.CustomerName</span>
+                        </div>
+
+                        <label for="id_CustomerType" class="col-md-3 col-lg-3 control-label">客戶形態</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_CustomerType" name="CustomerType" value="@ViewBag.CustomerType" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SourceOrder" class="col-md-3 col-lg-3 control-label">來源單號</label>
+                        <div class="col-md-13 col-lg-13">
+                            <input type="text" class="form-control" id="id_SourceOrderType" name="SourceOrderType" style="width: 25%; display: inline;" value="@ViewBag.SourceOrderType" readonly />
+                            <input type="text" class="form-control" id="id_SourceOrderNo" name="SourceOrderNo" style="width: 40%; display: inline;" value="@ViewBag.SourceOrderNo" readonly />
+                            <input type="text" class="form-control" id="id_SourceOrderItemId" name="SourceOrderItemId" style="width: 25%; display: inline;" value="@ViewBag.SourceOrderItemId" readonly />
+                        </div>
+                        <label for="id_Version" class="col-md-3 col-lg-3 control-label">版次</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_Version" name="Version" value="@ViewBag.Version" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SerialNo" class="col-md-3 col-lg-3 control-label">序號</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_SerialNo" name="SerialNo" value="@ViewBag.SerialNo" readonly />
+
+                        </div>
+                        <label for="id_ProductNo" class="col-md-3 col-lg-3 control-label">品號</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_ProductNo" name="ProductNo" value="@ViewBag.ProductNo" readonly />
+
+                        </div>
+                        <label for="id_ProductName" class="col-md-3 col-lg-3 control-label">品名</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_ProductName" name="ProductName" value="@ViewBag.ProductName" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SaleDate" class="col-md-3 col-lg-3 control-label">銷貨日期</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_SaleDate" name="SaleDate" readonly="readonly" value="@ViewBag.SaleDate" />
+                        </div>
+                        <label for="id_RoutineServiceFreq" class="col-md-3 col-lg-3 control-label">定期保養</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_RoutineServiceFreq" name="RoutineServiceFreq" style="width: 75%; display: inline;" value="@ViewBag.RoutineServiceFreq" readonly />
+                            <span>次</span>
+                        </div>
+                        <label for="id_ConfirmedDate" class="col-md-3 col-lg-3 control-label">計劃日期</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_ConfirmedDate" name="ConfirmedDate" readonly="readonly" value="@ViewBag.ConfirmedDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_WarrantyPeriod" class="col-md-3 col-lg-3 control-label">保固期限</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_WarrantyPeriod" name="WarrantyPeriod" style="width: 75%; display: inline;" value="@ViewBag.WarrantyPeriod" readonly />
+                            <span>月</span>
+                        </div>
+                        <label for="id_WarrantySDate" class="col-md-3 col-lg-3 control-label">保固起日</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_WarrantySDate" name="WarrantySDate" readonly="readonly" value="@ViewBag.WarrantySDate" />
+                        </div>
+                        <label for="id_WarrantyEDate" class="col-md-3 col-lg-3 control-label">保固迄日</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_WarrantyEDate" name="WarrantyEDate" readonly="readonly" value="@ViewBag.WarrantyEDate" />
+                        </div>
+                    </div>      
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_Remark" class="col-md-3 col-lg-3 control-label">備註</label>
+                        <div class="col-md-13 col-lg-13">
+                            <textarea class="form-control" id="id_Remark" name="Remark" cols="40" rows="5" maxlength="255" readonly>@ViewBag.Remark</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_InternalRemark" class="col-md-3 col-lg-3 control-label">內部備註</label>
+                        <div class="col-md-13 col-lg-13">
+                            <textarea class="form-control" id="id_InternalRemark" name="InternalRemark" cols="40" rows="5" maxlength="255" readonly>@ViewBag.InternalRemark</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <h5>保固明細</h5>
+                    <hr />
+                    <div id="divServiceArrange_DGrid" style="height: 100px;overflow-y: auto;">
+                        @{
+                            var webGrid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.ServiceArrange_D>)ViewData["ServiceArrange_D"], canPage: false, canSort: false, ajaxUpdateContainerId: "divServiceArrange_DGrid");
+                        }
+                        @webGrid.GetHtml(
+
+                            tableStyle: "table table-striped table-hover",
+                            columns: webGrid.Columns(
+                                    webGrid.Column(columnName: "ItemId", header: "項次", style: "ItemId",
+                                    format:
+                                    @<text>
+                                        @item.ItemId
+                                        <input type="hidden" class="strCItemId" name="strCItemId" value='@item.ItemId' tabindex="1">
+                                    </text>),
+                                    webGrid.Column(columnName: "ArrangeMonth", header: "保養月份", style: "ArrangeMonth",
+                                    format:
+                                    @<text>
+                                        @item.ArrangeMonth
+                                        <input type="hidden" class="strCArrangeMonth" name="strCArrangeMonth" value='@item.ArrangeMonth' tabindex="2">
+                                    </text>),
+                                    webGrid.Column(columnName: "AddressSName", header: "地址簡稱", style: "AddressSName",
+                                    format:
+                                    @<text>
+                                        @item.AddressSName
+                                        <input type="hidden" class="strCAddressSName" name="strCAddressSName" value='@item.AddressSName' tabindex="3">
+                                    </text>),
+                                    webGrid.Column(columnName: "Address", header: "地址", style: "Address",
+                                    format:
+                                    @<text>
+                                        @item.Address
+                                        <input type="hidden" class="strCAddress" name="strCAddress" value='@item.Address' tabindex="4">
+                                    </text>),
+                                    webGrid.Column(columnName: "IsClosed", header: "結案碼", style: "IsClosed",
+                                    format:
+                                    @<text>
+                                        @item.IsClosed
+                                        <input type="hidden" class="strCIsClosed" name="strCIsClosed" value='@item.IsClosed' tabindex="5">
+                                    </text>),
+                                    webGrid.Column(columnName: "DRemark", header: "單身備註", style: "DRemark",
+                                    format:
+                                    @<text>
+                                        @item.Remark
+                                        <input type="hidden" class="strCRemark" name="strCRemark" value='@item.Remark' tabindex="6">
+                                    </text>)
+)
+)
+                    </div>
+                </div>
+                <p style="color: red;">@ViewBag.Msg</p>
+                <div class="text-right">
+                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">返回列表</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_ServiceArrange.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")
+<input type="hidden" title="module" value="PMAB01" />

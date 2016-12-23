@@ -1,0 +1,69 @@
+﻿<section class="content-header">
+    <h1>維護出件單維護</h1>
+</section>
+<section class="content">
+    @using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+    {
+    <div class="toolbar-container">
+        <a class="btn btn-primary" href="@Url.Action("CUR", "Main", null)"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增</a>
+        <button type="submit" class="btn btn-primary" id="btnExport" name="action" value="btnExport" aria-label="Left Align">
+            <span class="glyphicon glyphicon-export" aria-hidden="true"></span> 匯出
+        </button>
+    </div>
+    }
+@using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+{
+    <div class="basic-search-container form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-20">
+                <label for="id_RGAReturnNo" class="control-label">出件單號</label>
+                <select class="form-control" style="width: 100px;display:inline;" name="RGAReturnNo"></select>
+                <input type="text" class="form-control" id="RGAReturnNo" name="RGAReturnNo" style="width:200px;display:inline;" value="@ViewBag.RGAReturnNo" />
+                <label for="id_CustomerId" class="control-label">客戶代號</label>
+                <select class="form-control" style="width: 100px;display:inline;" name="selCond2"></select>
+                <input type="text" class="form-control" id="CustomerId" name="CustomerId" style="width:200px;display:inline;" value="@ViewBag.CustomerId" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-20">
+                <label for="id_Confirmed" class="control-label">單據狀態</label>
+                <select class="form-control" style="width: 100px;display:inline;" name="Confirmed"></select>
+                <input type="text" class="form-control" id="Confirmed" name="Confirmed" style="width:200px;display:inline;" value="@ViewBag.Confirmed" />
+                <button type="submit" class="btn btn-default" id="btnSearch" name="action" value="btnSearch" aria-label="Left Align" style="display: inline-block;">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-link" aria-label="Left Align" data-toggle="modal" data-target=".advanced-search-modal" style="display: inline-block;">
+                    進階查詢
+                </button>
+            </div>
+        </div>
+    </div>
+
+    var grid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.RGAReturn_H>)ViewData["RGAReturn_H"], canPage: false, canSort: false, ajaxUpdateContainerId: "divGrid");
+
+
+    @grid.GetHtml(
+             tableStyle: "table table-striped table-hover rms-table bomi02-table",
+        columns: grid.Columns(
+                 grid.Column(columnName: "", header: "動作", style: "column-two-actions", format: @<text>
+                <a href="@Url.Action("Edit", "Main", new { RGAReturnType = @item.RGAReturnType, RGAReturnNo = @item.RGAReturnNo })">編輯</a>
+                <a onclick="deleteInfo('@Url.Action("Delete", "Main", new {  RGAReturnType = @item.RGAReturnType,RGAReturnNo=@item.RGAReturnNo })','@item.RGAReturnNo')" href="#">刪除</a>
+                </text>, canSort: false),
+        grid.Column(columnName: "RGAReturnType", header: "出件單別", style: "RGAReturnType"),
+        grid.Column(columnName: "OrderSName", header: "單據名稱", style: "OrderSName"),
+        grid.Column(columnName: "RGAReturnNo", header: "出件單號", style: "RGAReturnNo"),
+        grid.Column(columnName: "CustomerName", header: "客戶名稱", style: "CustomerName"),
+        grid.Column(columnName: "ProductNo", header: "品號", style: "ProductNo"),
+        grid.Column(columnName: "ProductName", header: "品名", style: "ProductName"),
+        grid.Column(columnName: "SerialNo", header: "序號", style: "SerialNo"),
+        grid.Column(columnName: "Confirmed", header: "狀態", style: "Confirmed")
+        )
+    )
+    <p style="color: red;">@ViewBag.Msg</p>
+        @RenderPage("~/Areas/BOMI02/Views/Shared/advanced-search-modal.cshtml")
+}
+</section>
+@RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")
+@using REGAL.MVC.UI.Bootstrap;
+@(Html.REGAL().FileUpload(name: "imageUploader", description: "The maximum file upload size is 500 KB.", cssClass: "modal-vertical-center"))

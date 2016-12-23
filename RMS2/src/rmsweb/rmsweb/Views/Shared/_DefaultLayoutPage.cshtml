@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv=X-UA-Compatible content="IE=edge">    
+    @Styles.Render("~/content/basestyles")
+    <link rel="stylesheet" href="~/Content/AdminLTE.css" />
+    <link rel="stylesheet" href="~/Content/skins/skin-black-light.css" />
+    @RenderSection("Styles", false)
+    @Scripts.Render("~/basescripts")
+    @RenderSection("Javascripts", false)    
+    <title>RMS2</title>
+</head>
+<body class="hold-transition skin-black-light sidebar-mini layout-boxed">
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- logo for sidebar -->
+            <a href="/" class="logo" style="padding: 0px;">
+                <span class="logo-mini"><b>RMS</b></span>
+                <!-- logo for regular state and mobile devices -->
+                <img class="logo-lg" src="~/images/logo.png" alt="" />                
+            </a>
+            <nav class="navbar navbar-static-top">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        @*<li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bell-o" aria-hidden="true"></i>
+                                <span class="label label-warning">1</span>
+                            </a>
+                            <ul class="dropdown-menu notification-menu">
+                                <li class="notification-menu-body">
+                                    <ul class="menu">
+                                        <li>
+                                            <a href="#">
+                                                <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="notification-menu-footer"><a href="#">View all</a></li>
+                            </ul>
+                        </li>*@
+                        <li class="dropdown user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="~/images/avatar_140x140.png" alt="User Image" style="width: 16px; height: 16px;">
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        @*<a href="#" class="btn btn-default btn-flat">Profile</a>*@
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="@Url.Action("Logout", "Login")" class="btn btn-default btn-flat">Sign out</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <ul class="nav sidebar-menu">
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-list fa-fw"></i> <span>基本資料</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-down pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>@Html.ActionLink("公司基本資料維護", "Index", "Main", new { Area = "CMSI01" }, null)</li>
+                            <li>@Html.ActionLink("部門基本資料維護", "Index", "Main", new { Area = "CMSI02" }, null)</li>
+                            <li>@Html.ActionLink("員工基本資料維護", "Index", "Main", new { Area = "CMSI03" }, null)</li>
+                            <li>@Html.ActionLink("客戶基本資料維護", "Index", "Main", new { Area = "CMSI09" }, null)</li>
+                            <li>@Html.ActionLink("廠商基本資料維護", "Index", "Main", new { Area = "CMSI10" }, null)</li>
+                            <li>@Html.ActionLink("品號類型資料維護", "Index", "Main", new { Area = "CMSI04" }, null)</li>
+                            <li>@Html.ActionLink("品牌類型資料維護", "Index", "Main", new { Area = "CMSI08" }, null)</li>
+                            <li>@Html.ActionLink("品號基本資料維護", "Index", "Main", new { Area = "CMSI05" }, null)</li>
+                            <li>@Html.ActionLink("交易幣別資料維護", "Index", "Main", new { Area = "CMSI07" }, null)</li>
+                            <li>@Html.ActionLink("行事曆維護", "Index", "Main", new { Area = "CMSI06" }, null)</li>
+                            <li>@Html.ActionLink("職務類別資料維護", "Index", "Main", new { Area = "CMSI11" }, null)</li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-random fa-fw"></i> <span>支援申請</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-down pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>@Html.ActionLink("單據性質設定作業", "Index", "Main", new { Area = "SUPI03" }, null)</li>
+                            <li>@Html.ActionLink("支援項目維護", "Index", "Main", new { Area = "SUPI04" }, null)</li>
+                            <li>@Html.ActionLink("支援申請單維護", "Index", "Main", new { Area = "SUPI05" }, null)</li>
+                            <li>@Html.ActionLink("支援申請派工作業", "Index", "Main", new { Area = "SUPB01" }, null)</li>
+                            <li>@Html.ActionLink("支援申請單發料作業", "Index", "Main", new { Area = "SUPB02" }, null)</li>
+                            <li>@Html.ActionLink("支援申請派工單維護", "Index", "Main", new { Area = "SUPI06" }, null)</li>
+                            <li>@Html.ActionLink("支援申請派工變更單作業", "Index", "Main", new { Area = "SUPI07" }, null)</li>
+                            <li>@Html.ActionLink("支援申請派工回報作業", "Index", "Main", new { Area = "SUPI08" }, null)</li>
+                            <li>@Html.ActionLink("發料單建立作業", "Index", "Main", new { Area = "SUPI09" }, null)</li>
+                            <li>@Html.ActionLink("ERP拋轉支援單作業", "Index", "Main", new { Area = "SUPB03" }, null)</li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-wrench fa-fw"></i> <span>客服維修</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-down pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>@Html.ActionLink("單據性質設定作業", "Index", "Main", new { Area = "SERI02" }, null)</li>
+                            <li>@Html.ActionLink("維修問題維護", "Index", "Main", new { Area = "SERI03" }, null)</li>
+                            <li>@Html.ActionLink("線上維修申請單維護", "Index", "Main", new { Area = "SERI04" }, null)</li>
+                            <li>@Html.ActionLink("電話服務單維護", "Index", "Main", new { Area = "SERI05" }, null)</li>
+                            <li>@Html.ActionLink("維修單維護", "Index", "Main", new { Area = "SERI06" }, null)</li>
+                            <li>@Html.ActionLink("維修變更單維護", "Index", "Main", new { Area = "SERI07" }, null)</li>
+                            <li>@Html.ActionLink("維修派工單維護", "Index", "Main", new { Area = "SERI08" }, null)</li>
+                            <li>@Html.ActionLink("維修派工變更單維護", "Index", "Main", new { Area = "SERI09" }, null)</li>
+                            <li>@Html.ActionLink("報價單維護", "Index", "Main", new { Area = "SERI10" }, null)</li>
+                            <li>@Html.ActionLink("完工單維護", "Index", "Main", new { Area = "SERI11" }, null)</li>
+                            <li>@Html.ActionLink("維修出件單維護", "Index", "Main", new { Area = "SERI12" }, null)</li>
+                            <li>@Html.ActionLink("異動明細維護", "Index", "Main", new { Area = "SERI13" }, null)</li>
+                            <li>@Html.ActionLink("維修單派工作業", "Index", "Main", new { Area = "SERB01" }, null)</li>
+                            <li>@Html.ActionLink("維修派工回報", "Index", "Main", new { Area = "SERB02" }, null)</li>
+                            <li>@Html.ActionLink("維修出件作業", "Index", "Main", new { Area = "SERB03" }, null)</li>
+                            <li>@Html.ActionLink("客戶維修狀況表", "Index", "Main", new { Area = "SERR01" }, null)</li>
+                            <li>@Html.ActionLink("零件報價查詢", "Index", "Main", new { Area = "SERQ01" }, null)</li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-wrench fa-fw"></i> <span>送廠維修</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-down pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>@Html.ActionLink("單據性質設定作業", "Index", "Main", new { Area = "RMAI01" }, null)</li>
+                            <li>@Html.ActionLink("送廠申請單維護", "Index", "Main", new { Area = "RMAI03" }, null)</li>
+                            <li>@Html.ActionLink("送廠申請變更單維護", "Index", "Main", new { Area = "RMAI04" }, null)</li>
+                            <li>@Html.ActionLink("送廠維修單維護", "Index", "Main", new { Area = "RMAI05" }, null)</li>
+                            <li>@Html.ActionLink("送廠歸還單維護", "Index", "Main", new { Area = "RMAI06" }, null)</li>
+                            <li>@Html.ActionLink("原廠報價單維護", "Index", "Main", new { Area = "RMAI07" }, null)</li>
+                            <li>@Html.ActionLink("送廠申請收件作業", "Index", "Main", new { Area = "RMAB01" }, null)</li>
+                            <li>@Html.ActionLink("送廠申請審核作業", "Index", "Main", new { Area = "RMAB02" }, null)</li>
+                            <li>@Html.ActionLink("送廠維修作業", "Index", "Main", new { Area = "RMAB03" }, null)</li>
+                            <li>@Html.ActionLink("送廠歸還作業", "Index", "Main", new { Area = "RMAB04" }, null)</li>
+                            <li>@Html.ActionLink("原廠報價作業", "Index", "Main", new { Area = "RMAB05" }, null)</li>
+                            <li>@Html.ActionLink("原廠零件報價查詢", "Index", "Main", new { Area = "RMAQ01" }, null)</li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-list fa-fw"></i> <span>序號管理</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-down pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>@Html.ActionLink("銷貨序號資料維護", "Index", "Main", new { Area = "PSMI01" }, null)</li>
+                            <li>@Html.ActionLink("進貨序號資料維護", "Index", "Main", new { Area = "PSMI02" }, null)</li>
+                            <li>@Html.ActionLink("品號序號保固維護", "Index", "Main", new { Area = "PSMI03" }, null)</li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-file-text-o fa-fw"></i> <span>維護合約</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-down pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>@Html.ActionLink("單據性質設定作業", "Index", "Main", new { Area = "CONI01" }, null)</li>
+                            <li>@Html.ActionLink("維護合約維護", "Index", "Main", new { Area = "CONI02" }, null)</li>
+                            <li>@Html.ActionLink("維護合約變更維護", "Index", "Main", new { Area = "CONI03" }, null)</li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-medkit l fa-fw"></i> <span>商品保固</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-down pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>@Html.ActionLink("單據性質設定作業", "Index", "Main", new { Area = "PMAI01" }, null)</li>
+                            <li>@Html.ActionLink("定保計畫單維護", "Index", "Main", new { Area = "PMAI02" }, null)</li>
+                            <li>@Html.ActionLink("定保計畫變更單維護", "Index", "Main", new { Area = "PMAI03" }, null)</li>
+                            <li>@Html.ActionLink("定保單維護", "Index", "Main", new { Area = "PMAI04" }, null)</li>
+                            <li>@Html.ActionLink("定保派工單維護", "Index", "Main", new { Area = "PMAI05" }, null)</li>
+                            <li>@Html.ActionLink("定保派工變更單維護", "Index", "Main", new { Area = "PMAI06" }, null)</li>
+                            <li>@Html.ActionLink("定保計畫轉定保單作業", "Index", "Main", new { Area = "PMAB01" }, null)</li>
+                            <li>@Html.ActionLink("定保憑證列印", "Index", "Main", new { Area = "PMAB02" }, null)</li>
+                            <li>@Html.ActionLink("定保派工作業", "Index", "Main", new { Area = "PMAB03" }, null)</li>
+                            <li>@Html.ActionLink("定保派工回報作業", "Index", "Main", new { Area = "PMAB04" }, null)</li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-list-alt fa-fw" aria-hidden="true"></i> <span>BOM表維護</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-down pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>@Html.ActionLink("BOM表用量維護", "Index", "Main", new { Area = "BOMI01" }, null)</li>
+                            <li>@Html.ActionLink("取替代料件維護", "Index", "Main", new { Area = "BOMI02" }, null)</li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-area-chart" aria-hidden="true"></i> <span>分析報表</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-down pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>@Html.ActionLink("基本維修率及覆修率", "Index", "Main", new { Area = "REPQ01" }, null)</li>
+                            <li>@Html.ActionLink("合約維修率及覆修率", "Index", "Main", new { Area = "REPQ02" }, null)</li>
+                            <li>@Html.ActionLink("維修記錄分析表", "Index", "Main", new { Area = "REPQ03" }, null)</li>
+                            <li>@Html.ActionLink("平均零件壽命統計表", "Index", "Main", new { Area = "REPQ04" }, null)</li>
+                            <li>@Html.ActionLink("平均回廠維修時間統計表", "Index", "Main", new { Area = "REPQ05" }, null)</li>
+                            <li>@Html.ActionLink("平均維修時間統計表", "Index", "Main", new { Area = "REPQ06" }, null)</li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-cogs fa-fw"></i> <span>管理維護</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-down pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>@Html.ActionLink("登入者代號維護", "Index", "Main", new { Area = "ADMI01" }, null)</li>
+                            <li>@Html.ActionLink("群組資料維護", "Index", "Main", new { Area = "ADMI02" }, null)</li>
+                            <li>@Html.ActionLink("使用者權限維護", "Index", "Main", new { Area = "ADMI03" }, null)</li>
+                            <li>@Html.ActionLink("模組代號維護", "Index", "Main", new { Area = "ADMI04" }, null)</li>
+                            <li>@Html.ActionLink("程式代號維護", "Index", "Main", new { Area = "ADMI05" }, null)</li>
+                            <li>@Html.ActionLink("檔案資料維護", "Index", "Main", new { Area = "ADMI06" }, null)</li>
+                            <li>@Html.ActionLink("Authentication", "Index", "Main", new { Area = "ADMI20" }, null)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+    </div>   
+    <input type="hidden" title="baseURL" value="@String.Format("{0}://{1}", Request.Url.Scheme, Request.Url.Authority)" />
+    <input type="hidden" title="virtualPath" value="@HttpRuntime.AppDomainAppVirtualPath" />
+    <script src="~/Scripts/app.js"></script>  
+</body>
+@Url.Action("Login", "Portal")
+</html>

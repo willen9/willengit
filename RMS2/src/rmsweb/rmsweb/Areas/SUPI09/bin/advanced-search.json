@@ -1,0 +1,17 @@
+﻿{
+  "h.PickingOrderType": "單別",
+  "h.PickingOrderNo": "單號",
+  "h.CustomerId": "客戶ID",
+  "h.SupportDept": "支援單位",
+  "h.RequestDate": "需求日期",
+  "h.sales": "業務人員",
+  "c.customertype": "客戶狀態",
+  "h.SupportAplOrderType": "來源單別",
+  "h.SupportAplOrderNo": "來源單號",
+  "Company": "公司別",
+  "UserGroup": "群組",
+  "Creator": "建立人員",
+  "CreateDate": "建立日期",
+  "Modifier": "修改人員",
+  "ModiDate": "修改日期"
+}

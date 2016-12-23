@@ -1,0 +1,81 @@
+﻿
+<div class='modal fade RGA_D-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>商品資料</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="id_RGA_DItemNo" class="control-label col-sm-4">項次</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_RGA_DItemNo" name="RGA_DItemNo" maxlength="40" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_RGA_DPartNo" class="col-sm-4 control-label">零件品號</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_RGA_DPartNo" name="id_RGA_DPartNo" style="width: 90%; display: inline;" tabindex="19" />
+                            <button type="button" class="btn btn-default" id="btnRGA_DPartNo" name="action" value="btnSearch" aria-label="Left Align" tabindex="20" style="display: inline">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_RGA_DPartName" class="col-sm-4 control-label">零件品名</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_RGA_DPartName" name="RGA_DPartName" maxlength="40" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_RGA_DPartQTY" class="col-sm-4  control-label">數量</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_RGA_DPartQTY" name="RGA_DPartQTY" maxlength="12" onblur="if(isNaN(this.value))this.value=''" tabindex="22" />
+                        </div>    
+                    </div>
+                    <div class="form-group">
+                        <label for="id_RGA_DUnit" class="col-sm-4 control-label">單位</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_RGA_DUnit" name="RGA_DUnit" tabindex="23" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_RGA_DRemark" class="col-sm-4  control-label">備註</label>
+                        <div class="col-sm-20">
+                            <textarea class="form-control" id="id_RGA_DRemark" name="RGA_DRemark" cols="40" rows="5" maxlength="255" tabindex="24"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_RGA_DRepaired" class="col-sm-4  control-label">維修否</label>
+                        <div class="col-sm-20">
+                            <input type="checkbox" id="id_RGA_DRepaired" name="RGA_DRepaired" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_RGA_DSourceOrderType" class="col-sm-4  control-label">來源單別</label>
+                        <div class="col-sm-20">
+                            <input type="text" id="id_RGA_DSourceOrderType" name="RGA_DSourceOrderType" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_RGA_DSourceOrderNo" class="col-sm-4  control-label">來源單號</label>
+                        <div class="col-sm-20">
+                            <input type="text" id="id_RGA_DSourceOrderNo" name="RGA_DSourceOrderNo" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_RGA_DSourceItemId" class="col-sm-4  control-label">來源項次</label>
+                        <div class="col-sm-20">
+                            <input type="text" id="id_RGA_DSourceItemId" name="RGA_DSourceItemId" />
+                        </div>
+                    </div>
+                </div> 
+            </div>
+            <div class='modal-footer'>
+                <button type="button" class="btn btn-default" name="action" value="btnAllot" onclick="checkRGAD()" tabindex="25">確定</button>
+                <button type='button' class='btn btn-default' data-dismiss='modal' tabindex="26">取消</button>
+            </div>
+        </div>
+    </div>
+</div>

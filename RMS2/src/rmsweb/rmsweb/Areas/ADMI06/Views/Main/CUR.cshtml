@@ -1,0 +1,355 @@
+﻿@using BusinessLayer.Models
+@{
+    ViewBag.Title = "AddPage";
+}
+<script type="text/javascript">
+
+    $(function() {
+        $("#btnQuestionList_D").click(function() {
+            if ($("#id_TableId").val().trim().length == 0) {
+                $("#msg_information").html("檔案代號不能為空！");
+                $('.msg-modal-lg').modal();
+                return false;
+            }
+
+            $("#id_txtColumnNo").val("");
+            $("#id_txtColumnName").val("");
+            $("#id_txtDataType").val("");
+            $("#id_txtColLength").val("");
+            $("#id_txtRemark").val("");
+            $('.QuestionList_D-modal').modal();
+        });
+    });
+
+    function QuestionList_DExid(id) {
+
+        if ($("#id_TableId").val().trim().length == 0) {
+            $("#msg_information").html("檔案代號不能為空！");
+            $('.msg-modal-lg').modal();
+            return false;
+        }
+
+        $("#id_ExtxtAddressId").val($(id).closest('tr').find(".txtAddressId").val());
+        $("#id_ExtxtColumnNo").val($(id).closest('tr').find(".txtColumnNo").val());
+        $("#id_ExtxtColumnName").val($(id).closest('tr').find(".txtColumnName").val());
+        $("#id_ExtxtDataType").val($(id).closest('tr').find(".txtDataType").val());
+        $("#id_ExtxtColLength").val($(id).closest('tr').find(".txtColLength").val());
+        $("#id_ExtxtRemark").val($(id).closest('tr').find(".txtRemark").val());
+        $('.QuestionList_DExid-modal').modal();
+    };
+
+    function check() {
+        if ($("#id_txtColumnNo").val().trim().length == 0) {
+            $("#msg_information").html("欄位代號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+        var stritemid = addZero(document.getElementById("divGrid").getElementsByTagName('tr').length.toString(), 4);
+        $("#divGrid table tbody").append("<tr>" +
+            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='QuestionList_DExid(this)'>編輯</a>|<a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>" +
+            "<td class='AddressId'>" + stritemid + "<input type='hidden' class='txtAddressId' name='txtAddressId' value='" + stritemid + "'></td>" +
+            "<td>" + $("#id_txtColumnNo").val() + "<input type='hidden' class='txtColumnNo' name='txtColumnNo' value='" + $("#id_txtColumnNo").val() + "'></td>" +
+            "<td>" + $("#id_txtColumnName").val() + "<input type='hidden' class='txtColumnName' name='txtColumnName' value='" + $("#id_txtColumnName").val() + "'></td>" +
+            "<td>" + $("#id_txtDataType").val() + "<input type='hidden' class='txtDataType' name='txtDataType' value='" + $("#id_txtDataType").val() + "'></td>" +
+            "<td>" + $("#id_txtColLength").val() + "<input type='hidden' class='txtColLength' name='txtColLength' value='" + $("#id_txtColLength").val() + "'></td>" +
+            "<td>" + $("#id_txtRemark").val() + "<input type='hidden' class='txtRemark' name='txtRemark' value='" + $("#id_txtRemark").val() + "'></td>" +
+            "</tr>");
+        $(".QuestionList_D-modal").modal("hide");
+    };
+
+    function checkExid() {
+        if ($("#id_ExtxtColumnNo").val().trim().length == 0) {
+            $("#msg_information").html("欄位代號不能為空！");
+            $('.msg-modal-lg').modal();
+            return false;
+        }
+        var table = document.getElementById("divGrid");
+        var trs = table.getElementsByTagName('tr');
+
+        for (var i = 0; i < trs.length; i++) {
+            if ($(trs[i]).closest('tr').find(".txtAddressId").val() == $("#id_ExtxtAddressId").val()) {
+                trs[i].innerHTML = "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='QuestionList_DExid(this)'>編輯</a>|<a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>" +
+                    "<td>" + $("#id_ExtxtAddressId").val() + "<input type='hidden' class='txtAddressId' name='txtAddressId' value='" + $("#id_ExtxtAddressId").val() + "'></td>" +
+                    "<td>" + $("#id_ExtxtColumnNo").val() + "<input type='hidden' class='txtColumnNo' name='txtColumnNo' value='" + $("#id_ExtxtColumnNo").val() + "'></td>" +
+                    "<td>" + $("#id_ExtxtColumnName").val() + "<input type='hidden' class='txtColumnName' name='txtColumnName' value='" + $("#id_ExtxtColumnName").val() + "'></td>" +
+                    "<td>" + $("#id_ExtxtDataType").val() + "<input type='hidden' class='txtDataType' name='txtDataType' value='" + $("#id_ExtxtDataType").val() + "'></td>" +
+                    "<td>" + $("#id_ExtxtColLength").val() + "<input type='hidden' class='txtColLength' name='txtColLength' value='" + $("#id_ExtxtColLength").val() + "'></td>" +
+                    "<td>" + $("#id_ExtxtRemark").val() + "<input type='hidden' class='txtRemark' name='txtRemark' value='" + $("#id_ExtxtRemark").val() + "'></td>"
+            }
+
+        }
+        $(".QuestionList_DExid-modal").modal("hide");
+    };
+
+    function RemoveProcess(id) {
+        $(id).parents('tr:first').remove()
+        var table = document.getElementById("divGrid");
+        var trs = table.getElementsByTagName('tr');
+        var stritem = "";
+        for (var i = 1; i < trs.length; i++) {
+            stritem = addZero((i).toString(), 4);
+            trs[i].cells[1].innerHTML = stritem + "<input type='hidden' class='txtAddressId' name='txtAddressId' value='" + stritem + "'>";
+        }
+    };
+
+    $(document).ready(function() {
+        $('#from-ProductCategory').bootstrapValidator({
+            fields: {
+                TableId:
+                {
+                    validators: {
+                        notEmpty: {
+                            message: '檔案代號不能為空！'
+                        },
+                        callback: {
+                            message: '檔案代號已存在！',
+                            callback: function(value, validator) {
+                                var res = true;
+                                if (document.getElementById("id_TableId").readOnly == true) {
+                                    return res;
+                                }
+                                if (value.length > 0) {
+                                    $.ajax({
+                                        //url: '/cmsi04/curid',
+                                        url: '@Url.Action("CURMID", "Main")',
+                                        data: JSON.stringify({ "TableId": value }),
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function(data) {
+                                            res = data;
+                                        }
+                                    });
+                                }
+                                return res;
+                            }
+                        }
+                    }
+                },
+                ModuleId:
+                {
+                    validators: {
+                            notEmpty: {
+                                message: '模組代號不能為空！'
+                            },
+                        callback: {
+                            message: '模組代號不存在！',
+                            callback: function(value, validator) {
+                                var res = true;
+                                if (document.getElementById("id_ModuleId").readOnly == true) {
+                                    return res;
+                                }
+                                if (value.length > 0) {
+                                    $.ajax({
+                                        //url: '/cmsi04/curid',
+                                        url: '@Url.Action("CURID", "Main")',
+                                        data: JSON.stringify({ "ModuleId": value }),
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function (data) {
+                                            res = data;
+                                        }
+                                    });
+                                }
+                                return res;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+<section class="content-header">
+    <h1>檔案資料維護</h1>
+</section>
+<section class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application
+        </div>
+        <div class="panel-body">
+            <form id="from-ProductCategory" method="post" action="@Url.Action("CUR", "Main")">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_ColumnNo" class="col-md-3 col-lg-3 control-label">檔案代號</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "New")
+                            {
+                                <input type="text" class="form-control" id="id_TableId" name="TableId" value="@ViewBag.TableId" maxlength="3" tabindex="1" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_TableId" name="TableId" value="@ViewBag.TableId" maxlength="3" readonly/>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_ColumnName" class="col-md-3 col-lg-3 control-label">檔案名稱</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="id_TableName" name="TableName" value="@ViewBag.TableName" maxlength="40" readonly/>
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_TableName" name="TableName" value="@ViewBag.TableName" maxlength="40" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_Mode" class="col-md-3 col-lg-3 control-label">類型</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="id_Mode" name="Mode" value="@ViewBag.Mode" readonly />
+                            }
+                            else
+                            {
+                                <select class="form-control" id="id_Mode" name="Mode">
+                                        <option value="1">主檔單頭</option>
+                                        <option value="2">主檔單身</option>
+                                        <option value="3">交易單頭</option>
+                                        <option value="4">交易單身</option>
+                                        <option value="5">交易明細</option>
+                                        <option value="6">系統檔</option>
+                                </select>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_ModuleId" class="col-md-3 col-lg-3 control-label">模組代號</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="id_ModuleId" name="ModuleId" value="@ViewBag.ModuleId" maxlength="3" readonly/>
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_ModuleId" name="ModuleId" value="@ViewBag.ModuleId" maxlength="3" />
+                            }
+                        </div>
+                        <span style="display: inline;" id="id_ModuleName">@ViewBag.ModuleName</span>
+                        <input type="hidden" id="id_ModuleName" name="ModuleName" value="@ViewBag.ModuleName" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_Remark" class="col-md-3 col-lg-3 control-label">備註</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <textarea class="form-control" id="id_Remark" name="Remark" cols="40" rows="5" maxlength="255" readonly>@ViewBag.Remark</textarea>
+                            }
+                            else
+                            {
+                                <textarea class="form-control" id="id_Remark" name="Remark" cols="40" rows="5" maxlength="255">@ViewBag.Remark</textarea>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    @if (ViewBag.Type == "Detail")
+                    {
+                        <button type="button" class="btn btn-primary" id="btnQuestionList_D" name="action" value="btnQuestionList_D" aria-label="Left Align" disabled="disabled" tabindex="14">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 欄位新增
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" id="btnQuestionList_D" name="action" value="btnQuestionList_D" aria-label="Left Align" tabindex="14">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 欄位新增
+                        </button>
+                    }
+                </div>
+                <div id="divGrid">
+                    @{
+                        var webGrid = new WebGrid(source: (IEnumerable<TableList>) ViewData["DisplayData"], canPage: false, canSort: true, defaultSort: "TableId", ajaxUpdateContainerId: "divGrid");
+                    }
+                    @webGrid.GetHtml(
+                        tableStyle: "table table-striped table-hover table-condensed rms-table",
+                        mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                        columns: webGrid.Columns(
+                            webGrid.Column(columnName: "", header: "動作", style: "actioncolumn",
+                                format:
+                                    @<text>
+                                        @if (ViewBag.Type == "Detail")
+                                        {
+                                            <a class='btn btn-link'>編輯</a>
+                                            <a class='btn btn-link'>刪除</a>
+                                        }
+                                        else
+                                        {
+                                            <a class='btn btn-link' data-dismiss='modal' onclick='QuestionList_DExid(this)'>編輯</a>
+                                            <a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>
+                                        }
+                                     </text>),
+                            webGrid.Column(columnName: "ItemId", header: "項次", style: "departmentId", format:
+                                @<text>
+                                    <span class="display-mode-address">@item.ItemId</span>
+                                    <input type="hidden" value="@item.ItemId" class="txtAddressId" maxlength="255" name="txtAddressId"/>
+                                 </text>),
+                            webGrid.Column(columnName: "ColumnNo", header: "欄位代號", style: "departmentName", format:
+                                @<text>
+                                    <span class="display-mode-address">@item.ColumnNo</span>
+                                    <input type="hidden" value="@item.ColumnNo" class="txtColumnNo" maxlength="255" name="txtColumnNo"/>
+                                 </text>),
+                            webGrid.Column(columnName: "ColumnName", header: "欄位名稱", style: "departmentName", format:
+                                @<text>
+                                    <span class="display-mode-address">@item.ColumnName</span>
+                                    <input type="hidden" value="@item.ColumnName" class="txtColumnName" maxlength="255" name="txtColumnName"/>
+                                 </text>),
+                            webGrid.Column(columnName: "DataType", header: "型態", style: "departmentName", format:
+                                @<text>
+                                    <span class="display-mode-address">@item.DataType</span>
+                                    <input type="hidden" value="@item.DataType" class="txtDataType" maxlength="30" name="txtDataType"/>
+                                 </text>),
+                            webGrid.Column(columnName: "ColLength", header: "長度", style: "departmentName", format:
+                                @<text>
+                                    <span class="display-mode-address">@item.ColLength</span>
+                                    <input type="hidden" value="@item.ColLength" class="txtColLength" maxlength="20" name="txtColLength"/>
+                                 </text>),
+                            webGrid.Column(columnName: "Remark", header: "欄位說明", style: "departmentName", format:
+                                @<text>
+                                    <span class="display-mode-address">@item.Remark</span>
+                                    <input type="hidden" value="@item.Remark" class="txtRemark" maxlength="20" name="txtRemark"/>
+                                 </text>)
+                            )
+                        )
+                </div>
+            <div class="text-right">
+                @if (ViewBag.Type == "New")
+                {
+                    <button type="submit" class="btn btn-primary savebefore" name="action" value="btnSaveNew" tabindex="15">存檔</button>
+                    <button type="submit" class="btn btn-primary savebefore" name="action" value="btnNextNew" tabindex="16">存檔並新增</button>
+                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="17">取消</a>
+                }
+                else if (ViewBag.Type == "Edit")
+                {
+                    <button type="submit" class="btn btn-primary savebefore" name="action" value="btnSaveEdit" tabindex="15">存檔</button>
+                    <button type="submit" class="btn btn-primary savebefore" name="action" value="btnNextEdit" tabindex="16">存檔並新增</button>
+                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="17">取消</a>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-primary" name="action" value="btnEdit" tabindex="15">編輯</button>
+                    <button type="submit" class="btn btn-primary" name="action" value="btnAdd" tabindex="16">複製并新增</button>
+                    <button type="submit" class="btn btn-primary" id="btnDelete" name="action" value="btnDelete" tabindex="17">刪除</button>
+                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="18">取消</a>
+                }
+                <input type="hidden" id="txtSaveAddress1" name="txtSaveAddress1"/>
+                <input type="hidden" id="txtSaveAddress2" name="txtSaveAddress2"/>
+            </div>
+            </form>
+        </div>
+    </div>
+</section>
+@RenderPage("~/Areas/ADMI06/Views/Shared/QuestionList_DExid-modal.cshtml")
+@RenderPage("~/Areas/ADMI06/Views/Shared/QuestionList_D-modal.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")

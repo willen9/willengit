@@ -1,0 +1,74 @@
+﻿<style type="text/css">
+    .record-selector-productcategory-modal table .actioncolumn {
+        width: 50px;
+    }
+
+    .record-selector-productcategory-modal table .ProductTypeIdType {
+        width: 150px;
+    }
+
+    .record-selector-productcategory-modal table .ProductTypeType {
+        width: 200px;
+    }
+</style>
+<div class='modal fade record-selector-productcategory-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title'>規格查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-inline">
+                    <div class="form-group">
+                        @*<input type="hidden" name="txtCategoryType" id="txtCategoryType" />
+            <label for="txtCondition" class="control-label">類別代號</label>
+            <input type="text" class="form-control" id="txtProductTypeId" name="txtProductTypeId" style="width: 200px; display: inline;" />
+            <label for="txtCondition" class="control-label">類別名稱</label>
+            <input type="text" class="form-control" id="txtProductType" name="txtProductType" style="width: 200px; display: inline;" />*@
+                        <select class="form-control" style="width: 200px; display: inline;" name="addCol" id="addCol">
+                            <option value="ProductCategoryType">分類方式</option>
+                            <option value="ProductTypeId">品號類別代號</option>
+                            <option value="ProductType">品號類別名稱</option>
+                        </select>
+
+                        <select class="form-control" style="width: 100px; display: inline;" name="addCondition" id="addCondition">
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>">&lt;&gt;</option>
+                            <option value="like%">like%</option>
+                            <option value="%like">%like</option>
+                            <option value="%like%">%like%</option>
+                        </select>
+                        <input type="text" class="form-control" id="addconditionValue" name="addconditionValue" style="width: 200px; display: inline;" />
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" id="btnPro" style="display: inline;">查詢</button>
+                    </div>
+                </div>
+            </div>
+                <div id="divProductCategoryGrid" style="height: 500px;overflow-y: auto;">
+                    <table class="table table-striped table-hover table-condensed" data-swhgajax="true" data-swhgcontainer="divProductCategoryGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                    類別代號
+                                </th>
+                                <th scope="col">
+                                    類別名稱
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <input type="hidden" id="ProdPage" name="ProdPage" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

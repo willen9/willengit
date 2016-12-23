@@ -1,0 +1,528 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#from-Position_H').bootstrapValidator({
+            fields: {
+                PositionNo: {
+                    validators: {
+                        notEmpty: {
+                            message: '職務代號不能為空！'
+                        },
+                        callback: {
+                            message: '輸入的職務代號已存在，請重新輸入!',
+                            callback: function (value, validator) {
+                                var res = true;
+                                if (value != "") {
+                                    $.ajax({
+                                        url: '@Url.Action("IsPositionNo", "Main")',
+                                        data: JSON.stringify({ "PositionNo": value }),
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function (data) {
+                                            if (data == false) {
+                                                res = false;
+                                            }
+                                        }
+                                    })
+                                }
+                                return res;
+                            }
+                        }
+                    }
+                },
+                Position: {
+                    validators: {
+                        notEmpty: {
+                            message: '職務名稱不能為空！'
+                        }
+                    }
+                }
+            }
+        });
+
+        $("#btnPosition_D").click(function () {
+            $("#id_Position_DEmployeeId").val("");
+            $("#id_Position_DEmployeeName").val("");
+            $("#id_Position_DRemark").val("");
+            $('.Position_D-modal').modal();
+        });
+
+        $('#id_Position_DEmployeeId').blur(function () {
+            $.ajax({
+                url: '@Url.Action("GetEmployeeName", "Main", new { Area = "SUPB01" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "EmployeeId": $("#id_Position_DEmployeeId").val().trim() }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var serverData = data.split('-');
+                    if (serverData[0] == "NO") {
+                        $("#msg_information").html("人員不存在！");
+                        $('.msg-modal-lg').modal();
+                        $("#id_Position_DEmployeeId").val("")
+                        $("#id_Position_DEmployeeName").val("")
+                    } else {
+                        $('#id_Position_DEmployeeName').val(serverData[1]);
+                    }
+                }
+            });
+        });
+
+        $("#btnPosition_DEmployeeId").click(function () {
+            $(".Position_D-modal").modal("hide");
+            $.ajax({
+                url: '@Url.Action("SearchEmployee", "Main", new { Area = "SUPI06" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "Col": "", "Condition": "", "conditionValue": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divEmployeeGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divEmployeeGrid table tbody").append("<tr>" +
+                               "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectEmployee(this)'>選擇</a>" +
+                               "<td class='EmployeeIdType'>" + Maintain[i].EmployeeId + "</td>" +
+                               "<td class='EmployeeNameTyep'>" + Maintain[i].EmployeeName + "</td>" +
+                               "<td class='DepartmentNameTyep'>" + Maintain[i].DepartmentName + "</td>" +
+                               "</tr>");
+
+                    }
+                }
+            });
+            $("#txtEmployeeId").val("");
+            $("#txtEmployeeName").val("");
+            $("#EmployeePage").val("1");
+            $(".record-selector-employee-modal").modal();
+        });
+
+        $("#btnEmployeeSearch").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchEmployee", "Main", new { Area = "SUPI06" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "Col": "," + $("#addemployeeCol").val(), "Condition": "," + $("#addemployeeCondition").val(), "conditionValue": "," + $("#addemployeeconditionValue").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divEmployeeGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divEmployeeGrid table tbody").append("<tr>" +
+                               "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectEmployee(this)'>選擇</a>" +
+                               "<td class='EmployeeIdType'>" + Maintain[i].EmployeeId + "</td>" +
+                               "<td class='EmployeeNameTyep'>" + Maintain[i].EmployeeName + "</td>" +
+                               "<td class='DepartmentNameTyep'>" + Maintain[i].DepartmentName + "</td>" +
+                               "</tr>");
+                    }
+                }
+            });
+            $("#EmployeePage").val("1");
+        });
+
+        $("#divEmployeeGrid").scroll(function () {
+            var Page = document.getElementById("EmployeePage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchEmployee", "Main", new { Area = "SUPI06" })',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "Col": "," + $("#addemployeeCol").val(), "Condition": "," + $("#addemployeeCondition").val(), "conditionValue": "," + $("#addemployeeconditionValue").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divEmployeeGrid table tbody").append("<tr>" +
+                                   "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectEmployee(this)'>選擇</a>" +
+                                   "<td class='EmployeeIdType'>" + Maintain[i].EmployeeId + "</td>" +
+                                   "<td class='EmployeeNameTyep'>" + Maintain[i].EmployeeName + "</td>" +
+                                   "<td class='DepartmentNameTyep'>" + Maintain[i].DepartmentName + "</td>" +
+                                   "</tr>");
+                            }
+                        }
+                    });
+                    $("#EmployeePage").val(Page);
+                }
+            }
+
+        });
+    });
+
+    function Position_DExit(id) {
+        $("#id_Position_DEmployeeId").val($(id).closest('tr').find(".strCEmployeeId").val());
+        $("#id_Position_DEmployeeName").val($(id).closest('tr').find(".strCEmployeeName").val());
+        $("#id_Position_DRemark").val($(id).closest('tr').find(".strCRemark").val());
+        $('.Position_D-modal').modal();
+    }
+
+    function SelectEmployee(id) {
+        $("#id_Position_DEmployeeId").val($(id).closest('tr').find(".EmployeeIdType").html());
+        $("#id_Position_DEmployeeName").val($(id).closest('tr').find(".EmployeeNameTyep").html());
+        $('.Position_D-modal').modal();
+    }
+
+    function check() {
+        if ($("#id_Position_DEmployeeId").val() == '') {
+            $("#msg_information").html("人員代號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        var table = document.getElementById("divPosition_DGrid");
+        var trs = table.getElementsByTagName('tr');
+        for (var i = 0; i < trs.length; i++) {
+            if ($(trs[i]).closest('tr').find(".strCEmployeeId").val() == $("#id_Position_DEmployeeId").val()) {
+                trs[i].innerHTML = "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='Position_DExit(this)'>編輯</a>|<a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>" +
+                "<td class='EmployeeId'>" + $("#id_Position_DEmployeeId").val() + "<input type='hidden' class='strCEmployeeId' name='strCEmployeeId' value='" + $("#id_Position_DEmployeeId").val() + "'></td>" +
+                "<td class='EmployeeName'>" + $("#id_Position_DEmployeeName").val() + "<input type='hidden' class='strCEmployeeName' name='strCEmployeeName' value='" + $("#id_Position_DEmployeeName").val() + "'></td>" +
+                "<td class='Remark'>" + $("#id_Position_DRemark").val() + "<input type='hidden' class='strCRemark' name='strCRemark' value='" + $("#id_Position_DRemark").val() + "'></td>";
+                $(".Position_D-modal").modal("hide");
+                return;
+            }
+
+        }
+
+
+
+        $("#divPosition_DGrid table tbody").append("<tr>" +
+            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='Position_DExit(this)'>編輯</a>|<a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>" +
+            "<td class='EmployeeId'>" + $("#id_Position_DEmployeeId").val() + "<input type='hidden' class='strCEmployeeId' name='strCEmployeeId' value='" + $("#id_Position_DEmployeeId").val() + "'></td>" +
+            "<td class='EmployeeName'>" + $("#id_Position_DEmployeeName").val() + "<input type='hidden' class='strCEmployeeName' name='strCEmployeeName' value='" + $("#id_Position_DEmployeeName").val() + "'></td>" +
+            "<td class='Remark'>" + $("#id_Position_DRemark").val() + "<input type='hidden' class='strCRemark' name='strCRemark' value='" + $("#id_Position_DRemark").val() + "'></td>" +
+            "</tr>");
+
+        $(".Position_D-modal").modal("hide");
+    };
+
+    function RemoveProcess(id) {
+        $(id).parents('tr:first').remove();
+    };
+
+    function btnAdd() {
+        if (document.getElementById("PositionNo").value == "") {
+            $("#msg_information").html("職務代號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+        if (document.getElementById("Position").value == "") {
+            $("#msg_information").html("職務名稱不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+        var ajaxTrue = true;
+
+        $.ajax({
+            url: '@Url.Action("IsPositionNo", "Main")',
+            data: JSON.stringify({ "PositionNo": document.getElementById("PositionNo").value }),
+            type: 'POST',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data == false) {
+                    $("#msg_information").html("職務代號已存在！");
+                    $('.msg-modal-lg').modal();
+                    ajaxTrue = false;
+                    return;
+                }
+            }
+        })
+
+        if (ajaxTrue == true) {
+            $.ajax({
+                url: '@Url.Action("Add", "Main")',
+                data: $('#from-Position_H').serialize(),
+                type: 'POST',
+                contentType: 'application/x-www-form-urlencoded',
+                success: function (data) {
+                    var strData = data.split('-');
+                    if (strData[0] == "NO") {
+                        $("#msg_information").html(strData[1]);
+                        $('.msg-modal-lg').modal();
+                    } else {
+                        window.location.href = '@Url.Action("Index", "Main")';
+                    }
+
+                }
+            })
+        }
+    };
+
+    function btnAddAgain() {
+        if (document.getElementById("PositionNo").value == "") {
+            $("#msg_information").html("職務代號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        if (document.getElementById("Position").value == "") {
+            $("#msg_information").html("職務名稱不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+
+        var ajaxTrue = true;
+
+        $.ajax({
+            url: '@Url.Action("IsPositionNo", "Main")',
+            data: JSON.stringify({ "PositionNo": document.getElementById("PositionNo").value }),
+            type: 'POST',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data == false) {
+                    $("#msg_information").html("職務代號已存在！");
+                    $('.msg-modal-lg').modal();
+                    ajaxTrue = false;
+                    return;
+                }
+            }
+        })
+        if (ajaxTrue == true) {
+            $.ajax({
+                url: '@Url.Action("Add", "Main")',
+                data: $('#from-Position_H').serialize(),
+                type: 'POST',
+                contentType: 'application/x-www-form-urlencoded',
+                success: function (data) {
+                    var strData = data.split('-');
+                    if (strData[0] == "NO") {
+                        $("#msg_information").html(strData[1]);
+                        $('.msg-modal-lg').modal();
+                    } else {
+                        window.location.href = '@Url.Action("CUR", "Main")';
+                    }
+
+                }
+            })
+        }
+    };
+
+    function btnExit() {
+        if (document.getElementById("Position").value == "") {
+            $("#msg_information").html("職務名稱不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+        $.ajax({
+            url: '@Url.Action("Exit", "Main")',
+            data: $('#from-Position_H').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("Index", "Main")';
+                }
+
+            }
+        })
+    };
+
+    function btnExitAgain() {
+        if (document.getElementById("Position").value == "") {
+            $("#msg_information").html("職務名稱不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+        $.ajax({
+            url: '@Url.Action("Exit", "Main")',
+            data: $('#from-Position_H').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("CUR", "Main")';
+                }
+
+            }
+        })
+    };
+
+</script>
+<section class="content-header">
+    <h1>職務類別資料維護</h1>
+</section>
+<section class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            <form id="from-Position_H" method="post" action="@Url.Action("CUR", "Main")">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_PositionNo" class="col-md-3 col-lg-3 control-label">職務代號</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="PositionNo" name="PositionNo" value="@ViewBag.PositionNo" maxlength="6" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="PositionNo" name="PositionNo" value="@ViewBag.PositionNo" maxlength="6" tabindex="1" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_Position" class="col-md-3 col-lg-3 control-label">職務名稱</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="Position" name="Position" value="@ViewBag.Position" maxlength="40" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="Position" name="Position" value="@ViewBag.Position" maxlength="40" tabindex="2" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_PositionCategory" class="col-md-3 col-lg-3 control-label">職務分類</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Details" || @ViewBag.Type == "Edit")
+                            {
+                                    if (ViewBag.PositionCategory == "1")
+                                    {
+                                        <input type="text" class="form-control" id="PositionCategory" name="PositionCategory" value="1.工程" maxlength="40" readonly />
+                                    }
+                                    if (ViewBag.PositionCategory == "3")
+                                    {
+                                        <input type="text" class="form-control" id="PositionCategory" name="PositionCategory" value="3.業務" maxlength="40" readonly />
+                                    }
+                            }
+                            else
+                            {
+                                <select class="form-control" id="PositionCategory" name="PositionCategory" tabindex="3">
+                                    @if (ViewBag.PositionCategory == "1")
+                                    {
+                                        <option value="1" selected>1.工程</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="1">1.工程</option>
+                                    }
+                                    @if (ViewBag.PositionCategory == "3")
+                                    {
+                                        <option value="3" selected>3.業務</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="3">3.業務</option>
+                                    }
+                                </select>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_Remark" class="col-md-3 col-lg-3 control-label">備註</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <textarea class="form-control" id="id_Remark" name="Remark" cols="40" rows="5" maxlength="255" readonly>@ViewBag.Remark</textarea>
+                            }
+                            else
+                            {
+                                <textarea class="form-control" id="id_Remark" name="Remark" cols="40" rows="5" maxlength="255" tabindex="4">@ViewBag.Remark</textarea>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <h5>人員列表</h5>
+                <div class="text-right">
+                    @if (@ViewBag.Type == "Details")
+                    {
+                        <button type="button" class="btn btn-primary" id="btnPosition_D" name="action" value="btnPosition_D" aria-label="Left Align" disabled>
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" id="btnPosition_D" name="action" value="btnPosition_D" aria-label="Left Align" tabindex="5">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
+                        </button>
+                    }
+                </div>
+                <div id="divPosition_DGrid" style="height: 100px;overflow-y: auto;">
+                    @{
+                        var webGrid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.Position_D>)ViewData["Position_D"], canPage: false, canSort: false, ajaxUpdateContainerId: "divPosition_DGrid");
+                    }
+                    @webGrid.GetHtml(
+
+                                    tableStyle: "table table-striped table-hover",
+                                    columns: webGrid.Columns(
+                                        webGrid.Column(columnName: "", header: "動作", style: "actioncolumn",
+                                            format:
+                                            @<text>
+                                                <a class='btn btn-link' data-dismiss='modal' onclick='Position_DExit(this)'>編輯</a>
+                                                <a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>
+                                            </text>),
+                                            webGrid.Column(columnName: "EmployeeId", header: "人員代號", style: "EmployeeId",
+                                            format:
+                                            @<text>
+                                                @item.EmployeeId
+                                                <input type="hidden" class="strCEmployeeId" name="strCEmployeeId" value='@item.EmployeeId'>
+                                            </text>),
+                                            webGrid.Column(columnName: "EmployeeName", header: "人員名稱", style: "EmployeeName",
+                                            format:
+                                            @<text>
+                                                @item.EmployeeName
+                                                <input type="hidden" class="strCEmployeeName" name="strCEmployeeName" value='@item.EmployeeName'>
+                                            </text>),
+                                            webGrid.Column(columnName: "Remark", header: "備註", style: "Remark",
+                                            format:
+                                            @<text>
+                                                @item.Remark
+                                                <input type="hidden" class="strCRemark" name="strCRemark" value='@item.Remark'>
+                                            </text>)
+                                        )
+                                        )
+                </div>
+                <div class="text-right">
+                    @if (@ViewBag.Type == "Edit")
+                    {
+                        <button type="button" class="btn btn-primary" name="action" value="Edit" onclick="btnExit()">存檔</button>
+                        <button type="button" class="btn btn-primary" name="action" value="EditAgain" onclick="btnExitAgain()">存檔並新增</button>
+                                <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+                    else if (@ViewBag.Type == "Details")
+                    {
+                        @*<a class="btn btn-primary" href="@Url.Action("Edit", "Main", new { PositionNo = @ViewBag.PositionNo })">編輯</a>*@
+                        @*<a class="btn btn-primary" href="@Url.Action("Copy", "Main", new { PositionNo = @ViewBag.PositionNo })">複製並新增</a>*@
+                                @*<button type="button" class="btn btn-primary" onclick="deleteInfo('@Url.Action("Delete", "Main", new { PositionNo = @ViewBag.PositionNo })','@ViewBag.Position')">刪除</button>*@
+                                <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">返回列表</a>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" name="action" value="Save" onclick="btnAdd()">存檔</button>
+                        <button type=button class="btn btn-primary" name="action" value="SaveAgain" onclick="btnAddAgain()">存檔並新增</button>
+                                <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<input type="hidden" title="module" value="CMSI11" />
+
+@RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/choose-msg-dialog.cshtml")
+@RenderPage("~/Areas/CMSI11/Views/Shared/Position_D-modal.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/record_selector_employee.cshtml")

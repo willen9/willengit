@@ -1,0 +1,115 @@
+﻿<link type="text/css" href="~/AreasStyle/CMSI01.css" rel="stylesheet" />
+<script type="text/javascript" >
+    $(document).ready(function () {
+        $('#from-Company').bootstrapValidator({
+            fields: {
+                shortname: {
+                    validators: {
+                        notEmpty: {
+                            message: '公司簡稱不能為空！'
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    /*
+        保存
+    */
+    function btnSave() {
+        if (document.getElementById("id_shortname").value == "") {
+            $("#msg_information").html("公司簡稱不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+        $.ajax({
+            url: '@Url.Action("SaveCompany", "Main")',
+            //url: '/cmsi01/savecompany',
+            data: $('#from-Company').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                $("#msg_information").html(strData[1]);
+                $('.msg-modal-lg').modal();
+            }
+        })
+    }
+</script>
+
+<section class="content-header">
+    <h1>公司基本資料維護</h1>
+</section>
+
+<section class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            <form id="from-Company" method="post">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_companyid" class="col-sm-3 control-label">公司代號</label>
+                        <div class="col-sm-21">
+                            <input type="text" class="form-control" id="id_companyid" name="companyid" value="@ViewBag.CompanyId" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_shortname" class="col-sm-3 control-label">公司簡稱</label>
+                        <div class="col-sm-21">
+                            <input type="text" class="form-control" id="id_shortname" name="shortname" value="@ViewBag.CompanyName" maxlength="30" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_fullname" class="col-sm-3 control-label">公司全名</label>
+                        <div class="col-sm-21">
+                            <input type="text" class="form-control" id="id_fullname" name="fullname" value="@ViewBag.CompanyFName" maxlength="80" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_tel" class="col-sm-3 control-label">電話</label>
+                        <div class="col-sm-21">
+                            <input type="text" class="form-control" id="id_tel" name="tel" value="@ViewBag.TelNo" maxlength="20" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_fax" class="col-sm-3 control-label">傳真</label>
+                        <div class="col-sm-21">
+                            <input type="text" class="form-control" id="id_fax" name="fax" value="@ViewBag.FaxNo" maxlength="20" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_address" class="col-sm-3 control-label">地址</label>
+                        <div class="col-sm-21">
+                            <input type="text" class="form-control" id="id_address" name="address" value="@ViewBag.Address" maxlength="255" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_remark" class="col-sm-3 control-label">備註</label>
+                        <div class="col-sm-21">
+                            <textarea class="form-control" id="id_remark" name="remark" cols="40" rows="5" maxlength="255">@ViewBag.Remark</textarea>
+                        </div>
+                    </div>
+                </div>
+                <p style="color: red;">@ViewBag.Msg</p>
+                <div class="text-right">
+                    <button type="button" class="btn btn-primary" name="action" value="Save" onclick="btnSave()"><i class="fa fa-floppy-o" aria-hidden="true"></i> 存檔</button>
+                </div>
+            </form>            
+        </div>
+    </div>
+</section>
+
+@RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")

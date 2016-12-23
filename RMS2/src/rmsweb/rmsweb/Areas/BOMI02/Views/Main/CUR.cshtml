@@ -1,0 +1,1034 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#from-Substitutes_D').bootstrapValidator({
+            fields: {
+                ComponentNo: {
+                    validators: {
+                        notEmpty: {
+                            message: '元件品號不能為空！'
+                        }
+                    }
+                },
+                MajorComponentNo: {
+                    validators: {
+                        notEmpty: {
+                            message: '主件品號不能為空！'
+                        }
+                    }
+                }
+            }
+        });
+
+        $("#id_sureConfirmDate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+
+        $("#btnSure").click(function () {
+            var myDate = new Date();
+            var year = myDate.getFullYear();
+            var month = myDate.getMonth() + 1;
+            var date = myDate.getDate();
+            $("#id_sureConfirmDate").val(year + "/" + month + "/" + date);
+            $(".sure-modal").modal();
+        });
+
+    });
+
+    $(function () {
+        $("#btnComponentNo").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchBOMD", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ComponentNo": "", "Col": "", "Condition": "", "conditionValue": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divComponentNoGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divComponentNoGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectComponentNo(this)'>選擇</a>" +
+                                "<td class='ComponentNoType'>" + Maintain[i].ComponentNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                "</tr>");
+
+                    }
+                }
+            });
+            $("#txtComponentNo").val("");
+            $("#txtProductNameComponentNo").val("");
+            $("#ComponentNoPage").val("1");
+            $(".record-selector-ComponentNo-modal").modal();
+        });
+
+        $("#btnSearchComponentNo").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchBOMD", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({
+                    "ComponentNo": $("#txtComponentNo").val(), "Col": $("#addComponent_Col").val(), "Condition": $("#addComponent_Condition").val(), "conditionValue": $("#addComponent_conditionValue").val(), Page: 1
+                }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divComponentNoGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divComponentNoGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectComponentNo(this)'>選擇</a>" +
+                                "<td class='ComponentNoType'>" + Maintain[i].ComponentNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#ComponentNoPage").val("1");
+        });
+
+        $("#divComponentNoGrid").scroll(function () {
+            var Page = document.getElementById("ComponentNoPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchBOMD", "Main")',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "ComponentNo": $("#txtComponentNo").val(), "Col": $("#addComponent_Col").val(), "Condition": $("#addComponent_Condition").val(), "conditionValue": $("#addComponent_conditionValue").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divComponentNoGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectComponentNo(this)'>選擇</a>" +
+                                    "<td class='ComponentNoType'>" + Maintain[i].ComponentNo + "</td>" +
+                                    "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                    "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                    "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                    "</tr>");
+                            }
+                        }
+                    });
+                    $("#ComponentNoPage").val(Page);
+                }
+            }
+
+        });
+
+        $('#id_ComponentNo').blur(function () {
+            if (document.getElementById("id_ComponentNo").readOnly == true) {
+                return;
+            }
+            if ($("#id_ComponentNo").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Action("SearchBOMDInfo", "Main")',
+                    data: JSON.stringify({ "ComponentNo": $("#id_ComponentNo").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#id_ComponentNo").val(data.ComponentNo);        //品號
+                        $("#id_ProductNameComponentNo").val(data.ProductName);     //品名
+                        $("#id_SpecificationComponentNo").val(data.Specification);     //品名
+                        $("#id_UnitComponentNo").val(data.Unit);     //品名
+
+                        $("#id_MajorComponentNo").val("");        //品號
+                        $("#id_ProductNameMajorComponentNo").val("");     //品名
+                        $("#id_SpecificationMajorComponentNo").val("");        //品號
+                        $("#id_UnitMajorComponentNo").val("");     //品名
+                    },
+                    error: function () {
+                        $("#msg_information").html("元件品號不存在！");
+                        $('.msg-modal-lg').modal();
+                        $("#id_ComponentNo").val("");        //品號
+                        $("#id_ProductNameComponentNo").val("");     //品名
+                        $("#id_SpecificationComponentNo").val("");        //品號
+                        $("#id_UnitComponentNo").val("");     //品名
+
+                        $("#id_MajorComponentNo").val("");        //品號
+                        $("#id_ProductNameMajorComponentNo").val("");     //品名
+                        $("#id_SpecificationMajorComponentNo").val("");        //品號
+                        $("#id_UnitMajorComponentNo").val("");     //品名
+                    }
+                })
+            } else {
+                $("#id_ComponentNo").val("");        //品號
+                $("#id_ProductNameComponentNo").val("");     //品名
+                $("#id_SpecificationComponentNo").val("");        //品號
+                $("#id_UnitComponentNo").val("");
+
+                $("#id_MajorComponentNo").val("");        //品號
+                $("#id_ProductNameMajorComponentNo").val("");     //品名
+                $("#id_SpecificationMajorComponentNo").val("");        //品號
+                $("#id_UnitMajorComponentNo").val("");     //品名
+            }
+        });
+
+        $("#btnMajorComponentNo").click(function () {
+            if ($("#id_ComponentNo").val().trim().length == 0)
+            {
+                $("#msg_information").html("請輸入元件品號！");
+                $('.msg-modal-lg').modal();
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("SearchBOMH", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "MajorComponentNo": "", "MajorComponentName": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divMajorComponentNoGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divMajorComponentNoGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectMajorComponentNo(this)'>選擇</a>" +
+                            "<td class='MajorComponentNoType'>" + Maintain[i].MajorComponentNo + "</td>" +
+                            "<td class='MajorComponentNameType'>" + Maintain[i].MajorComponentName + "</td>" +
+                            "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                            "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                            "</tr>");
+
+                    }
+                }
+            });
+            $("#txtMajorComponentNo").val("");
+            $("#txtSpecificationMajorComponentNo").val("");
+            $("#MajorComponentNoPage").val("1");
+            $(".record-selector-MajorComponentNo-modal").modal();
+        });
+
+        $("#btnSearchMajorComponentNo").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchBOMH", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "MajorComponentNo": $("#txtMajorComponentNo").val(), "MajorComponentName": $("#txtSpecificationMajorComponentNo").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divMajorComponentNoGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divMajorComponentNoGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectMajorComponentNo(this)'>選擇</a>" +
+                            "<td class='MajorComponentNoType'>" + Maintain[i].MajorComponentNo + "</td>" +
+                            "<td class='MajorComponentNameType'>" + Maintain[i].MajorComponentName + "</td>" +
+                            "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                            "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                            "</tr>");
+                    }
+                }
+            });
+            $("#MajorComponentNoPage").val("1");
+        });
+
+        $("#divMajorComponentNoGrid").scroll(function () {
+            var Page = document.getElementById("MajorComponentNoPage").value;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchBOMH", "Main")',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "MajorComponentNo": $("#txtMajorComponentNo").val(), "MajorComponentName": $("#txtSpecificationMajorComponentNo").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divMajorComponentNoGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectMajorComponentNo(this)'>選擇</a>" +
+                                    "<td class='MajorComponentNoType'>" + Maintain[i].MajorComponentNo + "</td>" +
+                                    "<td class='MajorComponentNameType'>" + Maintain[i].MajorComponentName + "</td>" +
+                                    "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                    "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                    "</tr>");
+                            }
+                        }
+                    });
+                    $("#MajorComponentNoPage").val(Page);
+                }
+            }
+
+        });
+
+        $('#id_MajorComponentNo').blur(function () {
+            if (document.getElementById("id_MajorComponentNo").readOnly == true) {
+                return;
+            }
+            if ($("#id_MajorComponentNo").val().trim() != "") {
+
+                if ($("#id_ComponentNo").val().trim().length == 0) {
+                    $("#msg_information").html("請輸入元件品號！");
+                    $('.msg-modal-lg').modal();
+                    $("#id_MajorComponentNo").val("");        //品號
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("SearchBOMHInfo", "Main")',
+                    data: JSON.stringify({ "MajorComponentNo": $("#id_MajorComponentNo").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#id_MajorComponentNo").val(data.MajorComponentNo);        //品號
+                        $("#id_ProductNameMajorComponentNo").val(data.MajorComponentName);     //品名
+                        $("#id_SpecificationMajorComponentNo").val(data.Specification);        //品號
+                        $("#id_UnitMajorComponentNo").val(data.Unit);     //品名
+                    },
+                    error: function () {
+                        $("#msg_information").html("品號不存在！");
+                        $('.msg-modal-lg').modal();
+                        $("#id_MajorComponentNo").val("");        //品號
+                        $("#id_ProductNameMajorComponentNo").val("");     //品名
+                        $("#id_SpecificationMajorComponentNo").val("");        //品號
+                        $("#id_UnitMajorComponentNo").val("");     //品名
+                    }
+                })
+            } else {
+                $("#id_MajorComponentNo").val("");        //品號
+                $("#id_ProductNameMajorComponentNo").val("");     //品名
+                $("#id_SpecificationMajorComponentNo").val("");        //品號
+                $("#id_UnitMajorComponentNo").val("");     //品名
+            }
+        });
+
+        $("#btnComponentNoD").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchProduct", "Main", new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ProductNo": "", "Col": "", "Condition": "", "conditionValue": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divProductGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divProductGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectComponentNoD(this)'>選擇</a>" +
+                                "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                "<td class='ProductTypeId1NameType'>" + Maintain[i].ProductTypeId1Name + "</td>" +
+                                "<td class='VendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                                "</tr>");
+
+                    }
+                }
+            });
+            $("#txtProductNo").val("");
+            $("#txtProductName").val("");
+            $("#ProductPage").val("1");
+            $(".Substitutes_D-modal").modal("hide");
+            $(".record-selector-product-modal").modal();
+        });
+
+        $("#btnSearchProduct").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchProduct", "Main", new { Area = "CONI02" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "ProductNo": $("#txtProductNo").val(), "Col": $("#addProduct_Col").val(), "Condition": $("#addProduct_Condition").val(), "conditionValue": $("#addProduct_conditionValue").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divProductGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divProductGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectComponentNoD(this)'>選擇</a>" +
+                                "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                "<td class='ProductTypeId1NameType'>" + Maintain[i].ProductTypeId1Name + "</td>" +
+                                "<td class='VendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#ProductPage").val("1");
+        });
+
+        $("#divProductGrid").scroll(function () {
+            var Page = document.getElementById("ProductPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchProduct", "Main", new { Area = "CONI02" })',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "ProductNo": $("#txtProductNo").val(), "Col": $("#addProduct_Col").val(), "Condition": $("#addProduct_Condition").val(), "conditionValue": $("#addProduct_conditionValue").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divProductGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectComponentNoD(this)'>選擇</a>" +
+                                    "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                    "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                    "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                    "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                    "<td class='ProductTypeId1NameType'>" + Maintain[i].ProductTypeId1Name + "</td>" +
+                                    "<td class='VendorNameType'>" + Maintain[i].VendorName + "</td>" +
+                                    "</tr>");
+                            }
+                        }
+                    });
+                    $("#ProductPage").val(Page);
+                }
+            }
+
+        });
+
+        $('#id_Substitutes_DComponentNo').blur(function () {
+            if (document.getElementById("id_Substitutes_DComponentNo").readOnly == true) {
+                return;
+            }
+            if ($("#id_Substitutes_DComponentNo").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Action("SearchProductInfo", "Main", new { Area = "PSMI03" })',
+                    data: JSON.stringify({ "ProductNo": $("#id_Substitutes_DComponentNo").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#id_Substitutes_DComponentNo").val(data.ProductNo);        //品號
+                        $("#id_Substitutes_DProductName").val(data.ProductName);     //品名
+                        $("#id_Substitutes_DSpecification").val(data.Specification);        //規格
+                        $("#id_Substitutes_DUnit").val(data.Unit);     //單位
+                    },
+                    error: function () {
+                        $("#msg_information").html("品號不存在！");
+                        $('.msg-modal-lg').modal();
+                        $("#id_Substitutes_DComponentNo").val("");        //品號
+                        $("#id_Substitutes_DProductName").val("");     //品名
+                        $("#id_Substitutes_DSpecification").val("");        //規格
+                        $("#id_Substitutes_DUnit").val("");     //單位
+                    }
+                })
+            } else {
+                $("#id_Substitutes_DComponentNo").val("");        //品號
+                $("#id_Substitutes_DProductName").val("");     //品名
+                $("#id_Substitutes_DSpecification").val("");        //規格
+                $("#id_Substitutes_DUnit").val("");     //單位
+            }
+        });
+
+        $("#btnSubstitutes_D").click(function () {
+            $("#id_Substitutes_DComponentNo").val("");
+            $("#id_Substitutes_DProductName").val("");
+            $("#id_Substitutes_DSpecification").val("");
+            $("#id_Substitutes_DUnit").val("");
+            $("#id_Substitutes_DQTY").val("");
+            $("#id_Substitutes_DPriority").val("");
+            $("#id_Substitutes_DRemark").val("");
+            $('.Substitutes_D-modal').modal();
+        });
+
+    });
+
+    function Substitutes_DExit(id) {
+        $("#id_Substitutes_DExitComponentNo").val($(id).closest('tr').find(".strCSubstitutesNo").val());
+        $("#id_Substitutes_DExitProductName").val($(id).closest('tr').find(".strCProductName").val());
+        $("#id_Substitutes_DExitSpecification").val($(id).closest('tr').find(".strCSpecification").val());
+        $("#id_Substitutes_DExitUnit").val($(id).closest('tr').find(".strCUnit").val());
+        $("#id_Substitutes_DExitQTY").val($(id).closest('tr').find(".strCQTY").val());
+        $("#id_Substitutes_DExitPriority").val($(id).closest('tr').find(".strCPriority").val());
+        $("#id_Substitutes_DExitRemark").val($(id).closest('tr').find(".strCRemark").val());
+        $('.Substitutes_DExit-modal').modal();
+    };
+
+    function checkExit() {
+        if ($("#id_Substitutes_DExitComponentNo").val() == '') {
+            $("#msg_information").html("品號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        var table = document.getElementById("divSubstitutes_DGrid");
+        var trs = table.getElementsByTagName('tr');
+        for (var i = 0; i < trs.length; i++) {
+            if ($(trs[i]).closest('tr').find(".strCSubstitutesNo").val() == $("#id_Substitutes_DExitComponentNo").val()) {
+                trs[i].innerHTML = "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='BOM_DExit(this)'>編輯</a>|<a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>" +
+                    "<td class='SubstitutesNo'>" + $("#id_Substitutes_DExitComponentNo").val() + "<input type='hidden' class='strCSubstitutesNo' name='strCSubstitutesNo' value='" + $("#id_Substitutes_DExitComponentNo").val() + "'></td>" +
+                    "<td class='ProductName'>" + $("#id_Substitutes_DExitProductName").val() + "<input type='hidden' class='strCProductName' name='strCProductName' value='" + $("#id_Substitutes_DExitProductName").val() + "'></td>" +
+                    "<td class='Specification'>" + $("#id_Substitutes_DExitSpecification").val() + "<input type='hidden' class='strCSpecification' name='strCSpecification' value='" + $("#id_Substitutes_DExitSpecification").val() + "'></td>" +
+                    "<td class='Unit'>" + $("#id_Substitutes_DExitUnit").val() + "<input type='hidden' class='strCUnit' name='strCUnit' value='" + $("#id_Substitutes_DExitUnit").val() + "'></td>" +
+                    "<td class='QTY'>" + $("#id_Substitutes_DExitQTY").val() + "<input type='hidden' class='strCQTY' name='strCQTY' value='" + $("#id_Substitutes_DExitQTY").val() + "'></td>" +
+                    "<td class='Priority'>" + $("#id_Substitutes_DExitPriority").val() + "<input type='hidden' class='strCPriority' name='strCPriority' value='" + $("#id_Substitutes_DExitPriority").val() + "'></td>" +
+                    "<td class='Remark'>" + $("#id_Substitutes_DExitRemark").val() + "<input type='hidden' class='strCRemark' name='strCRemark' value='" + $("#id_Substitutes_DExitRemark").val() + "'></td>";
+            }
+
+        }
+        $(".Substitutes_DExit-modal").modal("hide");
+    };
+
+
+    function SelectComponentNo(id) {
+        $("#id_ComponentNo").val($(id).closest('tr').find(".ComponentNoType").html());        //品號
+        $("#id_ProductNameComponentNo").val($(id).closest('tr').find(".ProductNameType").html());     //品名
+        $("#id_SpecificationComponentNo").val($(id).closest('tr').find(".SpecificationType").html());        //品號
+        $("#id_UnitComponentNo").val($(id).closest('tr').find(".UnitType").html());     //品名
+
+        $("#id_MajorComponentNo").val("");        //品號
+        $("#id_ProductNameMajorComponentNo").val("");     //品名
+        $("#id_SpecificationMajorComponentNo").val("");        //品號
+        $("#id_UnitMajorComponentNo").val("");     //品名
+    }
+
+    function SelectMajorComponentNo(id) {
+
+        var ajaxTrue = true;
+
+        $.ajax({
+            url: '@Url.Action("IsBOM_D", "Main")',
+            data: JSON.stringify({ "ComponentNo": document.getElementById("id_ComponentNo").value, "MajorComponentNo": $(id).closest('tr').find(".MajorComponentNoType").html() }),
+            type: 'POST',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data == false) {
+                    $("#msg_information").html("該元件品號不存在於該主件品號的BOM表裡！");
+                    $('.msg-modal-lg').modal();
+                    ajaxTrue = false;
+                    return;
+                }
+            }
+        })
+        if (ajaxTrue == true)
+        {
+            $("#id_MajorComponentNo").val($(id).closest('tr').find(".MajorComponentNoType").html());        //品號
+            $("#id_ProductNameMajorComponentNo").val($(id).closest('tr').find(".MajorComponentNameType").html());     //品名
+            $("#id_SpecificationMajorComponentNo").val($(id).closest('tr').find(".SpecificationType").html());        //品號
+            $("#id_UnitMajorComponentNo").val($(id).closest('tr').find(".UnitType").html());     //品名
+        }
+        
+    }
+
+    function SelectComponentNoD(id) {
+        $("#id_Substitutes_DComponentNo").val($(id).closest('tr').find(".ProductNoType").html());        //品號
+        $("#id_Substitutes_DProductName").val($(id).closest('tr').find(".ProductNameType").html());     //品名
+        $("#id_Substitutes_DSpecification").val($(id).closest('tr').find(".SpecificationType").html());        //規格
+        $("#id_Substitutes_DUnit").val($(id).closest('tr').find(".UnitType").html());     //單位
+        $('.Substitutes_D-modal').modal();
+    }
+
+        function btnAdd() {
+            if (document.getElementById("id_ComponentNo").value == "") {
+                $("#msg_information").html("元件品號不能為空！");
+                $('.msg-modal-lg').modal();
+                return;
+            }
+
+            if (document.getElementById("id_MajorComponentNo").value == "") {
+                $("#msg_information").html("主件品號不能為空！");
+                $('.msg-modal-lg').modal();
+                return;
+            }
+
+            var ajaxTrue = true;
+
+            $.ajax({
+                url: '@Url.Action("IsSubstitutes_H", "Main")',
+                data: JSON.stringify({ "ComponentNo": document.getElementById("id_ComponentNo").value, "MajorComponentNo": document.getElementById("id_MajorComponentNo").value, "SubstitutesType": document.getElementById("id_SubstitutesType").value }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data == false) {
+                        $("#msg_information").html("輸入的資料已存在，請重新輸入！");
+                        $('.msg-modal-lg').modal();
+                        ajaxTrue = false;
+                        return;
+                    }
+                }
+            })
+
+            if (ajaxTrue == true)
+            {
+                $.ajax({
+                    url: '@Url.Action("Add", "Main")',
+                    data: $('#from-Substitutes_D').serialize(),
+                    type: 'POST',
+                    contentType: 'application/x-www-form-urlencoded',
+                    success: function (data) {
+                        var strData = data.split('-');
+                        if (strData[0] == "NO") {
+                            $("#msg_information").html(strData[1]);
+                            $('.msg-modal-lg').modal();
+                        } else {
+                            window.location.href = '@Url.Action("Index", "Main")';
+                        }
+
+                    }
+                })
+            }
+
+        };
+
+        function btnAddAgain() {
+            if (document.getElementById("id_ProductNo").value == "") {
+                $("#msg_information").html("品號不能為空！");
+                $('.msg-modal-lg').modal();
+                return;
+            }
+
+            if (document.getElementById("id_SerialNo").value == "") {
+                $("#msg_information").html("序號不能為空！");
+                $('.msg-modal-lg').modal();
+                return;
+            }
+
+            var ajaxTrue = true;
+
+            $.ajax({
+                url: '@Url.Action("SerialNo", "Main")',
+                data: JSON.stringify({ "SerialNo": document.getElementById("id_SerialNo").value }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data == false) {
+                        $("#msg_information").html("輸入的商品序號已存在，請重新輸入！");
+                        $('.msg-modal-lg').modal();
+                        ajaxTrue = false;
+                        return;
+                    }
+                }
+            })
+
+            if (ajaxTrue == true)
+            {
+                $.ajax({
+                    url: '@Url.Action("Add", "Main")',
+                    data: $('#from-Substitutes_D').serialize(),
+                    type: 'POST',
+                    contentType: 'application/x-www-form-urlencoded',
+                    success: function (data) {
+                        var strData = data.split('-');
+                        if (strData[0] == "NO") {
+                            $("#msg_information").html(strData[1]);
+                            $('.msg-modal-lg').modal();
+                        } else {
+                            window.location.href = '@Url.Action("CUR", "Main")';
+                        }
+
+                    }
+                })
+            }
+
+        };
+
+        function btnExit() {
+            $.ajax({
+                url: '@Url.Action("Exit", "Main")',
+                data: $('#from-Substitutes_D').serialize(),
+                type: 'POST',
+                contentType: 'application/x-www-form-urlencoded',
+                success: function (data) {
+                    var strData = data.split('-');
+                    if (strData[0] == "NO") {
+                        $("#msg_information").html(strData[1]);
+                        $('.msg-modal-lg').modal();
+                    } else {
+                        window.location.href = '@Url.Action("Index", "Main")';
+                    }
+
+                }
+            })
+        };
+
+        function btnExitAgain() {
+            $.ajax({
+                url: '@Url.Action("Exit", "Main")',
+                data: $('#from-Warranty').serialize(),
+                type: 'POST',
+                contentType: 'application/x-www-form-urlencoded',
+                success: function (data) {
+                    var strData = data.split('-');
+                    if (strData[0] == "NO") {
+                        $("#msg_information").html(strData[1]);
+                        $('.msg-modal-lg').modal();
+                    } else {
+                        window.location.href = '@Url.Action("CUR", "Main")';
+                    }
+
+                }
+            })
+        };
+
+    function check() {
+        if ($("#id_Substitutes_DComponentNo").val() == '') {
+            $("#msg_information").html("品號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        $("#divSubstitutes_DGrid table tbody").append("<tr>" +
+            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='BOM_DExit(this)'>編輯</a>|<a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>" +
+            "<td class='SubstitutesNo'>" + $("#id_Substitutes_DComponentNo").val() + "<input type='hidden' class='strCSubstitutesNo' name='strCSubstitutesNo' value='" + $("#id_Substitutes_DComponentNo").val() + "'></td>" +
+            "<td class='ProductName'>" + $("#id_Substitutes_DProductName").val() + "<input type='hidden' class='strCProductName' name='strCProductName' value='" + $("#id_Substitutes_DProductName").val() + "'></td>" +
+            "<td class='Specification'>" + $("#id_Substitutes_DSpecification").val() + "<input type='hidden' class='strCSpecification' name='strCSpecification' value='" + $("#id_Substitutes_DSpecification").val() + "'></td>" +
+            "<td class='Unit'>" + $("#id_Substitutes_DUnit").val() + "<input type='hidden' class='strCUnit' name='strCUnit' value='" + $("#id_Substitutes_DUnit").val() + "'></td>" +
+            "<td class='QTY'>" + $("#id_Substitutes_DQTY").val() + "<input type='hidden' class='strCQTY' name='strCQTY' value='" + $("#id_Substitutes_DQTY").val() + "'></td>" +
+            "<td class='Priority'>" + $("#id_Substitutes_DPriority").val() + "<input type='hidden' class='strCPriority' name='strCPriority' value='" + $("#id_Substitutes_DPriority").val() + "'></td>" +
+            "<td class='Remark'>" + $("#id_Substitutes_DRemark").val() + "<input type='hidden' class='strCRemark' name='strCRemark' value='" + $("#id_Substitutes_DRemark").val() + "'></td>" +
+            "</tr>");
+
+        $(".Substitutes_D-modal").modal("hide");
+    };
+
+    function RemoveProcess(id) {
+        $(id).parents('tr:first').remove();
+    };
+
+    function BOM_DExit(id) {
+        $("#id_QuestionList_DExidItemId").val($(id).closest('tr').find(".strCItemId").val());
+        $("#id_QuestionList_DExidSolution").val($(id).closest('tr').find(".strCSolution").val());
+        $("#id_QuestionList_DExidRemark").val($(id).closest('tr').find(".strCRemark").val());
+        $('.BOM_DExit-modal').modal();
+    };
+
+    function checkExid() {
+        if ($("#id_QuestionList_DExidSolution").val() == '') {
+            $("#msg_information").html("解決方法不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        var table = document.getElementById("divSubstitutes_DGrid");
+        var trs = table.getElementsByTagName('tr');
+        for (var i = 0; i < trs.length; i++) {
+            if ($(trs[i]).closest('tr').find(".strCItemId").val() == $("#id_QuestionList_DExidItemId").val()) {
+                trs[i].innerHTML = "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='QuestionList_DExid(this)'>編輯</a>|<a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>" +
+                "<td class='ItemId'>" + $("#id_QuestionList_DExidItemId").val() + "<input type='hidden' class='strCItemId' name='strCItemId' value='" + $("#id_QuestionList_DExidItemId").val() + "'></td>" +
+                "<td class='Solution'>" + $("#id_QuestionList_DExidSolution").val() + "<input type='hidden' class='strCSolution' name='strCSolution' value='" + $("#id_QuestionList_DExidSolution").val() + "'></td>" +
+                "<td class='Remark'>" + $("#id_QuestionList_DExidRemark").val() + "<input type='hidden' class='strCRemark' name='strCRemark' value='" + $("#id_QuestionList_DExidRemark").val() + "'></td>";
+            }
+
+        }
+        $(".BOM_DExit-modal").modal("hide");
+    };
+
+    function checkSure() {
+        if ($("#id_sureConfirmDate").val() == '') {
+            alert("请選擇派工日期");
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("Sure", "Main")',
+            data: $('#from-Substitutes_D').serialize(),
+            type: 'POST',
+            async: false,
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("Index", "Main")';
+                }
+
+            }
+        })
+    }
+</script>
+<section class="content-header">
+    <h1>取替代料件維護</h1>
+</section>
+<section class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            <form id="from-Substitutes_D" method="post">
+                <div class="row">
+                    <div class="form-group">
+                            <label for="id_ComponentNo" class="col-md-3 col-lg-3 control-label">元件品號</label>
+                            <div class="col-md-9 col-lg-9">
+                                @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Details")
+                                {
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="id_ComponentNo" name="ComponentNo" value="@ViewBag.ComponentNo" maxlength="40" readonly />
+                                        <span class="input-group-addon" id="btnComponentNo" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="id_ComponentNo" name="ComponentNo" value="@ViewBag.ComponentNo" maxlength="40" tabindex="1"/>
+                                        <span class="input-group-addon" id="btnComponentNo" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                    </div>
+                                }
+                            </div>
+
+                            <label for="id_MajorComponentNo" class="col-md-3 col-lg-3 control-label">主件品號</label>
+                            <div class="col-md-9 col-lg-9">
+                                @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Details")
+                                {
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="id_MajorComponentNo" name="MajorComponentNo" value="@ViewBag.MajorComponentNo" maxlength="40" readonly />
+                                        <span class="input-group-addon" id="btnMajorComponentNo" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="id_MajorComponentNo" name="MajorComponentNo" value="@ViewBag.MajorComponentNo" maxlength="40" tabindex="2"/>
+                                        <span class="input-group-addon" id="btnMajorComponentNo" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_ProductNameComponentNo" class="col-md-3 col-lg-3 control-label">元件品名</label>
+                        <div class="col-md-9 col-lg-9">
+                            <input type="text" class="form-control" id="id_ProductNameComponentNo" name="ProductNameComponentNo" value="@ViewBag.ProductNameComponentNo" maxlength="120" readonly />
+                        </div>
+                        <label for="id_ProductNameMajorComponentNo" class="col-md-3 col-lg-3 control-label">主件品號</label>
+                        <div class="col-md-9 col-lg-9">
+                            <input type="text" class="form-control" id="id_ProductNameMajorComponentNo" name="ProductNameMajorComponentNo" value="@ViewBag.ProductNameMajorComponentNo" maxlength="120" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SpecificationComponentNo" class="col-md-3 col-lg-3 control-label">元件規格</label>
+                        <div class="col-md-9 col-lg-9">
+                            <input type="text" class="form-control" id="id_SpecificationComponentNo" name="SpecificationComponentNo" value="@ViewBag.SpecificationComponentNo" maxlength="120" readonly />
+                        </div>
+                        <label for="id_SpecificationMajorComponentNo" class="col-md-3 col-lg-3 control-label">主件規格</label>
+                        <div class="col-md-9 col-lg-9">
+                            <input type="text" class="form-control" id="id_SpecificationMajorComponentNo" name="SpecificationMajorComponentNo" value="@ViewBag.SpecificationMajorComponentNo" maxlength="120" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_UnitComponentNo" class="col-md-3 col-lg-3 control-label">元件單位</label>
+                        <div class="col-md-9 col-lg-9">
+                            <input type="text" class="form-control" id="id_UnitComponentNo" name="UnitComponentNo" value="@ViewBag.UnitComponentNo" maxlength="10" readonly />
+                        </div>
+                        <label for="id_UnitMajorComponentNo" class="col-md-3 col-lg-3 control-label">主件單位</label>
+                        <div class="col-md-9 col-lg-9">
+                            <input type="text" class="form-control" id="id_UnitMajorComponentNo" name="UnitMajorComponentNo" value="@ViewBag.UnitMajorComponentNo" maxlength="10" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SubstitutesType" class="col-md-3 col-lg-3 control-label">取替代件</label>
+                        <div class="col-md-9 col-lg-9">
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <select class="form-control" name="SubstitutesType" id="id_SubstitutesType" disabled>
+                                    @if (ViewBag.SubstitutesType == "1")
+                                    {
+                                        <option value="1" selected>1.取代料件</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="1">1.取代料件</option>
+                                    }
+                                    @if (ViewBag.SubstitutesType == "2")
+                                    {
+                                        <option value="2" selected>2.替代料件</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="2">2.替代料件</option>
+                                    }
+                                </select>
+                                <input type="hidden" name="intSubstitutesType" value="@ViewBag.SubstitutesType" maxlength="1" tabindex="3"/>
+                            }
+                            else
+                            {
+                                <select class="form-control" name="SubstitutesType" id="id_SubstitutesType" tabindex="5">
+                                    @if (ViewBag.SubstitutesType == "1")
+                                    {
+                                        <option value="1" selected>1.取代料件</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="1">1.取代料件</option>
+                                    }
+                                    @if (ViewBag.SubstitutesType == "2")
+                                    {
+                                        <option value="2" selected>2.替代料件</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="2">2.替代料件</option>
+                                    }
+                                </select>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_Remark" class="col-md-3 col-lg-3 control-label">備註</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <textarea class="form-control" id="id_Remark" name="Remark" cols="40" rows="5" maxlength="255" readonly>@ViewBag.Remark</textarea>
+                            }
+                            else
+                            {
+                                <textarea class="form-control" id="id_Remark" name="Remark" cols="40" rows="5" maxlength="255" tabindex="6">@ViewBag.Remark</textarea>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <h5>取替代件資料</h5>
+                    <div class="text-right">
+                        @if (@ViewBag.Type == "Details")
+                        {
+                            <button type="button" class="btn btn-primary" id="btnSubstitutes_D" name="action" value="btnSubstitutes_D" aria-label="Left Align" disabled>
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-primary" id="btnSubstitutes_D" name="action" value="btnSubstitutes_D" aria-label="Left Align" tabindex="7">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
+                            </button>
+                        }
+                    </div>
+                    <hr />
+                    <div id="divSubstitutes_DGrid" style="height: 100px;overflow-y: auto;">
+                        @{
+                            var webGrid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.Substitutes_D>)ViewData["Substitutes_D"], canPage: false, canSort: false, ajaxUpdateContainerId: "divSubstitutes_DGrid");
+                        }
+                        @webGrid.GetHtml(
+
+                                tableStyle: "table table-striped table-hover",
+                                columns: webGrid.Columns(
+                                    webGrid.Column(columnName: "", header: "動作", style: "actioncolumn",
+                                        format:
+                                        @<text>
+                                            @if (@ViewBag.Type == "Details")
+                                            {
+                                                <a class='btn btn-link'>編輯</a>
+                                                <a class='btn btn-link'>刪除</a>
+                                            }
+                                            else
+                                            {
+                                                <a class='btn btn-link' data-dismiss='modal' onclick='Substitutes_DExit(this)'>編輯</a>
+                                                <a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>
+                                            }
+                                        </text>),
+                                        webGrid.Column(columnName: "SubstitutesNo", header: "品號", style: "SubstitutesNo",
+                                        format:
+                                        @<text>
+                                            @item.SubstitutesNo
+                                            <input type="hidden" class="strCSubstitutesNo" name="strCSubstitutesNo" value='@item.SubstitutesNo' maxlength="40" tabindex="8">
+                                        </text>),
+                                        webGrid.Column(columnName: "ProductName", header: "品名", style: "ProductName",
+                                        format:
+                                        @<text>
+                                            @item.ProductName
+                                            <input type="hidden" class="strCProductName" name="strCProductName" value='@item.ProductName' maxlength="120" tabindex="9">
+                                        </text>),
+                                        webGrid.Column(columnName: "Specification", header: "規格", style: "Specification",
+                                        format:
+                                        @<text>
+                                            @item.Specification
+                                            <input type="hidden" class="strCSpecification" name="strCSpecification" value='@item.Specification' maxlength="120" tabindex="10">
+                                        </text>),
+                                        webGrid.Column(columnName: "Unit", header: "單位", style: "Unit",
+                                        format:
+                                        @<text>
+                                            @item.Unit
+                                            <input type="hidden" class="strCUnit" name="strCUnit" value='@item.Unit' maxlength="10" tabindex="11">
+                                        </text>),
+                                        webGrid.Column(columnName: "QTY", header: "數量", style: "QTY",
+                                        format:
+                                        @<text>
+                                            @item.QTY
+                                            <input type="hidden" class="strCQTY" name="strCQTY" value='@item.QTY' maxlength="12" tabindex="13">
+                                        </text>),
+                                        webGrid.Column(columnName: "Priority", header: "取替代件順序", style: "Priority",
+                                        format:
+                                        @<text>
+                                            @item.QTY
+                                            <input type="hidden" class="strCPriority" name="strCPriority" value='@item.Priority' maxlength="4" tabindex="12">
+                                        </text>),
+                                        webGrid.Column(columnName: "Remark", header: "備註", style: "remark",
+                                        format:
+                                        @<text>
+                                            @item.Remark
+                                            <input type="hidden" class="strCRemark" name="strCRemark" value='@item.Remark' maxlength="255" tabindex="14">
+                                        </text>)
+    )
+)
+                    </div>
+                </div>
+                <p style="color: red;">@ViewBag.Msg</p>
+                <div class="text-right">
+                            @if (@ViewBag.Type == "Edit")
+                            {
+                                <button type="button" class="btn btn-primary" name="action" value="Edit" onclick="btnExit()" tabindex="15">存檔</button>
+                                <button type="button" class="btn btn-primary" name="action" value="EditAgain" onclick="btnExitAgain()" tabindex="16">存檔並新增</button>
+                                <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                            }
+                            else if (@ViewBag.Type == "Details")
+                            {
+                                if (@ViewBag.Confirmed == "Y")
+                                {
+                                    <a class="btn btn-primary" href="@Url.Action("Confirmed", "Main", new { ComponentNo = @ViewBag.ComponentNo, MajorComponentNo = @ViewBag.MajorComponentNo,SubstitutesType = @ViewBag.SubstitutesType, Confirmed = 'N' })">取消確認</a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-primary" href="@Url.Action("Edit", "Main", new { ComponentNo = @ViewBag.ComponentNo, MajorComponentNo = @ViewBag.MajorComponentNo, SubstitutesType = @ViewBag.SubstitutesType })">編輯</a>
+                                    <button type="button" class="btn btn-primary" id="btnSure" name="action" value="btnSure" aria-label="Left Align" tabindex="17">確認</button>
+                                }
+                                <a class="btn btn-primary" onclick="deleteInfo('@Url.Action("Delete", "Main", new { ComponentNo = @ViewBag.ComponentNo,MajorComponentNo=@ViewBag.MajorComponentNo,SubstitutesType=@ViewBag.SubstitutesType })', '@ViewBag.ProductNameComponentNo')">刪除</a>
+                                <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">返回列表</a>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-primary" name="action" value="Save" onclick="btnAdd()" tabindex="18">存檔</button>
+                                <button type=button class="btn btn-primary" name="action" value="SaveAgain" onclick="btnAddAgain()" tabindex="19">存檔並新增</button>
+                                <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                            }
+
+                        </div>
+                @RenderPage("~/Areas/BOMI02/Views/Shared/sure-modal.cshtml")
+            </form>
+        </div>
+    </div>
+</section>
+@RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/record_selector_product.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/record_selector_ComponentNo.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/record_selector_MajorComponentNo.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")
+@RenderPage("~/Areas/BOMI02/Views/Shared/Substitutes_D-modal.cshtml")
+@RenderPage("~/Areas/BOMI02/Views/Shared/Substitutes_DExit-modal.cshtml")

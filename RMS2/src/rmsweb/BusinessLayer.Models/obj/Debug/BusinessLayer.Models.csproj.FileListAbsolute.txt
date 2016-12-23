@@ -1,0 +1,13 @@
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\BusinessLayer.Models\bin\BusinessLayer.Models.dll.config
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\BusinessLayer.Models\bin\BusinessLayer.Models.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\BusinessLayer.Models\bin\BusinessLayer.Models.pdb
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\BusinessLayer.Models\bin\EntityFramework.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\BusinessLayer.Models\bin\EntityFramework.SqlServer.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\BusinessLayer.Models\bin\MySql.Data.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\BusinessLayer.Models\bin\MySql.Data.Entity.EF6.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\BusinessLayer.Models\bin\System.Linq.Dynamic.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\BusinessLayer.Models\bin\EntityFramework.xml
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\BusinessLayer.Models\bin\EntityFramework.SqlServer.xml
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\BusinessLayer.Models\obj\Debug\BusinessLayer.Models.csprojResolveAssemblyReference.cache
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\BusinessLayer.Models\obj\Debug\BusinessLayer.Models.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\BusinessLayer.Models\obj\Debug\BusinessLayer.Models.pdb

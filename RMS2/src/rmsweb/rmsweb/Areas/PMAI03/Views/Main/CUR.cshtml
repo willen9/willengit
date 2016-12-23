@@ -1,0 +1,684 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#from-PurchasedSerial').bootstrapValidator({
+            fields: {
+                ProductNo: {
+                    validators: {
+                        notEmpty: {
+                            message: '品號不能為空！'
+                        }
+                    }
+                },
+                SerialNo: {
+                    validators: {
+                        notEmpty: {
+                            message: '序號不能為空！'
+                        },
+                        callback: {
+                            message: '輸入的商品序號已存在，請重新輸入!',
+                            callback: function (value, validator) {
+                                var res = true;
+                                if (value != "") {
+                                    $.ajax({
+                                        url: '@Url.Action("SerialNo", "Main")',
+                                        data: JSON.stringify({ "SerialNo": value }),
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function (data) {
+                                            if (data == false) {
+                                                res = false;
+                                            }
+                                        }
+                                    })
+                                }
+                                return res;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        $("#id_OrderDate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+
+        $("#id_SaleDate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+
+        $("#id_ConfirmedDate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+
+        $("#id_WarrantySDate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+
+        $("#id_WarrantyEDate").datetimepicker({
+            format: 'yyyy/mm/dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+    });
+
+    $(function () {
+        $("#btnSerArrangeOrderType").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchServiceArrange", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "SerArrangeOrderType": "", "SerArrangeOrderNo": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divServiceArrangeGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divServiceArrangeGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectServiceArrange(this)'>選擇</a>" +
+                                "<td class='SerArrangeOrderTypeType'>" + Maintain[i].SerArrangeOrderType + "</td>" +
+                                "<td class='SerArrangeOrderNoType'>" + Maintain[i].SerArrangeOrderNo + "</td>" +
+                                "<td class='ConfirmedDateType'>" + Maintain[i].ConfirmedDate + "</td>" +
+                                "<td class='CustomerNameType'>" + Maintain[i].CustomerName + "</td>" +
+                                "<td class='CustomerTypeType'>" + Maintain[i].CustomerType + "</td>" +
+                                "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SerialNoType'>" + Maintain[i].SerialNo + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#txtSerArrangeOrderType").val("");
+            $("#txtSerArrangeOrderNo").val("");
+            $("#ServiceArrangePage").val("1");
+            $(".record-selector-ServiceArrange-modal").modal();
+
+        });
+
+        $("#btnServiceArrangeInfo").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchServiceArrange", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "SerArrangeOrderType": $("#txtSerArrangeOrderType").val(), "SerArrangeOrderNo": $("#txtSerArrangeOrderNo").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divServiceArrangeGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divServiceArrangeGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectServiceArrange(this)'>選擇</a>" +
+                                "<td class='SerArrangeOrderTypeType'>" + Maintain[i].SerArrangeOrderType + "</td>" +
+                                "<td class='SerArrangeOrderNoType'>" + Maintain[i].SerArrangeOrderNo + "</td>" +
+                                "<td class='ConfirmedDateType'>" + Maintain[i].ConfirmedDate + "</td>" +
+                                "<td class='CustomerNameType'>" + Maintain[i].CustomerName + "</td>" +
+                                "<td class='CustomerTypeType'>" + Maintain[i].CustomerType + "</td>" +
+                                "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SerialNoType'>" + Maintain[i].SerialNo + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#ServiceArrangePage").val("1");
+        });
+
+        $("#divServiceArrangeGrid").scroll(function () {
+            var Page = document.getElementById("ServiceArrangePage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchServiceArrange", "Main")',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "SerArrangeOrderType": $("#txtSerArrangeOrderType").val(), "SerArrangeOrderNo": $("#txtSerArrangeOrderNo").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divServiceArrangeGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectServiceArrange(this)'>選擇</a>" +
+                                    "<td class='SerArrangeOrderTypeType'>" + Maintain[i].SerArrangeOrderType + "</td>" +
+                                    "<td class='SerArrangeOrderNoType'>" + Maintain[i].SerArrangeOrderNo + "</td>" +
+                                    "<td class='ConfirmedDateType'>" + Maintain[i].ConfirmedDate + "</td>" +
+                                    "<td class='CustomerNameType'>" + Maintain[i].CustomerName + "</td>" +
+                                    "<td class='CustomerTypeType'>" + Maintain[i].CustomerType + "</td>" +
+                                    "<td class='ProductNoType'>" + Maintain[i].ProductNo + "</td>" +
+                                    "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                    "<td class='SerialNoType'>" + Maintain[i].SerialNo + "</td>" +
+                                    "</tr>");
+                            }
+                        }
+                    });
+                    $("#ServiceArrangePage").val(Page);
+                }
+            }
+
+        });
+    });
+
+    function SelectServiceArrange(id) {
+        $.ajax({
+            url: '@Url.Action("SearchServiceArrangeInfo", "Main")',
+            data: JSON.stringify({ "SerArrangeOrderType": $(id).closest('tr').find(".SerArrangeOrderTypeType").html(), "SerArrangeOrderNo": $(id).closest('tr').find(".SerArrangeOrderNoType").html() }),
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $("#id_SerArrangeOrderType").val(data.SerArrangeOrderType);        //單據日期
+                $("#id_OrderDate").val(data.OrderDate);        //單據日期
+                //$("#ordersname").html();
+                $("#id_Confirmed").val(data.Confirmed)
+                $("#id_SerArrangeOrderNo").val(data.SerArrangeOrderNo);        //單據日期
+                $("#id_CustomerId").val(data.CustomerId);        //單據日期
+                $("#customername").html(data.CustomerName);        //單據日期
+                $("#id_CustomerType").val(data.CustomerType);        //單據日期
+                $("#id_Version").val(data.Version);        //單據日期
+                $("#id_SourceOrderType").val(data.SourceOrderType);        //單據日期
+                $("#id_SourceOrderNo").val(data.SourceOrderNo);        //單據日期
+                $("#id_SourceOrderItemId").val(data.SourceOrderItemId);        //單據日期
+                $("#id_SerialNo").val(data.SerialNo);        //單據日期
+                $("#id_ProductNo").val(data.ProductNo);        //單據日期
+                $("#id_ProductName").val(data.ProductName);        //單據日期
+                $("#id_SaleDate").val(data.SaleDate);        //單據日期
+                $("#id_RoutineServiceFreq").val(data.RoutineServiceFreq);        //單據日期
+                $("#id_ConfirmedDate").val(data.ConfirmedDate);        //單據日期
+                $("#id_WarrantyPeriod").val(data.WarrantyPeriod);        //單據日期
+                $("#id_WarrantySDate").val(data.WarrantySDate);        //單據日期
+                $("#id_WarrantyEDate").val(data.WarrantyEDate);        //單據日期
+                $("#id_NewRemark").val(data.Remark);        //單據日期
+                $("#id_NewInternalRemark").val(data.InternalRemark);        //單據日期
+                if (data.ForceToClose == "Y")
+                {
+                    $("#id_ForceToClose").attr("checked", true);
+                } else
+                {
+                    $("#id_ForceToClose").attr("checked", false);
+                }
+                
+                $("#id_ModiReason").val(data.ModiReason);        //單據日期
+
+                $.ajax({
+                    url: '@Url.Action("SearchServiceArrangeDInfo", "Main")',
+                    data: JSON.stringify({ "SerArrangeOrderType": $(id).closest('tr').find(".SerArrangeOrderTypeType").html(), "SerArrangeOrderNo": $(id).closest('tr').find(".SerArrangeOrderNoType").html(), "Version": data.Version }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#divServiceArrangeModi_DGrid table tbody").empty();
+                        var Maintain = eval(data);
+                        for (var i = 0; i < Maintain.length; i++) {
+                            $("#divServiceArrangeModi_DGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link'>編輯|刪除</a>" +
+                                "<td class='strCItemId'>" + Maintain[i].ItemId + "<input type='hidden' class='strCItemId' name='strCItemId' value='" + Maintain[i].ItemId + "'></td>" +
+                                "<td class='strCArrangeMonth'>" + Maintain[i].ArrangeMonth + "<input type='hidden' class='strCArrangeMonth' name='strCArrangeMonth' value='" + Maintain[i].ArrangeMonth + "'></td>" +
+                                "<td class='strCAddressSName'>" + Maintain[i].AddressSName + "<input type='hidden' class='strCAddressSName' name='strCAddressSName' value='" + Maintain[i].AddressSName + "'></td>" +
+                                "<td class='strCAddress'>" + Maintain[i].Address + "<input type='hidden' class='strCAddress' name='strCAddress' value='" + Maintain[i].Address + "'></td>" +
+                                "<td class='strCIsClosed'>" + Maintain[i].IsClosed + "<input type='hidden' class='strCIsClosed' name='strCIsClosed' value='" + Maintain[i].IsClosed + "'></td>" +
+                                "<td class='strCRemark'>" + Maintain[i].Remark + "<input type='hidden' class='strCRemark' name='strCRemark' value='" + Maintain[i].Remark + "'></td>" +
+                                "</tr>");
+                        }
+                    }
+                })
+            },
+            error: function () {
+                $("#msg_information").html("計劃不存在！");
+                $('.msg-modal-lg').modal();
+                $("#id_SerArrangeOrderType").val("");        //單據日期
+                $("#id_OrderDate").val("");        //單據日期
+                //$("#ordersname").html();
+                $("#id_Confirmed").val("")
+                $("#id_SerArrangeOrderNo").val("");        //單據日期
+                $("#id_CustomerId").val("");        //單據日期
+                $("#customername").html("");        //單據日期
+                $("#id_CustomerType").val("");        //單據日期
+                $("#id_Version").val("");        //單據日期
+                $("#id_SourceOrderType").val("");        //單據日期
+                $("#id_SourceOrderNo").val("");        //單據日期
+                $("#id_SourceOrderItemId").val("");        //單據日期
+                $("#id_SerialNo").val("");        //單據日期
+                $("#id_ProductNo").val("");        //單據日期
+                $("#id_ProductName").val("");        //單據日期
+                $("#id_SaleDate").val("");        //單據日期
+                $("#id_RoutineServiceFreq").val("");        //單據日期
+                $("#id_ConfirmedDate").val("");        //單據日期
+                $("#id_WarrantyPeriod").val("");        //單據日期
+                $("#id_WarrantySDate").val("");        //單據日期
+                $("#id_WarrantyEDate").val("");        //單據日期
+                $("#id_NewRemark").val("");        //單據日期
+                $("#id_NewInternalRemark").val("");        //單據日期
+                $("#id_ForceToClose").attr("checked", false);
+                $("#id_ModiReason").val("");        //單據日期
+                return;
+            }
+        })
+    }
+
+    function btnAdd() {
+        if (document.getElementById("id_SerArrangeOrderType").value == "") {
+            $("#msg_information").html("單別不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("Add", "Main")',
+            data: $('#from-ServiceArrangeChange').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("Index", "Main")';
+                }
+
+            }
+        })
+    };
+
+    function btnAddAgain() {
+        if (document.getElementById("id_ProductNo").value == "") {
+            $("#msg_information").html("品號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        }
+        $.ajax({
+            url: '@Url.Action("Add", "Main")',
+            data: $('#from-ServiceArrangeChange').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("CUR", "Main")';
+                }
+
+            }
+        })
+    };
+
+    function btnExit() {
+        $.ajax({
+            url: '@Url.Action("Exit", "Main")',
+            data: $('#from-ServiceArrangeChange').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("Index", "Main")';
+                }
+
+            }
+        })
+    };
+
+    function btnExitAgain() {
+        $.ajax({
+            url: '@Url.Action("Exit", "Main")',
+            data: $('#from-ServiceArrangeChange').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("CUR", "Main")';
+                }
+
+            }
+        })
+    };
+
+</script>
+<section class="content-header">
+    <h1>定保計畫變更單維護</h1>
+</section>
+<section class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            <form id="from-ServiceArrangeChange" method="post">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SerArrangeOrderType" class="col-md-3 col-lg-3 control-label">計劃單別</label>
+                        <div class="col-md-5 col-lg-5">
+                            
+                            @if (ViewBag.Type == "Edit" || ViewBag.Type == "Details")
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_SerArrangeOrderType" name="SerArrangeOrderType" value="@ViewBag.SerArrangeOrderType" readonly />
+                                    <span class="input-group-addon" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                                
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_SerArrangeOrderType" name="SerArrangeOrderType" value="@ViewBag.SerArrangeOrderType" readonly />
+                                    <span class="input-group-addon" id="btnSerArrangeOrderType" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                </div>
+                            }
+
+                            <span style="display:inline;" id="ordersname">@ViewBag.OrderSName</span>
+                        </div>
+                        <label for="id_OrderDate" class="col-md-3 col-lg-3 control-label">單據日期</label>
+                        @if (ViewBag.Type == "Details")
+                        {
+                            <div class="col-md-5 col-lg-5 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_OrderDate" data-link-format="yyyy-mm-dd">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_OrderDate" name="OrderDate" value="@ViewBag.OrderDate" readonly />
+                                    <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-5 col-lg-5 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_OrderDate" data-link-format="yyyy-mm-dd">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="id_OrderDate" name="OrderDate" value="@ViewBag.OrderDate" readonly />
+                                    <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                        }
+                        <label for="id_Confirmed" class="col-md-3 col-lg-3 control-label">狀態碼</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_Confirmed" name="Confirmed" readonly="readonly" value="@ViewBag.Confirmed" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SerArrangeOrderNo" class="col-md-3 col-lg-3 control-label">計畫單號</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_SerArrangeOrderNo" name="SerArrangeOrderNo" value="@ViewBag.SerArrangeOrderNo" readonly />
+                        </div>
+                        <label for="id_CustomerId" class="col-md-3 col-lg-3 control-label">客戶代號</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_CustomerId" name="CustomerId" value="@ViewBag.CustomerId" readonly />
+                            <span style="display:inline;" id="customername">@ViewBag.CustomerName</span>
+                        </div>
+
+                        <label for="id_CustomerType" class="col-md-3 col-lg-3 control-label">客戶形態</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_CustomerType" name="CustomerType" value="@ViewBag.CustomerType" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SourceOrder" class="col-md-3 col-lg-3 control-label">來源單號</label>
+                        <div class="col-md-13 col-lg-13">
+                            <input type="text" class="form-control" id="id_SourceOrderType" name="SourceOrderType" style="width: 30%; display: inline;" value="@ViewBag.SourceOrderType" readonly />
+                            <input type="text" class="form-control" id="id_SourceOrderNo" name="SourceOrderNo" style="width: 35%; display: inline;" value="@ViewBag.SourceOrderNo" readonly />
+                            <input type="text" class="form-control" id="id_SourceOrderItemId" name="SourceOrderItemId" style="width: 30%; display: inline;" value="@ViewBag.SourceOrderItemId" readonly />
+                        </div>
+                        <label for="id_Version" class="col-md-3 col-lg-3 control-label">版次</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_Version" name="Version" value="@ViewBag.Version" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_Version" class="col-md-3 col-lg-3 control-label">整張結案</label>
+                        <div class="col-md-5 col-lg-5">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                if (ViewBag.ForceToClose == "Y")
+                                {
+                                    <input type="checkbox" id="id_ForceToClose" name="ForceToClose" checked disabled />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="id_ForceToClose" name="ForceToClose" disabled />
+                                }
+                            }
+                            else
+                            {
+                                if (ViewBag.ForceToClose == "Y")
+                                {
+                                    <input type="checkbox" id="id_ForceToClose" name="ForceToClose" checked />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="id_ForceToClose" name="ForceToClose" tabindex="1" />
+                                }
+                            }
+                        </div>
+                        <label for="id_CustomerType" class="col-md-3 col-lg-3 control-label">變更人員</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_CustomerType" name="CustomerType" value="" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_ModiReason" class="col-md-3 col-lg-3 control-label">變更原因</label>
+                        <div class="col-md-13 col-lg-13">
+                            @if (ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="form-control" id="id_ModiReason" name="ModiReason" value="@ViewBag.ModiReason" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_ModiReason" name="ModiReason" value="@ViewBag.ModiReason" maxlength="255" tabindex="2"/>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SerialNo" class="col-md-3 col-lg-3 control-label">序號</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_SerialNo" name="SerialNo" value="@ViewBag.SerialNo" readonly />
+                        </div>
+                        <label for="id_ProductNo" class="col-md-3 col-lg-3 control-label">品號</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_ProductNo" name="ProductNo" value="@ViewBag.ProductNo" readonly />
+
+                        </div>
+                        <label for="id_ProductName" class="col-md-3 col-lg-3 control-label">品名</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_ProductName" name="ProductName" value="@ViewBag.ProductName" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SaleDate" class="col-md-3 col-lg-3 control-label">銷貨日期</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_SaleDate" name="SaleDate" readonly="readonly" value="@ViewBag.SaleDate" />
+                        </div>
+                        <label for="id_RoutineServiceFreq" class="col-md-3 col-lg-3 control-label">定期保養</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_RoutineServiceFreq" name="RoutineServiceFreq" style="width: 80%; display: inline;" value="@ViewBag.RoutineServiceFreq" readonly />
+                            <span>次</span>
+                        </div>
+                        <label for="id_ConfirmedDate" class="col-md-3 col-lg-3 control-label">計劃日期</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_ConfirmedDate" name="ConfirmedDate" readonly="readonly" value="@ViewBag.ConfirmedDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_WarrantyPeriod" class="col-md-3 col-lg-3 control-label">保固期限</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_WarrantyPeriod" name="WarrantyPeriod" style="width: 80%; display: inline;" value="@ViewBag.WarrantyPeriod" readonly />
+                            <span>月</span>
+                        </div>
+                        <label for="id_WarrantySDate" class="col-md-3 col-lg-3 control-label">保固起日</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_WarrantySDate" name="WarrantySDate" readonly="readonly" value="@ViewBag.WarrantySDate" />
+                        </div>
+                        <label for="id_WarrantyEDate" class="col-md-3 col-lg-3 control-label">保固迄日</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_WarrantyEDate" name="WarrantyEDate" readonly="readonly" value="@ViewBag.WarrantyEDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_NewRemark" class="col-md-3 col-lg-3 control-label">備註</label>
+                        <div class="col-md-13 col-lg-13">
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <textarea class="form-control" id="id_NewRemark" name="NewRemark" cols="40" rows="5" maxlength="255" readonly>@ViewBag.NewRemark</textarea>
+                            }
+                            else
+                            {
+                                <textarea class="form-control" id="id_NewRemark" name="NewRemark" cols="40" rows="5" maxlength="255" tabindex="3">@ViewBag.NewRemark</textarea>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_NewInternalRemark" class="col-md-3 col-lg-3 control-label">內部備註</label>
+                        <div class="col-md-13 col-lg-13">
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <textarea class="form-control" id="id_NewInternalRemark" name="NewInternalRemark" cols="40" rows="5" maxlength="255" readonly>@ViewBag.NewInternalRemark</textarea>
+                            }
+                            else
+                            {
+                                <textarea class="form-control" id="id_NewInternalRemark" name="NewInternalRemark" cols="40" rows="5" maxlength="255" tabindex="4">@ViewBag.NewInternalRemark</textarea>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <h5>計劃明細</h5>
+                <div class="text-right">
+                    <button type="button" class="btn btn-primary" id="btnAddServiceArrangeModi_D" name="action" value="btnAddServiceArrangeModi_D" aria-label="Left Align" tabindex="11" disabled>
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
+                    </button>
+                </div>
+                <hr />
+                <div id="divServiceArrangeModi_DGrid" style="height: 100px;overflow-y: auto;">
+                    @{
+                        var webGrid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.ServiceArrangeModi_D>)ViewData["ServiceArrangeModi_D"], canPage: false, canSort: false, ajaxUpdateContainerId: "divServiceArrangeModi_DGrid");
+                    }
+                    @webGrid.GetHtml(
+
+                tableStyle: "table table-striped table-hover",
+                columns: webGrid.Columns(
+                    webGrid.Column(columnName: "", header: "動作", style: "actioncolumn",
+                        format:
+                        @<text>
+                            <a class='btn btn-link'>編輯|刪除</a>
+                        </text>),
+                        webGrid.Column(columnName: "ItemId", header: "項次", style: "ItemId",
+                        format:
+                        @<text>
+                            @item.ItemId
+                            <input type="hidden" class="strCItemId" name="strCItemId" value='@item.ItemId' tabindex="12">
+                        </text>),
+                        webGrid.Column(columnName: "ArrangeMonth", header: "保養月份", style: "ArrangeMonth",
+                        format:
+                        @<text>
+                            @item.ArrangeMonth
+                            <input type="hidden" class="strCArrangeMonth" name="strCArrangeMonth" value='@item.ArrangeMonth' tabindex="13">
+                        </text>),
+                        webGrid.Column(columnName: "AddressSName", header: "地址簡稱", style: "AddressSName",
+                        format:
+                        @<text>
+                            @item.AddressSName
+                            <input type="hidden" class="strCAddressSName" name="strCAddressSName" value='@item.AddressSName'tabindex="14">
+                        </text>),
+                        webGrid.Column(columnName: "Address", header: "地址", style: "Address",
+                        format:
+                        @<text>
+                            @item.Address
+                            <input type="hidden" class="strCAddress" name="strCAddress" value='@item.Address' tabindex="15">
+                        </text>),
+                        webGrid.Column(columnName: "IsClosed", header: "結案碼", style: "IsClosed",
+                        format:
+                        @<text>
+                            @item.IsClosed
+                            <input type="hidden" class="strCIsClosed" name="strCIsClosed" value='@item.IsClosed' tabindex="16">
+                        </text>),
+                        webGrid.Column(columnName: "DRemark", header: "單身備註", style: "DRemark",
+                        format:
+                        @<text>
+                            @item.Remark
+                            <input type="hidden" class="strCRemark" name="strCRemark" value='@item.Remark' tabindex="17">
+                        </text>)
+)
+)
+                </div>
+
+                <p style="color: red;">@ViewBag.Msg</p>
+                <div class="text-right">
+                    @if (@ViewBag.Type == "Edit")
+                    {
+                        <button type="button" class="btn btn-primary" name="action" value="Edit" onclick="btnExit()" tabindex="10">存檔</button>
+                        <button type="button" class="btn btn-primary" name="action" value="EditAgain" onclick="btnExitAgain()" tabindex="9">存檔並新增</button>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+                    else if (@ViewBag.Type == "Details")
+                    {
+                        <a class="btn btn-primary" href="@Url.Action("Edit", "Main", new { SerArrangeOrderType = @ViewBag.SerArrangeOrderType, SerArrangeOrderNo = @ViewBag.SerArrangeOrderNo,Version= @ViewBag.Version })">編輯</a>
+                        <a class="btn btn-primary" onclick="deleteInfo('@Url.Action("Delete", "Main", new { SerArrangeOrderType = @ViewBag.SerArrangeOrderType, SerArrangeOrderNo = @ViewBag.SerArrangeOrderNo,Version= @ViewBag.Version })', '@ViewBag.SerArrangeOrderNo')">刪除</a>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">返回列表</a>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" name="action" value="Save" onclick="btnAdd()" tabindex="8">存檔</button>
+                        <button type=button class="btn btn-primary" name="action" value="SaveAgain" onclick="btnAddAgain()" tabindex="7">存檔並新增</button>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_ServiceArrange.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")
+<input type="hidden" title="module" value="PMAI03" />

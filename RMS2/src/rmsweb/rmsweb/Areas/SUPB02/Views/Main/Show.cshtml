@@ -1,0 +1,537 @@
+﻿<script type="text/javascript">
+    function issueModal(SupportAplOrderType,SupportAplOrderNo)
+    {
+        $("#id_SupportAplOrderType").val(SupportAplOrderType);
+        $("#id_SupportAplOrderNo").val(SupportAplOrderNo);
+        $(".Issue-modal").modal();
+    };
+</script>
+<section class="content-header">
+    <h1>支援申請發料作業</h1>
+</section>
+<section class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            <form id="from-SupportApl_H" method="post" action="@Url.Action("CUR", "Main")">
+                <h5>支援申請資料</h5>
+                <hr />
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_deptid" class="col-md-3 col-lg-3 control-label">單別</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_SOrderType" name="Sordertype" value="@ViewBag.SupportAplOrderType" maxlength="5" readonly />
+                            <span style="display:inline;" id="ordersname"></span>
+                            <input type="hidden" class="form-control" id="id_autoconfirm" name="autoconfirm" readonly />
+                        </div>
+                        <label for="id_deptid" class="col-md-3 col-lg-3 control-label">單據日期</label>
+                        <div class="col-md-5 col-lg-5 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_orderdate" data-link-format="yyyy/mm/dd">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="orderdate" readonly="readonly" value="@ViewBag.OrderDate" />
+                                <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                        </div>
+
+                        <label for="id_orderstatus" class="col-md-3 col-lg-3 control-label">狀態碼</label>
+                        <div class="col-md-5 col-lg-5">
+                            <select class="form-control" name="orderstatusId" disabled>
+                                @if (@ViewBag.OrderStatus == "0")
+                                {
+                                    <option value="0" selected>0.未處理</option>
+                                }
+                                else
+                                {
+                                    <option value="0">0.未處理</option>
+                                }
+
+                                @if (@ViewBag.OrderStatus == "1")
+                                {
+                                    <option value="1" selected>1.完工</option>
+                                }
+                                else
+                                {
+                                    <option value="1">1.完工</option>
+                                }
+
+                                @if (@ViewBag.OrderStatus == "2")
+                                {
+                                    <option value="2" selected>2.作廢</option>
+                                }
+                                else
+                                {
+                                    <option value="2">2.作廢</option>
+                                }
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_SupportAplOrderNo" class="col-md-3 col-lg-3 control-label">單號</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_SSupportAplOrderNo" name="supportaplorderno" maxlength="11" value="@ViewBag.SupportAplOrderNo" readonly />
+                        </div>
+                        <label for="id_deptid" class="col-md-3 col-lg-3 col-md-offset-8 col-lg-offset-8 control-label">修改人員</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_deptid" name="deptid" value="@ViewBag.Modifier" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_deptid" class="col-md-3 col-lg-3 control-label">客戶代號</label>
+                        <div class="col-md-5 col-lg-5">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="id_customerId" name="customerId" value="@ViewBag.CustomerId" readonly />
+                                <span class="input-group-addon" id="id_customerId" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                            </div>
+                            <span style="display:inline;" id="idcustomerName">@ViewBag.CustomerName</span>
+                        </div>
+                        <label for="id_deptid" class="col-md-3 col-lg-3 control-label">客戶型態</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_customerTypeName" name="customerTypeName" value="@ViewBag.CustomerTypeName" readonly />
+                            <input type="hidden" class="form-control" id="id_customertype" name="customertype" value="@ViewBag.CustomerType" readonly />
+                        </div>
+                        <label for="id_deptid" class="col-md-3 col-lg-3 control-label">業務員</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_sales" name="sales" value="@ViewBag.SalesId" readonly />
+                            <span style="display:inline;" id="id_salesname">@ViewBag.SalesName</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_deptid" class="col-md-3 col-lg-3 control-label">地址簡稱</label>
+                        <div class="col-md-13 col-lg-13">
+                            <input type="text" class="form-control" id="id_address1" name="address1" value="@ViewBag.Address" readonly />
+                        </div>
+                        <label for="id_nootprints" class="col-md-3 col-lg-3 control-label">列印次數</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_nootprints" name="nootprints" value="@ViewBag.NoOfPrints" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_deptid" class="col-md-3 col-lg-3 control-label">地址</label>
+                        <div class="col-md-13 col-lg-13">
+                                    <input type="text" class="form-control" id="id_address2" name="address2" value="@ViewBag.Address" readonly />
+                                </div>
+                        <label for="id_deptid" class="col-md-3 col-lg-3 control-label">領料</label>
+                        <div class="col-md-5 col-lg-5">
+                                    @if (ViewBag.Type == "Details")
+                                    {
+                                        if (@ViewBag.Picking == "Y")
+                                        {
+                                            <input type="checkbox" id="id_picking" name="picking" checked disabled />
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" id="id_picking" name="picking" disabled />
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (@ViewBag.Picking == "Y")
+                                        {
+                                            <input type="checkbox" id="id_picking" name="picking" checked />
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" id="id_picking" name="picking" />
+                                        }
+                                    }
+                                </div>
+                    </div>
+                </div>
+                <div class="row">
+                            <div class="form-group">
+                                <label for="id_deptid" class="col-md-3 col-lg-3 control-label">聯絡人</label>
+                                <div class="col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" id="id_contact" name="contact" value="@ViewBag.Contact" readonly />
+                                </div>
+                                <label for="id_deptid" class="col-md-3 col-lg-3 control-label">電話</label>
+                                <div class="col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" id="id_telno" name="telno" value="@ViewBag.TelNo" readonly />
+                                </div>
+                                <label for="id_deptid" class="col-md-3 col-lg-3 control-label">傳真</label>
+                                <div class="col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" id="id_faxno" name="faxno" value="@ViewBag.FaxNo" readonly />
+                                </div>
+                            </div>
+                        </div>
+                <div class="row">
+                            <div class="form-group">
+                                <label for="id_remark" class="col-md-3 col-lg-3 control-label">備註</label>
+                                <div class="col-md-21 col-lg-21">
+                                    <textarea class="form-control" id="id_remark" name="remark" cols="40" rows="5" readonly>@ViewBag.Remark</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                <h5>需求資訊</h5>
+                <hr />
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_deptid" class="col-md-3 col-lg-3 control-label">需求日期</label>
+                        <div class="col-md-5 col-lg-5 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_requesDate" data-link-format="yyyy-mm-dd">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="requesDate" readonly="readonly" value="@ViewBag.RequestDate" />
+                                <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                        </div>
+                        <label for="id_deptid" class="col-md-3 col-lg-3 control-label">指定時間</label>
+                        <div class="col-md-5 col-lg-5">
+                            <select class="form-control" name="requesttime" disabled>
+                                @if (@ViewBag.RequestTime == "不指定")
+                                {
+                                    <option value="不指定" selected>不指定</option>
+                                }
+                                else
+                                {
+                                    <option value="不指定">不指定</option>
+                                }
+                                @if (@ViewBag.RequestTime == "上午")
+                                {
+                                    <option value="上午" selected>上午</option>
+                                }
+                                else
+                                {
+                                    <option value="上午">上午</option>
+                                }
+                                @if (@ViewBag.RequestTime == "下午")
+                                {
+                                    <option value="下午" selected>下午</option>
+                                }
+                                else
+                                {
+                                    <option value="下午">下午</option>
+                                }
+                                @if (@ViewBag.RequestTime == "7:00")
+                                {
+                                    <option value="7:00" selected>7:00</option>
+                                }
+                                else
+                                {
+                                    <option value="7:00">7:00</option>
+                                }
+                                @if (@ViewBag.RequestTime == "8:00")
+                                {
+                                    <option value="8:00" selected>8:00</option>
+                                }
+                                else
+                                {
+                                    <option value="8:00">8:00</option>
+                                }
+                                @if (@ViewBag.RequestTime == "9:00")
+                                {
+                                    <option value="9:00" selected>9:00</option>
+                                }
+                                else
+                                {
+                                    <option value="9:00">9:00</option>
+                                }
+                                @if (@ViewBag.RequestTime == "10:00")
+                                {
+                                    <option value="10:00" selected>10:00</option>
+                                }
+                                else
+                                {
+                                    <option value="10:00">10:00</option>
+                                }
+                                @if (@ViewBag.RequestTime == "11:00")
+                                {
+                                    <option value="11:00" selected>11:00</option>
+                                }
+                                else
+                                {
+                                    <option value="11:00">11:00</option>
+                                }
+                                @if (@ViewBag.RequestTime == "12:00")
+                                {
+                                    <option value="12:00" selected>12:00</option>
+                                }
+                                else
+                                {
+                                    <option value="12:00">12:00</option>
+                                }
+                                @if (@ViewBag.RequestTime == "13:00")
+                                {
+                                    <option value="13:00" selected>13:00</option>
+                                }
+                                else
+                                {
+                                    <option value="13:00">13:00</option>
+                                }
+                                @if (@ViewBag.RequestTime == "14:00")
+                                {
+                                    <option value="14:00" selected>14:00</option>
+                                }
+                                else
+                                {
+                                    <option value="14:00">14:00</option>
+                                }
+                                @if (@ViewBag.RequestTime == "15:00")
+                                {
+                                    <option value="15:00" selected>15:00</option>
+                                }
+                                else
+                                {
+                                    <option value="15:00">15:00</option>
+                                }
+                                @if (@ViewBag.RequestTime == "16:00")
+                                {
+                                    <option value="16:00" selected>16:00</option>
+                                }
+                                else
+                                {
+                                    <option value="16:00">16:00</option>
+                                }
+                                @if (@ViewBag.RequestTime == "17:00")
+                                {
+                                    <option value="17:00" selected>17:00</option>
+                                }
+                                else
+                                {
+                                    <option value="17:00">17:00</option>
+                                }
+                                @if (@ViewBag.RequestTime == "18:00")
+                                {
+                                    <option value="18:00" selected>18:00</option>
+                                }
+                                else
+                                {
+                                    <option value="18:00">18:00</option>
+                                }
+                                @if (@ViewBag.RequestTime == "19:00")
+                                {
+                                    <option value="19:00" selected>19:00</option>
+                                }
+                                else
+                                {
+                                    <option value="19:00">19:00</option>
+                                }
+                                @if (@ViewBag.RequestTime == "20:00")
+                                {
+                                    <option value="20:00" selected>20:00</option>
+                                }
+                                else
+                                {
+                                    <option value="20:00">20:00</option>
+                                }
+
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_deptid" class="col-md-3 col-lg-3 control-label">支援單位</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_departmentId" name="departmentId" value="@ViewBag.SupportDept" readonly />
+                            @*<button type="button" class="btn btn-default" style="display:inline;" id="btnDepartment" disabled><i class="fa fa-hand-pointer-o"></i></button>*@
+                            <span style="display:inline;" id="iddepartmentName"></span>
+                        </div>
+                        <label for="id_deptid" class="col-md-3 col-lg-3 control-label">來源單號</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="id_sourceorderno" name="sourceorderno" value="@ViewBag.SourceOrderNo" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_deptid" class="col-md-3 col-lg-3 control-label">支援項目</label>
+                        <br />
+                        <div id="divSupportApl_SupportItemGrid" style="height: 100px;overflow-y: auto;">
+                            @{
+                                var webGrid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.SupportApl_SupportItem>)ViewData["SupportApl_SupportItem"], canPage: false, canSort: false, ajaxUpdateContainerId: "divSupportApl_SupportItemGrid");
+                            }
+
+                            @webGrid.GetHtml(
+
+        tableStyle: "table table-striped table-hover",
+        columns: webGrid.Columns(
+            webGrid.Column(columnName: "", header: "動作", style: "actioncolumn",
+                format:
+                @<text>
+                    @*@Html.ActionLink("刪除", "Delete", "Main", new { id = item.ItemNo })*@
+                </text>),
+                webGrid.Column(columnName: "SupportItemId", header: "項目代號", style: "supportitemid",
+                format:
+                @<text>
+                    @item.SupportItemId
+                    <input type="hidden" class="supportitemid" name="strsupportitemid" value="@item.SupportItemId" />
+                </text>),
+                webGrid.Column(columnName: "SupportItemName", header: "項目名稱", style: "supportitemname",
+                format:
+                @<text>
+                    @item.SupportItemName
+                    <input type="hidden" class="supportitemname" name="strsupportitemname" value="@item.SupportItemName" />
+                </text>),
+                webGrid.Column(columnName: "Remark", header: "詳細說明", style: "remark",
+                format:
+                @<text>
+                    @item.Remark
+                    <input type="hidden" class="remark" name="strremark" value="@item.Remark" />
+                </text>)
+)
+)
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_deptid" class="col-md-3 col-lg-3 control-label">附件</label>
+                    </div>
+                </div>
+
+                <h5>品項明細</h5>
+                <hr />
+                <div class="form-group">
+                            <div id="divSupportApl_ProductDGrid" style="height: 100px;overflow-y: auto;">
+                                @{
+                                    var webGridProduct = new WebGrid(source: (IEnumerable<BusinessLayer.Models.SupportApl_ProductD>)ViewData["SupportApl_ProductD"], canPage: false, canSort: false, ajaxUpdateContainerId: "divSupportApl_ProductDGrid");
+                                }
+
+                                @webGridProduct.GetHtml(
+
+                tableStyle: "table table-striped table-hover",
+                columns: webGridProduct.Columns(
+                    webGridProduct.Column(columnName: "", header: "動作", style: "actioncolumn",
+                        format:
+                        @<text>
+                            @*@Html.ActionLink("刪除", "Delete", "Main", new { })*@
+                        </text>),
+                        webGridProduct.Column(columnName: "ItemId", header: "項次", style: "itemid",
+                        format:
+                        @<text>
+                            @item.ItemId
+                            <input type="hidden" class="itemId" name="ItemId" value="@item.ItemId" />
+                        </text>),
+                        webGridProduct.Column(columnName: "ProductNo", header: "品號", style: "productno",
+                        format:
+                        @<text>
+                            @item.ProductNo
+                            <input type="hidden" class="productno" name="strproductno" value="@item.ProductNo" />
+                        </text>),
+                        webGridProduct.Column(columnName: "ProductName", header: "品名", style: "productname",
+                        format:
+                        @<text>
+                            @item.ProductNo
+                            <input type="hidden" class="productname" name="strproductname" value="@item.ProductNo" />
+                        </text>),
+                        webGridProduct.Column(columnName: "", header: "", style: "",
+                        format:
+                        @<text>
+                            <input type="hidden" class="unit" name="strunit" value="@item.Unit" />
+                        </text>),
+                        webGridProduct.Column(columnName: "QTY", header: "數量", style: "qty",
+                        format:
+                        @<text>
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="qty" name="strqty" value="@item.QTY" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="qty" name="strqty" value="@item.QTY" />
+                            }
+                        </text>),
+                        webGridProduct.Column(columnName: "Remark", header: "備註", style: "remark",
+                        format:
+                        @<text>
+                            @if (@ViewBag.Type == "Details")
+                            {
+                                <input type="text" class="strproductdremark" name="strproductdremark" value="@item.Remark" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="strproductdremark" name="strproductdremark" value="@item.Remark" />
+                            }
+                        </text>)
+                                                                                                         ))
+                            </div>
+                        </div>
+
+                <h5>處理狀況</h5>
+                <hr />
+                <div class="row">
+                            <div class="form-group">
+                                <label for="id_deptid" class="col-md-3 col-lg-3 control-label">派工日期</label>
+                                <div class="col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" id="id_asigndate" name="asigndate" value="@ViewBag.AsignDate" readonly />
+                                </div>
+                                <label for="id_deptid" class="col-md-3 col-lg-3 col-md-offset-8 col-lg-offset-8 control-label">完工日期</label>
+                                <div class="col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" id="id_completiondate" name="completiondate" value="@ViewBag.CompletionDate" readonly />
+                                </div>
+                            </div>
+                        </div>
+                <div class="row">
+                            <div class="form-group">
+                                <label for="id_deptid" class="col-md-3 col-lg-3 control-label">派工人員</label>
+                                <div class="col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" id="id_asignman" name="asignman" value="@ViewBag.AsignMan" readonly />
+                                </div>
+                                <label for="id_deptid" class="col-md-3 col-lg-3 control-label">處理人員</label>
+                                <div class="col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" id="id_processman" name="processman" value="@ViewBag.ProcessMan" readonly />
+                                </div>
+                                <label for="id_deptid" class="col-md-3 col-lg-3 control-label">完工人員</label>
+                                <div class="col-md-5 col-lg-5">
+                                    <input type="text" class="form-control" id="id_completionman" name="completionman" value="@ViewBag.CompletionDate" readonly />
+                                </div>
+                            </div>
+                        </div>
+
+                <div id="divSupportApl_ProcessDGrid" style="height: 100px;overflow-y: auto;">
+                            @{
+                                var webProcessDGrid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.SupportApl_ProcessD>)ViewData["SupportApl_ProcessD"], canPage: false, canSort: false, ajaxUpdateContainerId: "divSupportApl_ProcessDGrid");
+                            }
+
+                            @webProcessDGrid.GetHtml(
+
+                tableStyle: "table table-striped table-hover",
+                columns: webProcessDGrid.Columns(
+                    webProcessDGrid.Column(columnName: "", header: "動作", style: "actioncolumn",
+                        format:
+                        @<text>
+                            @*@Html.ActionLink("編輯", "Delete", "Main", new { id = item.ItemId })|
+                        <a class='btn btn-link' data-dismiss='modal' onclick='RemoveProcess(this)'>刪除</a>*@
+                        </text>),
+                                                                                                  webProcessDGrid.Column(columnName: "ItemId", header: "項次", style: "itemid"),
+                                                                                                  webProcessDGrid.Column(columnName: "ProcessDate", header: "處理時間", style: "processdate"),
+                                                                                                  webProcessDGrid.Column(columnName: "ProcessExplanation", header: "處理描述", style: "processexplanation"),
+                                                                                                  webProcessDGrid.Column(columnName: "ProcessMan", header: "處理人員", style: "processman"),
+                                                                                                  webProcessDGrid.Column(columnName: "Remark", header: "備註", style: "remark")
+                                                                                              )
+                                                                                          )
+                        </div>
+                        <p style="color: red;">@ViewBag.Msg</p>
+                <div class="text-right">
+                            @if (@ViewBag.IsPicking == "N")
+                            {
+                                <a class='btn btn-primary' onclick="issueModal('@ViewBag.SupportAplOrderType','@ViewBag.SupportAplOrderNo')">發料</a>
+                            }
+                            <a class="btn btn-primary" href="@Url.Action("Print", "Main", new { Area = "SUPI09",SupportAplOrderType = @ViewBag.SupportAplOrderType, SupportAplOrderNo = @ViewBag.SupportAplOrderNo })">列印</a>
+                            <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">返回列表</a>
+                        </div>
+            </form>             
+        </div>
+    </div>
+</section>
+<input type="hidden" title="module" value="SUPB02" />
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_OrderCategory.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_customer.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_address.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_department.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_contact.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_supportitem.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/record_selector_product.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")
+    @RenderPage("../../../../Views/Shared/RecordSelector/choose-msg-dialog.cshtml")
+@RenderPage("~/Areas/SUPB02/Views/Shared/Issue-modal.cshtml")

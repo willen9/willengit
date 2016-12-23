@@ -1,0 +1,70 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#from-ProductCategory').bootstrapValidator({
+            fields: {
+                brandId: {
+                    validators: {
+                        notEmpty: {
+                            message: '品牌代號不能為空！'
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+<h2>品牌類型資料維護</h2>
+<hr />
+<div class="panel panel-default" style="margin-left: 5%; margin-right: 5%;">
+    <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+    <div class="panel-body">
+        <div class="container-fluid">
+            <div class="row">
+                <form id="from-ProductCategory" method="post" action="@Url.Action("CUR", "Main")">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label for="id_brandId" class="col-sm-3 control-label">品牌代號</label>
+                            <div class="col-sm-21">
+                                @if (@ViewBag.Type == "Edit")
+                                {
+                                    <input type="text" class="form-control" id="id_brandId" name="brandId" maxlength="10" value="@ViewBag.BrandId" readonly />
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="id_brandId" name="brandId" maxlength="10" value="@ViewBag.BrandId" />
+                                }
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_brandName" class="col-sm-3 control-label">品牌名稱</label>
+                            <div class="col-sm-21">
+                                <input type="text" class="form-control" id="id_brandName" name="brandName" maxlength="40" value="@ViewBag.BrandName" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_remark" class="col-sm-3 control-label">備註</label>
+                            <div class="col-sm-21">
+                                <input type="text" class="form-control" id="id_remark" name="remark" />
+                            </div>
+                        </div>
+                        <p style="color: red;">@ViewBag.Msg</p>
+                        <p class="text-right">
+                            @if (@ViewBag.Type == "Edit")
+                            {
+                                <button type=submit class="btn btn-primary" name="action" value="Edit">存檔</button>
+                                <button type=submit class="btn btn-primary" name="action" value="EditAgain">存檔並新增</button>
+                            }
+                            else
+                            {
+                                <button type=submit class="btn btn-primary" name="action" value="Save">存檔</button>
+                                <button type=submit class="btn btn-primary" name="action" value="SaveAgain">存檔並新增</button>
+                            }
+                            <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

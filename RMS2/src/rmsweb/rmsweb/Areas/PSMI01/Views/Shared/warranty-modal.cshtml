@@ -1,0 +1,125 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#id_SerArrangeOrderType').blur(function () {
+            if ($("#id_SerArrangeOrderType").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Action("GetOrderTypeName", "Main", new { Area = "CONI01" })',
+                    data: JSON.stringify({ "OrderType": $("#id_SerArrangeOrderType").val().trim(), "OrderCategory": "D1" }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $('#ordersname').text(data.OrderSName);
+                    },
+                    error: function () {
+                        $("#msg_information").html("單別不存在！");
+                        $('.msg-modal-lg').modal();
+                        $("#id_SerArrangeOrderType").val("")
+                        $('#ordersname').text("");
+                        return;
+                    }
+                })
+            } else {
+                $("#id_OrderType").val("")
+                $('#ordersname').text("");
+            }
+        });
+
+    });
+
+    function SelectOrderType(id) {
+        $("#id_SerArrangeOrderType").val($(id).closest('tr').find(".OrderTypeType").html());
+        $("#ordersname").html($(id).closest('tr').find(".OrderSNameType").html());
+    };
+
+    function checkSure(from) {
+        if ($("#id_WarrantyPeriod").val() == '') {
+            alert("請輸入保固期限!");
+            return false;
+        }
+
+        if ($("#id_WarrantyPeriod").val() != "") {
+            if (isNaN($("#id_WarrantyPeriod").val())) {
+                alert("保固期限請輸入數字!");
+                return false;
+            }
+        }
+
+        if (parseInt($("#id_WarrantyPeriod").val()) == 0) {
+            alert("保固期限必須大於0!");
+            return false;
+        }
+
+        if ($("#id_WarrantyRoutineServiceFreq").val() == '') {
+            alert("請輸入定期保養!");
+            return false;
+        }
+
+        if ($("#id_WarrantyRoutineServiceFreq").val() != "") {
+            if (isNaN($("#id_WarrantyRoutineServiceFreq").val())) {
+                alert("定期保養請輸入數字!");
+                return false;
+            }
+        }
+
+        if ($("#warrantyType").val() == "Y:需定保")
+        {
+            if (parseInt($("#id_WarrantyRoutineServiceFreq").val()) == 0) {
+                alert("定期保養必須大於0!");
+                return false;
+            }
+            if($("#id_SerArrangeOrderType").val()=="")
+            {
+                alert("請輸入計劃單別!");
+                return false;
+            }
+        }
+        if ($("#warrantyType").val() == "") {
+            if (parseInt($("#id_WarrantyRoutineServiceFreq").val()) > 0) {
+                if ($("#id_SerArrangeOrderType").val() == "") {
+                    alert("請輸入計劃單別!");
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+</script>
+<div class='modal fade warranty-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>保固設定</h4>
+            </div>
+                <div class='modal-body'>
+                    <input type="hidden" id="warrantyType" />
+                    <div class="form-group">
+                        <label for="id_WarrantyPeriod" class="control-label">保固期限</label>
+                        <input type="text" class="form-control" id="id_WarrantyPeriod" name="WarrantyPeriod" style="width: 200px; display: inline;" onkeydown="onlyNumber();" maxlength="3" />
+                    </div>
+                    <div class="form-group">
+                        <label for="id_WarrantyRoutineServiceFreq" class="control-label">定期保養</label>
+                        <input type="text" class="form-control" id="id_WarrantyRoutineServiceFreq" name="WarrantyRoutineServiceFreq" style="width: 200px; display: inline;" onkeydown="onlyNumber();" maxlength="3" />
+                    </div>
+                    <div class="form-group">
+                        <label for="id_SerArrangeOrderType" class="control-label">計劃單別</label>
+                        <input type="text" class="form-control" id="id_SerArrangeOrderType" name="SerArrangeOrderType" style="width: 200px; display: inline;" maxlength="5" />
+                        <button type="button" class="btn btn-default" style="display:inline;" id="btnSerArrangeOrderType" data-toggle="modal" data-target="#modal-orderCategory" ng-click="OrderCategoryList()">Q</button>
+                        <span style="display:inline;" id="ordersname"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_WarrantyRemark" class="control-label">備註</label>
+                        <textarea class="form-control" id="id_WarrantyRemark" name="WarrantyRemark" cols="40" rows="5" maxlength="255" tabindex="10"></textarea>
+                    </div>
+                </div>
+                <div class='modal-footer'>
+                    @if(@ViewBag.warrantyType==true)
+                    {
+                        <button type="submit" class="btn btn-default" name="action" value="btnWarranty" onclick="return checkSure(this)">確定</button>
+                        <button type='button' class='btn btn-default' data-dismiss='modal'>取消</button>
+                    }
+                </div>
+        </div>
+    </div>
+</div>
+@RenderPage("../../../../Views/Shared/RecordSelector/record_selector_OrderCategory.cshtml")

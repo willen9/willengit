@@ -1,0 +1,11 @@
+﻿{
+  "ProductNo": "品號",
+  "SerielNo": "序號",
+  "RGAType": "維修單別",
+  "RGANo": "維修單號",
+  "ChangeDate": "異動日期",
+  "ChangeOrderType": "異動單別",
+  "ChangeOrderNo": "異動單號",
+  "ChangeMode": "異動別",
+  "Remark": "備註"
+}

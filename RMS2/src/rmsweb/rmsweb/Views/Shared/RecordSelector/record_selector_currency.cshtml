@@ -1,0 +1,104 @@
+﻿<style type="text/css">
+    .record-selector-currency-modal table .CurrencyIdType {
+        width: 150px;
+    }
+
+    .record-selector-currency-modal table .CurrencyNameType {
+        width: 200px;
+    }
+
+    .record-selector-currency-modal table .ExchangeRateType {
+        width: 200px;
+    }
+</style>
+<div class='modal fade record-selector-currency-modal' tabindex='-1' id="modal-currency" role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title'>幣別查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-horizontal" id="search-condition-area">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <label for="txtCurrencyId" class="control-label">幣別代號</label>
+                            <input type="text" class="form-control" id="txtCurrencyId" name="txtCurrencyId" style="width: 200px; display: inline;" />
+                            <label for="txtCurrencyName" class="control-label">幣別名稱</label>
+                            <input type="text" class="form-control" id="txtCurrencyName" name="txtCurrencyName" style="width: 200px; display: inline;" />
+                            <button type="button" class="btn btn-default" id="btnCurrencySearch" style="display: inline;" v-on:click="searchData">查詢</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="divCurrencyGrid" style="height: 500px;overflow-y: auto;">
+                    <table class="table table-striped table-hover table-condensed" data-swhgajax="true" data-swhgcontainer="divCurrencyGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    選擇
+                                </th>
+                                <th scope="col">
+                                    幣別代號
+                                </th>
+                                <th scope="col">
+                                    幣別名稱
+                                </th>
+                                <th scope="col">
+                                    匯率
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in currencyItems">
+                                <td class='column-one-action'><a data-dismiss='modal' onclick='SelectCurrency(this)'>選擇</a></td>
+                                <td class='CurrencyIdType'>{{ item.CurrencyId }}</td>
+                                <td class='CurrencyNameType'>{{ item.CurrencyName }}</td>
+                                <td>{{ item.ExchangeRate }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <input type="hidden" id="CurrencyPage" name="CurrencyPage" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<script>
+    var app = new Vue({
+        el: '#vue-container',
+        data: {
+            message: 'Hello Vue!'
+        }
+    })
+</script>*@
+@*<script>
+    var currency = new Vue({
+        el: '#vue-container',
+        data: {
+            message: 'Hello Vue!'
+            //currencyItems: []
+        },
+        methods: {
+            loadData: function () {
+                $("#txtCurrencyId").val("");
+                $("#txtCurrencyName").val("");
+
+                $.post('@Url.Action("SearchCurrencyInfoAll","Main")', function (data) {
+                    this.currencyItems = data;
+                }.bind(this), 'json');
+            },
+            searchData: function () {
+                $.ajax({
+                    url: '@Url.Action("SearchCurrencyInfoDetail","Main")',
+                    datatype: 'JSON',
+                    data: JSON.stringify({ "currencyId": $("#txtCurrencyId").val(), "currencyName": $("#txtCurrencyName").val() }),
+                    contentType: "application/json; charset=utf-8",
+                    type: "POST",
+                    success: function (data) {
+                        this.currencyItems = data;
+                    }.bind(this)
+                });
+            }
+        }
+    });
+</script>*@

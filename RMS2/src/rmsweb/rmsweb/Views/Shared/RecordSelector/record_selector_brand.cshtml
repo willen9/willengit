@@ -1,0 +1,70 @@
+﻿<style type="text/css">
+    .record-selector-brand-modal table .actioncolumn {
+        width: 50px;
+    }
+
+    .record-selector-brand-modal table .brandIdType {
+        width: 150px;
+    }
+
+    .record-selector-brand-modal table .brandTyep {
+        width: 200px;
+    }
+</style>
+<div class='modal fade record-selector-brand-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title'>品牌查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <select class="form-control" style="width: 200px; display: inline;" name="addBrand_Col" id="addBrand_Col">
+                            <option value="BrandId">品牌代號</option>
+                            <option value="Brand">品牌</option>
+                            <option value="Remark">備註</option>
+                        </select>
+
+                        <select class="form-control" style="width: 100px; display: inline;" name="addBrand_Condition" id="addBrand_Condition">
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>">&lt;&gt;</option>
+                            <option value="like%">like%</option>
+                            <option value="%like">%like</option>
+                            <option value="%like%">%like%</option>
+                        </select>
+                        <input type="text" class="form-control" id="addBrand_conditionValue" name="addBrand_conditionValue" style="width: 200px; display: inline;" />
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" id="btnBrand" style="display: inline;">查詢</button>
+                    </div>
+                </div>
+            </div>
+                <div id="divBrandGrid" style="height: 500px;overflow-y: auto;">
+                    <table class="table table-striped table-hover table-condensed" data-swhgajax="true" data-swhgcontainer="divBrandGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                    品牌代號
+                                </th>
+                                <th scope="col">
+                                    品牌名稱
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <input type="hidden" id="BrandPage" name="BrandPage" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

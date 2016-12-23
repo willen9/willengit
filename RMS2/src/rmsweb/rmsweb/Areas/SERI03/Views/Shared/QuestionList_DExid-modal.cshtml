@@ -1,0 +1,36 @@
+﻿
+<div class='modal fade QuestionList_DExid-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>解決方法--編輯</h4>
+            </div>
+            <div class='modal-body'>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="id_QuestionList_DExid-ItemId" class="control-label col-sm-5">項次</label>
+                        <div class="col-sm-19">
+                            <input type="text" class="form-control" id="id_QuestionList_DExidItemId" name="QuestionList_DExid-ItemId" maxlength="60" readonly />
+                        </div>
+                    </div>  
+                    <div class="form-group">
+                        <label for="id_QuestionList_DExid-Solution" class="control-label col-sm-5">處理狀況說明</label>
+                        <div class="col-sm-19">
+                            <input type="text" class="form-control" id="id_QuestionList_DExidSolution" name="QuestionList_DExidSolution" maxlength="60" tabindex="6" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_QuestionList_DExid-Remark" class="control-label col-sm-5">備註</label>
+                        <div class="col-sm-19">
+                            <textarea class="form-control" id="id_QuestionList_DExidRemark" name="QuestionList_DExidRemark" cols="40" rows="5" maxlength="255" tabindex="7"></textarea>
+                        </div>
+                    </div>                
+                </form>
+            </div>
+            <div class='modal-footer'>
+                <button type="button" class="btn btn-default" name="action" value="btnAllot" onclick="checkExid()" tabindex="8">確定</button>
+                <button type='button' class='btn btn-default' data-dismiss='modal' tabindex="9">取消</button>
+            </div>
+        </div>
+    </div>
+</div>

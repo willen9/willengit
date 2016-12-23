@@ -1,0 +1,156 @@
+﻿<script type="text/javascript">
+    $(function () {
+        @*$("#btnOrderType").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchOrderType", "Main", new { Area = "CONI01" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "Col": ",OrderCategory", "Condition": ",=", "conditionValue": ",D2", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divOrderCategoryGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divOrderCategoryGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectOrderType(this)'>選擇</a>" +
+                                    "<td class='OrderTypeType'>" + Maintain[i].OrderType + "</td>" +
+                                    "<td class='OrderSNameType'>" + Maintain[i].OrderSName + "</td>" +
+                                    "<td><input type='hidden' class='OrderCategoryType' name='version' value='" + Maintain[i].OrderCategoryID + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='OrderFNameType' name='version' value='" + Maintain[i].OrderFName + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='CodeModeType' name='version' value='" + Maintain[i].CodeMode + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='SerialNrCodeLengthType' name='version' value='" + Maintain[i].SerialNrCodeLength + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='AutoConfirmType' name='version' value='" + Maintain[i].AutoConfirm + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='CheckExOrderType' name='version' value='" + Maintain[i].CheckExOrder + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='RemarkType' name='version' value='" + Maintain[i].Remark + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='DaysAfterCreateType' name='version' value='" + Maintain[i].DaysAfterCreate + "'>" + "</td>" +
+                                    "</tr>");
+                    }
+                }
+            });
+            $("#txtOrderType").val("");
+            $("#txtOrderSName").val("");
+            $("#OrderCategoryPage").val("1");
+            $(".record-selector-orderCategory-modal").modal();
+
+        });
+
+        $("#btnOrderTypeInfo").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchOrderType", "Main", new { Area = "CONI01" })',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "OrderType": $("#txtOrderType").val(), "OrderSName": $("#txtOrderSName").val(), "OrderCategory": "D2", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divOrderCategoryGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divOrderCategoryGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectOrderType(this)'>選擇</a>" +
+                                    "<td class='OrderTypeType'>" + Maintain[i].OrderType + "</td>" +
+                                    "<td class='OrderSNameType'>" + Maintain[i].OrderSName + "</td>" +
+                                    "<td><input type='hidden' class='OrderCategoryType' name='version' value='" + Maintain[i].OrderCategoryID + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='OrderFNameType' name='version' value='" + Maintain[i].OrderFName + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='CodeModeType' name='version' value='" + Maintain[i].CodeMode + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='SerialNrCodeLengthType' name='version' value='" + Maintain[i].SerialNrCodeLength + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='AutoConfirmType' name='version' value='" + Maintain[i].AutoConfirm + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='CheckExOrderType' name='version' value='" + Maintain[i].CheckExOrder + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='RemarkType' name='version' value='" + Maintain[i].Remark + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='DaysAfterCreateType' name='version' value='" + Maintain[i].DaysAfterCreate + "'>" + "</td>" +
+                                    "</tr>");
+                    }
+                }
+            });
+            $("#OrderCategoryPage").val("1");
+        });
+
+        $("#divOrderCategoryGrid").scroll(function () {
+            var Page = document.getElementById("OrderCategoryPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchOrderType", "Main", new { Area = "CONI01" })',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "OrderType": $("#txtOrderType").val(), "OrderSName": $("#txtOrderSName").val(), "OrderCategory": "D2", Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divOrderCategoryGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectOrderType(this)'>選擇</a>" +
+                                    "<td class='OrderTypeType'>" + Maintain[i].OrderType + "</td>" +
+                                    "<td class='OrderSNameType'>" + Maintain[i].OrderSName + "</td>" +
+                                    "<td><input type='hidden' class='OrderCategoryType' name='version' value='" + Maintain[i].OrderCategoryID + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='OrderFNameType' name='version' value='" + Maintain[i].OrderFName + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='CodeModeType' name='version' value='" + Maintain[i].CodeMode + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='SerialNrCodeLengthType' name='version' value='" + Maintain[i].SerialNrCodeLength + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='AutoConfirmType' name='version' value='" + Maintain[i].AutoConfirm + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='CheckExOrderType' name='version' value='" + Maintain[i].CheckExOrder + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='RemarkType' name='version' value='" + Maintain[i].Remark + "'>" + "</td>" +
+                                    "<td><input type='hidden' class='DaysAfterCreateType' name='version' value='" + Maintain[i].DaysAfterCreate + "'>" + "</td>" +
+                                    "</tr>");
+                            }
+                        }
+                    });
+                    $("#OrderCategoryPage").val(Page);
+                }
+            }
+
+        });*@
+    });
+
+    function check(from) {
+        if ($("#id_OrderType").val() == '') {
+            alert("请输入定保單別!");
+            return false;
+        }
+
+        if ($("#id_confirmeddate").val() == '') {
+            alert("请選擇定保日期");
+            return false;
+        }
+        return true;
+    }
+</script>
+
+@*@using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+{*@
+<div class='modal fade allot-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>拋磚</h4>
+            </div>
+                <div class='modal-body'>
+                    <label for="id_OrderType" class="control-label">定保單別</label>
+                    <input type="text" class="form-control" id="id_OrderType" name="ordertype" style="width: 200px; display: inline;" maxlength="5" />
+                    <button type="button" class="btn btn-default" style="display:inline;" id="btnOrderType" data-toggle="modal" data-target="#modal-orderCategory" ng-click="OrderCategoryList()">Q</button>
+                    <span style="display:inline;" id="ordersname"></span>
+                    <br />
+                    <label for="id_confirmeddate" class="control-label">定保日期</label>
+                    <div class="col-sm-12 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_confirmeddate" data-link-format="yyyy-mm-dd">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="id_confirmeddate" name="confirmeddate" readonly="readonly" />
+                            <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                    <br />
+                    <label for="id_EmployeeId" class="control-label">備註</label>
+                    <input type="checkbox" id="id_chkRemark" name="chkRemark" />
+                </div>
+                <div class='modal-footer'>
+                    <button type="submit" class="btn btn-default" name="action" value="btnAllot" onclick="return check(this)">確定</button>
+                    <button type='button' class='btn btn-default' data-dismiss='modal'>取消</button>
+                </div>
+        </div>
+    </div>
+</div>
+@*}*@
+
+@RenderPage("../../../../Views/Shared/RecordSelector/record_selector_OrderCategory.cshtml")

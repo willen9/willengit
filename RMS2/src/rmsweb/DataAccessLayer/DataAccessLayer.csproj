@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6659B8C1-99CF-47B6-AC68-666B2DFE179A}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataAccessLayer</RootNamespace>
+    <AssemblyName>DataAccessLayer</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data.Entity.EF6, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.Entity.6.9.9\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Linq.Dynamic, Version=1.0.6132.35681, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.7\lib\net40\System.Linq.Dynamic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssignmentChangeDAL.cs" />
+    <Compile Include="AssignmentDAL.cs" />
+    <Compile Include="VendorContactDAL.cs" />
+    <Compile Include="FileArchiveDAL.cs" />
+    <Compile Include="Interfaces\IVendorContactDAL.cs" />
+    <Compile Include="Interfaces\IFileArchiveDAL.cs" />
+    <Compile Include="TableListDAL.cs" />
+    <Compile Include="Interfaces\ITableList.cs" />
+    <Compile Include="Interfaces\IScheduleDAL.cs" />
+    <Compile Include="ScheduleDAL.cs" />
+    <Compile Include="RepairRecordDAL.cs" />
+    <Compile Include="GroupDAL.cs" />
+    <Compile Include="Interfaces\IAssignmentChangeDAL.cs" />
+    <Compile Include="Interfaces\IAssignmentDAL.cs" />
+    <Compile Include="Interfaces\IRepairRecordDAL.cs" />
+    <Compile Include="Interfaces\IGroup.cs" />
+    <Compile Include="Interfaces\IModule.cs" />
+    <Compile Include="Interfaces\IPosition_DDAL.cs" />
+    <Compile Include="ModuleDAL.cs" />
+    <Compile Include="Position_DDAL.cs" />
+    <Compile Include="ProgramDAL.cs" />
+    <Compile Include="Interfaces\IProgram.cs" />
+    <Compile Include="Position_HDAL.cs" />
+    <Compile Include="Interfaces\IPosition_HDAL.cs" />
+    <Compile Include="Interfaces\IRMAReturn_HDAL.cs" />
+    <Compile Include="Interfaces\IRMAReturn_DDAL.cs" />
+    <Compile Include="Interfaces\IRFQ_HDAL.cs" />
+    <Compile Include="Interfaces\IRFQ_DDAL.cs" />
+    <Compile Include="RMAReturn_DDAL.cs" />
+    <Compile Include="RFQ_DDAL.cs" />
+    <Compile Include="RMA_DDAL.cs" />
+    <Compile Include="Interfaces\IRMA_DDAL.cs" />
+    <Compile Include="RMAReturn_HDAL.cs" />
+    <Compile Include="RFQ_HDAL.cs" />
+    <Compile Include="RMA_HDAL.cs" />
+    <Compile Include="Interfaces\IRMA_HDAL.cs" />
+    <Compile Include="Interfaces\IRGAReturn_DDAL.cs" />
+    <Compile Include="Interfaces\IRMAAplChangeDAL.cs" />
+    <Compile Include="Interfaces\IRMAAplDAL.cs" />
+    <Compile Include="RGAReturn_DDAL.cs" />
+    <Compile Include="Interfaces\IRGAReturn_HDAL.cs" />
+    <Compile Include="RGAReturn_HDAL.cs" />
+    <Compile Include="Interfaces\ICompletionOrderDAL.cs" />
+    <Compile Include="Quotation_DDAL.cs" />
+    <Compile Include="Interfaces\IQuotation_DDAL.cs" />
+    <Compile Include="Interfaces\IQuotation_HDAL.cs" />
+    <Compile Include="Quotation_HDAL.cs" />
+    <Compile Include="Interfaces\IRGAChange_DDAL.cs" />
+    <Compile Include="Interfaces\IRGA_DDAL.cs" />
+    <Compile Include="Interfaces\IRGAChange_QDAL.cs" />
+    <Compile Include="Interfaces\IRGA_QDAL.cs" />
+    <Compile Include="Interfaces\IRGAChange_HDAL.cs" />
+    <Compile Include="RGAChange_DDAL.cs" />
+    <Compile Include="RGA_DDAL.cs" />
+    <Compile Include="RGAChange_QDAL.cs" />
+    <Compile Include="RGA_QDAL.cs" />
+    <Compile Include="RGA_HDAL.cs" />
+    <Compile Include="Interfaces\IRGA_HDAL.cs" />
+    <Compile Include="Interfaces\IPhoneService_HDAL.cs" />
+    <Compile Include="Interfaces\IPhoneService_DDAL.cs" />
+    <Compile Include="PhoneService_DDAL.cs" />
+    <Compile Include="QuestionList_DDAL.cs" />
+    <Compile Include="Interfaces\IQuestionList_DDAL.cs" />
+    <Compile Include="PhoneService_HDAL.cs" />
+    <Compile Include="QuestionList_HDAL.cs" />
+    <Compile Include="Interfaces\IQuestionList_HDAL.cs" />
+    <Compile Include="RGAChange_HDAL.cs" />
+    <Compile Include="CompletionOrderDAL.cs" />
+    <Compile Include="RMAAplChangeDAL.cs" />
+    <Compile Include="RMAAplDAL.cs" />
+    <Compile Include="RMSDbContext.cs" />
+    <Compile Include="Substitutes_DDA.cs" />
+    <Compile Include="Interfaces\ISubstitutes_DDAL.cs" />
+    <Compile Include="Interfaces\IBOM_DDAL.cs" />
+    <Compile Include="BOM_DDAL.cs" />
+    <Compile Include="Substitutes_HDAL.cs" />
+    <Compile Include="BrandDAL.cs" />
+    <Compile Include="CompanyDAL.cs" />
+    <Compile Include="ContractChange_HDAL.cs" />
+    <Compile Include="ContractChange_ProductSerialDAL.cs" />
+    <Compile Include="Contract_HDAL.cs" />
+    <Compile Include="Contract_ProductDDAL.cs" />
+    <Compile Include="CustomerAddressDAL.cs" />
+    <Compile Include="CustomerContactDAL.cs" />
+    <Compile Include="Interfaces\ISubstitutes_HDAL.cs" />
+    <Compile Include="Interfaces\IBrandDAL.cs" />
+    <Compile Include="Interfaces\IContractChange_HDAL.cs" />
+    <Compile Include="Interfaces\IContractChange_ProductSerialDAL.cs" />
+    <Compile Include="Interfaces\IContract_HDAL.cs" />
+    <Compile Include="Interfaces\IContract_ProductDDAL.cs" />
+    <Compile Include="Interfaces\ICustomerAddressDAL.cs" />
+    <Compile Include="Interfaces\ICustomerContactDAL.cs" />
+    <Compile Include="Interfaces\IOrderCategoryDAL.cs" />
+    <Compile Include="Interfaces\IPicking_HDAL.cs" />
+    <Compile Include="Interfaces\IPicking_ProductDDAL.cs" />
+    <Compile Include="Interfaces\IRoutineService_ProductDDAL.cs" />
+    <Compile Include="Interfaces\IRoutineService_ProcessDDAL.cs" />
+    <Compile Include="Interfaces\IServiceArrangeModi_DDAL.cs" />
+    <Compile Include="Interfaces\IServiceArrange_DDAL.cs" />
+    <Compile Include="Interfaces\IServiceArrangeModi_HDAL.cs" />
+    <Compile Include="Interfaces\IRoutineService_HDAL.cs" />
+    <Compile Include="Interfaces\IBOM_HDAL.cs" />
+    <Compile Include="Interfaces\IWarranty_DDAL.cs" />
+    <Compile Include="Interfaces\IServiceArrange_HDAL.cs" />
+    <Compile Include="Interfaces\IWarranty_HDAL.cs" />
+    <Compile Include="Interfaces\IPurchasedSerialDAL.cs" />
+    <Compile Include="Interfaces\ISaleSerialDAL.cs" />
+    <Compile Include="Interfaces\ISupportAplAsignDAL.cs" />
+    <Compile Include="Interfaces\ISupportAplAsignModiDAL.cs" />
+    <Compile Include="Interfaces\ISupportApl_HDAL.cs" />
+    <Compile Include="Interfaces\ISupportApl_ProcessDDAL.cs" />
+    <Compile Include="Interfaces\ISupportApl_ProductDDAL.cs" />
+    <Compile Include="Interfaces\ISupportApl_SupportItemDAL.cs" />
+    <Compile Include="Interfaces\ISupportItemDAL.cs" />
+    <Compile Include="Interfaces\ISyscodeNumbersDAL.cs" />
+    <Compile Include="Interfaces\IPicking_ProductSerialDAL.cs" />
+    <Compile Include="OrderCategoryDAL.cs" />
+    <Compile Include="Picking_HDAL.cs" />
+    <Compile Include="Picking_ProductDDAL.cs" />
+    <Compile Include="Picking_ProductSerialDAL.cs" />
+    <Compile Include="RoutineService_ProductDDAL.cs" />
+    <Compile Include="RoutineService_ProcessDDAL.cs" />
+    <Compile Include="ServiceArrangeModi_HDAL.cs" />
+    <Compile Include="ServiceArrangeModi_DDAL.cs" />
+    <Compile Include="ServiceArrange_DDAL.cs" />
+    <Compile Include="RoutineService_HDAL.cs" />
+    <Compile Include="BOM_HDAL.cs" />
+    <Compile Include="Warranty_DDAL.cs" />
+    <Compile Include="ServiceArrange_HDAL.cs" />
+    <Compile Include="Warranty_HDAL.cs" />
+    <Compile Include="PurchasedSerialDAL.cs" />
+    <Compile Include="SaleSerialDAL.cs" />
+    <Compile Include="SupportAplAsignDAL.cs" />
+    <Compile Include="SupportAplAsignModiDAL.cs" />
+    <Compile Include="SupportApl_HDAL.cs" />
+    <Compile Include="SupportApl_ProcessDDAL.cs" />
+    <Compile Include="SupportApl_ProductDDAL.cs" />
+    <Compile Include="SupportApl_SupportItemDAL.cs" />
+    <Compile Include="SupportItemDAL.cs" />
+    <Compile Include="SyscodeNumbersDAL.cs" />
+    <Compile Include="VendorDAL.cs" />
+    <Compile Include="CustomerDAL.cs" />
+    <Compile Include="DepartmentDAL.cs" />
+    <Compile Include="CurrencyDAL.cs" />
+    <Compile Include="EmployeeDAL.cs" />
+    <Compile Include="Interfaces\ICompanyDAL.cs" />
+    <Compile Include="Interfaces\IVendor.cs" />
+    <Compile Include="Interfaces\ICustomer.cs" />
+    <Compile Include="Interfaces\IDepartmentDAL.cs" />
+    <Compile Include="Interfaces\ICurrency.cs" />
+    <Compile Include="Interfaces\IEmployee.cs" />
+    <Compile Include="Interfaces\IProductCategoryDAL.cs" />
+    <Compile Include="Interfaces\IProductDAL.cs" />
+    <Compile Include="ProductCategoryDAL.cs" />
+    <Compile Include="ProductDAL.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessLayer.Models\BusinessLayer.Models.csproj">
+      <Project>{cd6ff156-129d-472c-b41f-6e8b5dcca6a8}</Project>
+      <Name>BusinessLayer.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataAccess.MySQL\DataAccess.MySQL.csproj">
+      <Project>{7ca9b4a2-178f-4e31-be0d-cd832fde8e64}</Project>
+      <Name>DataAccess.MySQL</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>60279</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:60279/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,88 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#from-ProductCategory').bootstrapValidator({
+            fields: {
+                brandId: {
+                    validators: {
+                        notEmpty: {
+                            message: '品牌代號不能為空！'
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+<h2>品牌類型資料維護</h2>
+<hr />
+<div class="container">
+    <form id="from-ProductCategory" method="post" action="@Url.Action("CUR", "Main")">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label for="id_brandId" class="col-sm-1 control-label">品牌代號</label>
+                <div class="col-sm-11">
+                    @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Details")
+                    {
+                        <input type="text" class="form-control" id="id_brandId" name="brandId" maxlength="10" value="@ViewBag.BrandId" readonly />
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" id="id_brandId" name="brandId" maxlength="10" value="@ViewBag.BrandId" />
+                    }
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_brandName" class="col-sm-1 control-label">品牌名稱</label>
+                <div class="col-sm-11">
+                    @if (@ViewBag.Type == "Details")
+                    {
+                        <input type="text" class="form-control" id="id_brandName" name="brandName" maxlength="40" value="@ViewBag.BrandName" readonly/>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" id="id_brandName" name="brandName" maxlength="40" value="@ViewBag.BrandName" />
+                    }
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_remark" class="col-sm-1 control-label">備註</label>
+                <div class="col-sm-11">
+                    @if (@ViewBag.Type == "Details")
+                    {
+                        <input type="text" class="form-control" id="id_remark" name="remark" readonly/>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" id="id_remark" name="remark" />
+                    }
+                    
+                </div>
+            </div>
+            <p style="color: red;">@ViewBag.Msg</p>
+            <p class="text-right">
+                @if (@ViewBag.Type == "Edit")
+                {
+                    <button type=submit class="btn btn-primary" name="action" value="Edit">存檔</button>
+                    <button type=submit class="btn btn-primary" name="action" value="EditAgain">存檔並新增</button>
+                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                }
+                else if (ViewBag.Type == "Details")
+                {
+                    <button type=submit class="btn btn-primary" name="action" value="EditDetails">編輯</button>
+                    <button type=submit class="btn btn-primary" name="action" value="CopyAddDetails">複製並新增</button>
+                    <a class="btn btn-primary" href="@Url.Action("Delete", "Main", new { BrandId = @ViewBag.BrandId })">刪除</a>
+                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">回列表</a>
+                }
+                else
+                {
+                    <button type=submit class="btn btn-primary" name="action" value="Save">存檔</button>
+                    <button type=submit class="btn btn-primary" name="action" value="SaveAgain">存檔並新增</button>
+                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                }
+                
+            </p>
+        </div>
+    </form>
+</div>

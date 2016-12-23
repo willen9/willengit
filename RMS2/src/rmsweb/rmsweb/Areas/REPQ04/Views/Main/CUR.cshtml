@@ -1,0 +1,44 @@
+﻿<section class="content-header">
+    <h1>平均零件壽命統計表</h1>
+</section>
+<section class="content">
+    @using (Ajax.BeginForm("CUR", "Main", FormMethod.Post, new AjaxOptions {UpdateTargetId = "DivGrid"}))
+    {
+        @*<div>*@
+        <label>品號</label>
+        <label name="ProductNo">@ViewBag.ProductNo</label>
+        <label>零件品號</label>
+        <label name="ComponentNo">@ViewBag.ComponentNo</label>
+        <label>客戶代號</label>
+        <label name="CustomerId">@ViewBag.CustomerId</label>
+        <label>結案碼</label>
+        <label name="StatusCode">@ViewBag.StatusCode</label>
+        if (ViewBag.Juect == "DetailsP")
+        {
+            var grid = new WebGrid(source: (IEnumerable<BusinessLayer.Models.QuestionList_H>
+                )ViewData["QuestionList_H"], canPage: false, canSort: false, ajaxUpdateContainerId: "divGrid");
+
+            @grid.GetHtml(
+                tableStyle: "table table-striped table-hover rms-table seri03-table",
+                columns: grid.Columns(
+                    grid.Column(columnName: "StatusCode", header: "單據狀態", style: "StatusCode"),
+                    grid.Column(columnName: "RGAType", header: "維修單別", style: "RGAType"),
+                    grid.Column(columnName: "OrderSName", header: "單據名稱", style: "OrderSName"),
+                    grid.Column(columnName: "RGANo", header: "維修單號", style: "RGANo"),
+                    grid.Column(columnName: "CustomerName", header: "客戶簡稱", style: "CustomerName"),
+                    grid.Column(columnName: "ProductNo", header: "品號", style: "ProductNo"),
+                    grid.Column(columnName: "ProductName", header: "品名", style: "ProductName"),
+                    grid.Column(columnName: "SerialNo", header: "序號", style: "SerialNo"),
+                    grid.Column(columnName: "ComponentNo", header: "零件品號", style: "ComponentNo"),
+                    grid.Column(columnName: "MajorComponentName", header: "零件品名", style: "MajorComponentName"),
+                    grid.Column(columnName: "QTY", header: "數量", style: "QTY"),
+                    grid.Column(columnName: "Lifetime", header: "壽命(月)", style: "Lifetime")
+                    )
+                )
+        }
+        @*</div>*@
+        <div class="text-right">
+            <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">返回列表</a>
+        </div>
+    }
+</section>

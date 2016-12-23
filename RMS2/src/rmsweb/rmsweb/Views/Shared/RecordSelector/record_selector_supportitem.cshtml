@@ -1,0 +1,80 @@
+﻿<style type="text/css">
+    .record-selector-brand-modal table .actioncolumn {
+        width: 50px;
+    }
+
+    .record-selector-brand-modal table .SupportItemIdType {
+        width: 150px;
+    }
+
+    .record-selector-brand-modal table .SupportItemNameType {
+        width: 200px;
+    }
+
+    .record-selector-brand-modal table .RemarkType {
+        width: 200px;
+    }
+</style>
+<div class='modal fade record-selector-supportitem-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title'>項目查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-inline">
+                    <div class="form-group">
+                        @*<label for="txtCondition" class="control-label">項目代號</label>
+            <input type="text" class="form-control" id="txtSupportItemId" name="txtSupportItemId" style="width: 200px; display: inline;" />
+            <label for="txtCondition" class="control-label">項目名稱</label>
+            <input type="text" class="form-control" id="txtSupportItemName" name="txtSupportItemName" style="width: 200px; display: inline;" />*@
+                        <select class="form-control" style="width: 200px; display: inline;" name="addCol" id="addCol">
+                            <option value="SupportItemId">支援項目代號</option>
+                            <option value="SupportItemName">支援項目名稱</option>
+                            <option value="Remark">備註</option>
+                        </select>
+
+                        <select class="form-control" style="width: 100px; display: inline;" name="addCondition" id="addCondition">
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>">&lt;&gt;</option>
+                            <option value="like%">like%</option>
+                            <option value="%like">%like</option>
+                            <option value="%like%">%like%</option>
+                        </select>
+                        <input type="text" class="form-control" id="addconditionValue" name="addconditionValue" style="width: 200px; display: inline;" />
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" id="btnSearchSupportItem" style="display: inline;">查詢</button>
+                    </div>
+                </div>
+            </div>
+                <div id="divSupportItemGrid" style="height: 500px;overflow-y: auto;">
+                    <table class="table table-striped table-hover table-condensed" data-swhgajax="true" data-swhgcontainer="divSupportItemGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                    項目代號
+                                </th>
+                                <th scope="col">
+                                    項目名稱
+                                </th>
+                                <th scope="col">
+                                    備註
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <input type="hidden" id="SupportItemPage" name="SupportItemPage" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

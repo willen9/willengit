@@ -1,0 +1,140 @@
+﻿@using System.Security.Policy
+@using System.Web.Mvc.Ajax
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".selectCustomer").click(function () {
+            $("#importType").val($(this).attr("id"));
+            $("#txtCondition1").val("");
+            $("#txtCondition2").val("");
+            $.ajax({
+                url: '@Url.Action("SearchCustomer", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "id":"", "name": "" }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divCustomerGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divCustomerGrid table tbody").append("<tr>" +
+                            "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectCustomer(this)'>選擇</a></td>" +
+                            "<td class='departmentId'>" + Maintain[i].CustomerId + "</td>" +
+                            "<td class='departmentName'>" + Maintain[i].CustomerName + "</td>" +
+                            "</tr>");
+                    }
+                }
+            });
+        });
+
+        $("#importSelect1_btnImport").click(function() {
+            if ($("input[name='importType']:checked").val() == 'A') {
+                if ($("#id_custumer2").val() == "") {
+                    alert("請先選擇客戶代號");
+                    return false;
+                }
+            }
+            if ($("input[name='importType']:checked").val() == 'C') {
+                if ($("#id_custumer1").val() == "") {
+                    alert("請先選擇客戶代號");
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        $("#submitButton-imageUploader").click(function () {
+            var url = $("#id_fileUpload").val();
+            if (url.trim() == "") {
+                alert('請選擇要上傳的文件');
+                return false;
+            } else {
+                if (url.split(".")[url.split(".").length - 1].toUpperCase() != "CSV") {
+                    alert('文件格式不正確');
+                    return false;
+                }
+                var cid = $("input[name='importType']:checked").val() == "A" ? $("#id_custumer2").val() : $("#id_custumer1").val();
+                $.ajaxFileUpload({
+                    url: "@Url.Action("Index","Main")",
+                    secureuri: false,
+                    data: { type: $("input[name='importType']:checked").val(), customerId:cid },
+                    fileElementId: 'id_fileUpload',//file标签的id
+                    dataType: 'json',//返回数据的类型
+                    success: function (data) {
+                    if (data == "1") {
+                        //window.location = "../CMSI03/Main";
+                        window.location = "@Url.Action("Index","Main")";
+                    } else {
+                        alert(data);
+                    }
+                },
+                error: function (data, status, e) {
+                    alert(e);
+                }
+            });
+        }
+        });
+    })
+</script>
+<!-- 模态框（Modal） -->
+<div class="modal fade modal-vertical-center" id="importSelect1" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>*@
+                <h4 class="modal-title" id="myModalLabel">
+                    匯入選擇
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="radio">
+                    <h4>
+                        <label>
+                            @Html.RadioButton("importType", "B", true, new { @id = "radBasic" })客戶基本資料
+                        </label>
+                    </h4>
+                </div>
+
+                <div class="radio">
+                    <h4>
+                        <label>
+                            @Html.RadioButton("importType", "C", false, new { @id = "radContact" })客戶聯絡人
+                            <input type="text" class="form-control" id="id_custumer1" name="customerId1" style="width: 200px; display: inline;" readonly="readonly" />
+                            <button type="button" class="btn btn-default selectCustomer" style="display: inline;" data-toggle="modal" data-target="#importSelect2" id="C"><i class="fa fa-hand-pointer-o"></i></button>
+                            <span style="display: inline;" id="spName1"></span>
+                            <input type="hidden" id="id_customerName1" name="customerName1" />
+                        </label>
+                    </h4>
+                </div>
+                <div class="radio">
+                    <h4>
+                        <label>
+                            @Html.RadioButton("importType", "A", false, new { @id = "radAddress" })客戶地址
+                            <input type="text" class="form-control" id="id_custumer2" name="customerId2" style="width: 200px; display: inline;" readonly="readonly" />
+                            <button type="button" class="btn btn-default selectCustomer" style="display: inline;" data-toggle="modal" data-target="#importSelect2" id="A"><i class="fa fa-hand-pointer-o"></i></button>
+                            <span style="display: inline;" id="spName2"></span>
+                            <input type="hidden" id="id_customerName2" name="customerName2" />
+                        </label>
+                    </h4>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    关闭
+                </button>
+                <button type="button" class="btn btn-primary" id="importSelect1_btnImport" data-toggle="modal" data-target="#imageUploader">
+                    <span class="glyphicon glyphicon-import" aria-hidden="true"></span> 匯入
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="importType"/>
+
+@RenderPage("~/Areas/CMSI09/Views/Shared/advanced-import2-modal.cshtml")
+@using REGAL.MVC.UI.Bootstrap;
+@(Html.REGAL().FileUpload(name: "imageUploader", description: "The maximum file upload size is 500 KB.", cssClass: "modal-vertical-center"))  

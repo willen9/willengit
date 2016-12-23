@@ -1,0 +1,75 @@
+﻿@using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+{
+<div class='modal fade Warranty_D-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>商品資料</h4>
+            </div>
+            <div class='modal-body'>
+                <label for="id_Warranty_DChangeDate" class="control-label">異動日期</label>
+                <div class="col-sm-12 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_Warranty_DChangeDate" data-link-format="yyyy-mm-dd">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="id_Warranty_DChangeDate" name="Warranty_DChangeDate" readonly />
+                        <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+                <br />
+                <label for="id_Warranty_DChangeOrderType" class="control-label">異動單別</label>
+                <input type="text" class="form-control" id="id_Warranty_DChangeOrderType" name="Warranty_DChangeOrderType" style="width: 200px; display: inline;" />
+                <br />
+                <label for="id_Warranty_DChangeOrderNo" class="control-label">異動單號</label>
+                <input type="text" class="form-control" id="id_Warranty_DChangeOrderNo" name="Warranty_DChangeOrderNo" style="width: 200px; display: inline;" />
+                <br />
+                <label for="id_Warranty_DChangeOrderItemId" class="control-label">異動項次</label>
+                <input type="text" class="form-control" id="id_Warranty_DChangeOrderItemId" name="Warranty_DChangeOrderItemId" style="width: 200px; display: inline;" />
+                <br />
+                <label for="id_Warranty_DTargetId" class="control-label">異動對象</label>
+                <input type="text" class="form-control" id="id_Warranty_DTargetId" name="Warranty_DTargetId" style="width: 200px; display: inline;" readonly/>
+                <button type="button" class="btn btn-default" style="display:inline;" id="btnChooseTargetId">Q</button>
+                <br />
+                <label for="id_Warranty_DTargetName" class="control-label">對象簡稱</label>
+                <input type="text" class="form-control" id="id_Warranty_DTargetName" name="Warranty_DTargetName" style="width: 200px; display: inline;" readonly/>
+                <br />
+                <label for="id_Warranty_DWarrantyPeriod" class="control-label">保固期限</label>
+                <input type="text" class="form-control" id="id_Warranty_DWarrantyPeriod" name="Warranty_DWarrantyPeriod" onchange="updateProductDWarrantyEDate()" onkeydown="onlyNumber();" maxlength="3" />
+                <br />
+                <label for="id_Warranty_DWarrantySDate" class="control-label">保固起日</label>
+                <div class="col-sm-12 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_Warranty_DWarrantySDate" data-link-format="yyyy-mm-dd">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="id_Warranty_DWarrantySDate" name="Warranty_DWarrantySDate" onchange="updateProductDWarrantyEDate()" readonly />
+                        <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+                <br />
+                <label for="id_Warranty_DWarrantyEDate" class="control-label">保固迄日</label>
+                <div class="col-sm-12 date" data-date="" data-date-format="yyyy/mm/dd" data-link-field="id_Warranty_DWarrantyEDate" data-link-format="yyyy-mm-dd">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="id_Warranty_DWarrantyEDate" name="Warranty_DWarrantyEDate" readonly />
+                        <span class="input-group-addon" id="basic-addon2"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+                <br />
+                <label for="id_Warranty_DWarrantyType" class="col-sm-3 control-label">保固類型</label>
+                <div class="col-sm-5">
+                    <select class="form-control" style="width: 200px;display:inline;" name="Warranty_DWarrantyType" id="id_Warranty_DWarrantyType">
+                        <option value="0.空白" selected>0.空白</option>
+                        <option value="1.廠商">1.廠商</option>
+                        <option value="2.客戶">2.客戶</option>
+                    </select>
+                </div>
+                <br/>
+                <label for="id_Warranty_DRemark" class="control-label">備註</label>
+                <textarea class="form-control" id="id_Warranty_DRemark" name="id_Warranty_DRemark" cols="40" rows="5" maxlength="255"></textarea>
+                <br />
+                
+            </div>
+            <div class='modal-footer'>
+                <button type="button" class="btn btn-default" name="action" value="btnAllot" onclick="check()">確定</button>
+                <button type="button" class='btn btn-default' data-dismiss='modal' onclick='numModel()'>序號管理</button>
+                <button type='button' class='btn btn-default' data-dismiss='modal'>取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+}

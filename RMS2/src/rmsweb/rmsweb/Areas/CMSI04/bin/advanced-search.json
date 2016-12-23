@@ -1,0 +1,11 @@
+﻿{
+  "ProductCategoryType": "分類方式",
+  "ProductTypeId": "類別代號",
+  "ProductType": "類別名稱",
+  "Company": "公司別",
+  "UserGroup": "群組",
+  "Creator": "建立人員",
+  "CreateDate": "建立日期",
+  "Modifier": "修改人員",
+  "ModiDate": "修改日期"
+}

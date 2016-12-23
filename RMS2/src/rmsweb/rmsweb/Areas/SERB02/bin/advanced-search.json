@@ -1,0 +1,21 @@
+﻿{
+  "h.RGAType": "維修單別",
+  "h.OrderDate": "單據日期",
+  "h.SourceOrderType": "來源單別",
+  "h.SourceOrderNo": "來源單號",
+  "h.Repairman": "維修人員",
+  "h.AddressSName": "地址簡稱",
+  "h.Address": "地址",
+  "h.ProductNo": "品號",
+  "h.ProductName": "品名",
+  "h.SerialNo": "序號",
+  "h.AssetNo": "資產編號",
+  "h.ContractType": "合約單別",
+  "h.ContractNo": "合約單號",
+  "h.Company": "公司別",
+  "h.UserGroup": "群組",
+  "h.Creator": "建立人員",
+  "h.CreateDate": "建立日期",
+  "h.Modifier": "修改人員",
+  "h.ModiDate": "修改日期"
+}

@@ -1,0 +1,466 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#from-Product').bootstrapValidator({
+            fields: {
+                productId: {
+                    validators: {
+                        notEmpty: {
+                            message: '品號不能為空！'
+                        }@*,
+                        remote: {
+                            url: '@Url.Action("ProductId", "Main")',
+                            type: 'POST',
+                            //contentType: 'application/json; charset=utf-8',
+                            message: '品號已存在！'
+                            //dataType: 'JSON',
+                            //data:
+                            //    {
+                            //        unit:function(validator)
+                            //        {
+                            //            return "12";
+                            //        }
+                            //    },
+                        }*@
+                    }
+                },
+                unit: {
+                    validators: {
+                        notEmpty: {
+                            message: '單位不能為空！'
+                        }
+                    }
+                },
+                productName: {
+                    validators: {
+                        notEmpty: {
+                            message: '品名不能為空！'
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    $(function () {
+        $('#id_productId').blur(function () {
+            if ($("#id_productId").val().trim() != "")
+            {
+                $.ajax({
+                    url: '@Url.Action("ProductId", "Main")',
+                    data: JSON.stringify({ "ProductId": $("#id_productId").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data == false) {
+                            //alert("主鍵存在!");
+                            //$('#id_productId').focus();
+                            $('#isproductid').text("品號已存在!");
+                            $('#btn_Save').attr('disabled', true);
+                            $('#btn_SaveAgain').attr('disabled', true);
+                            //$('#id_productId').focus();
+                        } else {
+                            $('#isproductid').text("");
+                            $('#btn_Save').removeAttr("disabled");
+                            $('#btn_SaveAgain').removeAttr("disabled");
+                        }
+                    }
+                })
+            }else
+            {
+                $('#isproductid').text("");
+                $('#btn_Save').removeAttr("disabled");
+                $('#btn_SaveAgain').removeAttr("disabled");
+            }
+            
+        });
+
+        $('#id_brand').blur(function () {
+            if ($("#id_brand").val().trim() != "")
+            {
+                $.ajax({
+                    url: '@Url.Action("GetBrandName", "Main")',
+                    data: JSON.stringify({ "BrandId": $("#id_brand").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            //alert("主鍵存在!");
+                            $('#brandname').text(serverData[1]);
+                            $('#btn_Save').attr('disabled', true);
+                            $('#btn_SaveAgain').attr('disabled', true);
+                            //$('#id_brand').focus();
+                        } else {
+                            $('#brandname').text(serverData[1]);
+                            $('#btn_Save').removeAttr("disabled");
+                            $('#btn_SaveAgain').removeAttr("disabled");
+                        }
+                    }
+                })
+            }else
+            {
+                $('#brandname').text("");
+                $('#btn_Save').removeAttr("disabled");
+                $('#btn_SaveAgain').removeAttr("disabled");
+            }
+            
+        });
+
+        $('#id_prodType1').blur(function () {
+            if ($("#id_prodType1").val().trim() != "")
+            {
+                $.ajax({
+                    url: '@Url.Action("GetProductType", "Main")',
+                    data: JSON.stringify({ "CategoryType": "1", "ProductTypeId": $("#id_prodType1").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            //alert("主鍵存在!");
+                            $('#idprodType1').text(serverData[1]);
+                            $('#btn_Save').attr('disabled', true);
+                            $('#btn_SaveAgain').attr('disabled', true);
+                            //$('#id_brand').focus();
+                        } else {
+                            $('#idprodType1').text(serverData[1]);
+                            $('#btn_Save').removeAttr("disabled");
+                            $('#btn_SaveAgain').removeAttr("disabled");
+                        }
+                    }
+                })
+            }else
+            {
+                $('#idprodType1').text("");
+                $('#btn_Save').removeAttr("disabled");
+                $('#btn_SaveAgain').removeAttr("disabled");
+            }
+            
+        });
+        $('#id_prodType2').blur(function () {
+            if ($("#id_prodType2").val().trim() != "")
+            {
+                $.ajax({
+                    url: '@Url.Action("GetProductType", "Main")',
+                    data: JSON.stringify({ "CategoryType": "2", "ProductTypeId": $("#id_prodType2").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            //alert("主鍵存在!");
+                            $('#idprodType2').text(serverData[1]);
+                            $('#btn_Save').attr('disabled', true);
+                            $('#btn_SaveAgain').attr('disabled', true);
+                            //$('#id_brand').focus();
+                        } else {
+                            $('#idprodType2').text(serverData[1]);
+                            $('#btn_Save').removeAttr("disabled");
+                            $('#btn_SaveAgain').removeAttr("disabled");
+                        }
+                    }
+                })
+            }else
+            {
+                $('#idprodType2').text("");
+                $('#btn_Save').removeAttr("disabled");
+                $('#btn_SaveAgain').removeAttr("disabled");
+            }
+            
+        });
+        $('#id_prodType3').blur(function () {
+            if ($("#id_prodType3").val().trim() != "")
+            {
+                $.ajax({
+                    url: '@Url.Action("GetProductType", "Main")',
+                    data: JSON.stringify({ "CategoryType": "3", "ProductTypeId": $("#id_prodType3").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            //alert("主鍵存在!");
+                            $('#idprodType3').text(serverData[1]);
+                            $('#btn_Save').attr('disabled', true);
+                            $('#btn_SaveAgain').attr('disabled', true);
+                            //$('#id_brand').focus();
+                        } else {
+                            $('#idprodType3').text(serverData[1]);
+                            $('#btn_Save').removeAttr("disabled");
+                            $('#btn_SaveAgain').removeAttr("disabled");
+                        }
+                    }
+                })
+            }else
+            {
+                $('#idprodType3').text("");
+                $('#btn_Save').removeAttr("disabled");
+                $('#btn_SaveAgain').removeAttr("disabled");
+            }
+            
+        });
+        $('#id_prodType4').blur(function () {
+            if ($("#id_prodType4").val().trim() != "")
+            {
+                $.ajax({
+                    url: '@Url.Action("GetProductType", "Main")',
+                    data: JSON.stringify({ "CategoryType": "4", "ProductTypeId": $("#id_prodType4").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            //alert("主鍵存在!");
+                            $('#idprodType4').text(serverData[1]);
+                            $('#btn_Save').attr('disabled', true);
+                            $('#btn_SaveAgain').attr('disabled', true);
+                            //$('#id_brand').focus();
+                        } else {
+                            $('#idprodType4').text(serverData[1]);
+                            $('#btn_Save').removeAttr("disabled");
+                            $('#btn_SaveAgain').removeAttr("disabled");
+                        }
+                    }
+                })
+            }else
+            {
+                $('#idprodType4').text("");
+                $('#btn_Save').removeAttr("disabled");
+                $('#btn_SaveAgain').removeAttr("disabled");
+            }
+            
+        });
+
+        $('#id_vender').blur(function () {
+            if ($("#id_vender").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Action("GetVendorName", "Main")',
+                    data: JSON.stringify({ "VendorId": $("#id_vender").val().trim() }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var serverData = data.split('-');
+                        if (serverData[0] == "NO") {
+                            //alert("主鍵存在!");
+                            $('#idvender').text(serverData[1]);
+                            $('#btn_Save').attr('disabled', true);
+                            $('#btn_SaveAgain').attr('disabled', true);
+                            //$('#id_brand').focus();
+                        } else {
+                            $('#idvender').text(serverData[1]);
+                            $('#btn_Save').removeAttr("disabled");
+                            $('#btn_SaveAgain').removeAttr("disabled");
+                        }
+                    }
+                })
+            } else {
+                $('#idprodType4').text("");
+                $('#btn_Save').removeAttr("disabled");
+                $('#btn_SaveAgain').removeAttr("disabled");
+            }
+
+        });
+    })
+</script>
+<h2>品號基本資料維護</h2>
+<hr />
+
+<div class="container">
+    <form id="from-Product" method="post" action="@Url.Action("CUR", "Main")">
+        <div class="form-horizontal cru-background">
+            <div class="form-group">
+                <label for="id_productId" class="col-sm-1 control-label">品號</label>
+                <div class="col-sm-5">
+                    @if (ViewBag.Type == "Edit" || ViewBag.Type == "Details")
+                    {
+                        <input type="text" class="form-control" name="productId" value="@ViewBag.ProductId" autocomplete="off" maxlength="40" readonly />
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" id="id_productId" name="productId" autocomplete="off" maxlength="40" value="@ViewBag.ProductId"/>
+                    }
+
+                    <span style='color:red' id="isproductid"></span>
+                </div>
+                <label for="id_unit" class="col-sm-1 control-label">單位</label>
+                <div class="col-sm-5">
+                    @if (ViewBag.Type == "Details")
+                    {
+                        <input type="text" class="form-control" id="id_unit" name="unit" maxlength="6" value="@ViewBag.Unit" readonly />
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" id="id_unit" name="unit" maxlength="6" value="@ViewBag.Unit" />
+                    }
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_productName" class="col-sm-1 control-label">品名</label>
+                <div class="col-sm-5">
+                    @if (ViewBag.Type == "Details")
+                    {
+                        <input type="text" class="form-control" id="id_productName" name="productName" maxlength="120" value="@ViewBag.ProductName" readonly/>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" id="id_productName" name="productName" maxlength="120" value="@ViewBag.ProductName" />
+                    }
+                    
+                </div>
+                <label for="id_brand" class="col-sm-1 control-label">品牌</label>
+                <div class="col-sm-5">
+                    @if (ViewBag.Type == "Details")
+                    {
+                        <input type="text" class="form-control" id="id_brand" name="brand" style="width: 200px; display: inline;" maxlength="10" value="@ViewBag.BrandId" readonly />
+                        <button type="button" class="btn btn-default" style="display:inline;" disabled><i class="fa fa-hand-pointer-o"></i></button>
+                        <span style="display:inline;" id="brandname">@ViewBag.BrandName</span>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" id="id_brand" name="brand" style="width: 200px; display: inline;" maxlength="10" value="@ViewBag.BrandId" />
+                        <button type="button" class="btn btn-default" style="display:inline;"><i class="fa fa-hand-pointer-o"></i></button>
+                        <span style="display:inline;" id="brandname">@ViewBag.BrandName</span>
+                    }
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_productSpec" class="col-sm-1 control-label">規格</label>
+                <div class="col-sm-5">
+                    @if (ViewBag.Type == "Details")
+                    {
+                        <input type="text" class="form-control" id="id_productSpec" name="productSpec" maxlength="120" value="@ViewBag.Specification" readonly/>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" id="id_productSpec" name="productSpec" maxlength="120" value="@ViewBag.Specification" />
+                    }
+                    
+                </div>
+                <label for="id_vender" class="col-sm-1 control-label">供應商</label>
+                <div class="col-sm-5">
+                    @if (ViewBag.Type == "Details")
+                    {
+                        <input type="text" class="form-control" id="id_vender" name="vender" style="width: 200px; display: inline;" maxlength="10" value="@ViewBag.VendorId" readonly/>
+                        <button type="button" class="btn btn-default" style="display:inline;" disabled><i class="fa fa-hand-pointer-o"></i></button>
+                        <span style="display:inline;" id="idvender">@ViewBag.VendorName</span>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" id="id_vender" name="vender" style="width: 200px; display: inline;" maxlength="10" value="@ViewBag.VendorId" />
+                        <button type="button" class="btn btn-default" style="display:inline;"><i class="fa fa-hand-pointer-o"></i></button>
+                        <span style="display:inline;" id="idvender">@ViewBag.VendorName</span>
+                    }
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_prodType1" class="col-sm-1 control-label">規格一</label>
+                <div class="col-sm-5">
+                    @if (ViewBag.Type == "Details")
+                    {
+                        <input type="text" class="form-control" id="id_prodType1" name="prodType1" style="width: 200px; display: inline;" maxlength="6" value="@ViewBag.ProductTypeId1" readonly/>
+                        <button type="button" class="btn btn-default" style="display:inline;" disabled><i class="fa fa-hand-pointer-o"></i></button>
+                        <span style="display:inline;" id="idprodType1">@ViewBag.ProductTypeId1Name</span>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" id="id_prodType1" name="prodType1" style="width: 200px; display: inline;" maxlength="6" value="@ViewBag.ProductTypeId1" />
+                        <button type="button" class="btn btn-default" style="display:inline;"><i class="fa fa-hand-pointer-o"></i></button>
+                        <span style="display:inline;" id="idprodType1">@ViewBag.ProductTypeId1Name</span>
+                    }
+                    
+                </div>
+                <label for="id_prodType3" class="col-sm-1 control-label">規格三</label>
+                <div class="col-sm-5">
+                    @if (ViewBag.Type == "Details")
+                    {
+                        <input type="text" class="form-control" id="id_prodType3" name="prodType3" style="width: 200px; display: inline;" maxlength="6" value="@ViewBag.ProductTypeId3" readonly/>
+                        <button type="button" class="btn btn-default" style="display:inline;" disabled><i class="fa fa-hand-pointer-o"></i></button>
+                        <span style="display:inline;" id="idprodType3">@ViewBag.ProductTypeId3Name</span>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" id="id_prodType3" name="prodType3" style="width: 200px; display: inline;" maxlength="6" value="@ViewBag.ProductTypeId3" />
+                        <button type="button" class="btn btn-default" style="display:inline;"><i class="fa fa-hand-pointer-o"></i></button>
+                        <span style="display:inline;" id="idprodType3">@ViewBag.ProductTypeId3Name</span>
+                    }
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_prodType2" class="col-sm-1 control-label">規格二</label>
+                <div class="col-sm-5">
+                    @if (ViewBag.Type == "Details")
+                    {
+                        <input type="text" class="form-control" id="id_prodType2" name="prodType2" style="width: 200px; display: inline;" maxlength="6" value="@ViewBag.ProductTypeId2" readonly/>
+                        <button type="button" class="btn btn-default" style="display:inline;" disabled><i class="fa fa-hand-pointer-o"></i></button>
+                        <span style="display:inline;" id="idprodType2">@ViewBag.ProductTypeId2Name</span>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" id="id_prodType2" name="prodType2" style="width: 200px; display: inline;" maxlength="6" value="@ViewBag.ProductTypeId2" />
+                        <button type="button" class="btn btn-default" style="display:inline;"><i class="fa fa-hand-pointer-o"></i></button>
+                        <span style="display:inline;" id="idprodType2">@ViewBag.ProductTypeId2Name</span>
+                    }
+                    
+                </div>
+                <label for="id_prodType4" class="col-sm-1 control-label">規格四</label>
+                <div class="col-sm-5">
+                    @if (ViewBag.Type == "Details")
+                    {
+                        <input type="text" class="form-control" id="id_prodType4" name="prodType4" style="width: 200px; display: inline;" maxlength="6" value="@ViewBag.ProductTypeId4" readonly/>
+                        <button type="button" class="btn btn-default" style="display:inline;" disabled><i class="fa fa-hand-pointer-o"></i></button>
+                        <span style="display:inline;" id="idprodType4">@ViewBag.ProductTypeId4Name</span>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" id="id_prodType4" name="prodType4" style="width: 200px; display: inline;" maxlength="6" value="@ViewBag.ProductTypeId4" />
+                        <button type="button" class="btn btn-default" style="display:inline;"><i class="fa fa-hand-pointer-o"></i></button>
+                        <span style="display:inline;" id="idprodType4">@ViewBag.ProductTypeId4Name</span>
+                    }
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_remark" class="col-sm-1 control-label">商品描述</label>
+                <div class="col-sm-11">
+                    @if (ViewBag.Type == "Details")
+                    {
+                        <textarea class="form-control" id="id_remark" name="remark" cols="40" rows="5" maxlength="255" readonly>@ViewBag.Explanation</textarea>
+                    }
+                    else
+                    {
+                        <textarea class="form-control" id="id_remark" name="remark" cols="40" rows="5" maxlength="255">@ViewBag.Explanation</textarea>
+                    }
+                    
+                </div>
+            </div>
+            <p style="color: red;">@ViewBag.Msg</p>
+            <p class="text-right">
+                @if (ViewBag.Type == "Edit")
+                {
+                    <button type="submit" class="btn btn-primary" name="action" value="Edit" id="btn_Edit">存檔</button>
+                    <button type="submit" class="btn btn-primary" name="action" value="EditAgain" id="btn_EditAgain">存檔並新增</button>
+                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                }
+                else if (ViewBag.Type == "Details")
+                {
+                    <button type=submit class="btn btn-primary" name="action" value="EditDetails">編輯</button>
+                    <button type=submit class="btn btn-primary" name="action" value="CopyAdd">複製並新增</button>
+                    <a class="btn btn-primary" href="@Url.Action("Delete", "Main", new { ProductId = @ViewBag.ProductId })">刪除</a>
+                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">回列表</a>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-primary" name="action" value="Save" id="btn_Save">存檔</button>
+                    <button type="submit" class="btn btn-primary" name="action" value="SaveAgain" id="btn_SaveAgain">存檔並新增</button>
+                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                }
+
+                
+            </p>
+        </div>
+    </form>
+</div>

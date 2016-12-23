@@ -1,0 +1,188 @@
+﻿@using BusinessLayer.Models;
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.delete_Currency').on('click', function () {
+            if (confirm("是否確定刪除" + $(this).parent().parent().children('td').eq(2).find($("a")).html() + "幣別？")) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+    })
+</script>
+
+<section class="content-header">
+    <h1>交易幣別資料維護</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    @using (Ajax.BeginForm("Index", "Main", new AjaxOptions {HttpMethod = "POST"}))
+    {
+        <div class="toolbar-container">
+            <button type="submit" class="btn btn-primary" id="btnAdd" name="action" value="btnAdd" aria-label="Left Align">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
+            </button>
+            <button type="submit" class="btn btn-primary" id="btnExport" name="action" value="btnExport" aria-label="Left Align">
+                <span class="glyphicon glyphicon-export" aria-hidden="true"></span> 匯出
+            </button>
+        </div>
+    }
+
+    <div class="basic-search-container form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-24">
+                <label for="id_currencyId" class="control-label">幣別</label>
+                @using (Ajax.BeginForm("Index", "Main", new AjaxOptions {HttpMethod = "POST"}, new {@style = "display: inline-block;"}))
+                {
+                    <select class="form-control" style="width: 100px; display: inline;" id="selectCondition" name="selectCondition">
+                        @if (ViewBag.SelectCondition == ">")
+                        {
+                            <option value="=">=</option>
+                            <option value=">" selected="selected">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>"><></option>
+                            <option value="like1">%like</option>
+                            <option value="like2">like%</option>
+                            <option value="like3">%like%</option>
+                        }
+                        else if (ViewBag.SelectCondition == ">=")
+                        {
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=" selected="selected">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>"><></option>
+                            <option value="like1">%like</option>
+                            <option value="like2">like%</option>
+                            <option value="like3">%like%</option>
+                        }
+                        else if (ViewBag.SelectCondition == "<")
+                        {
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<" selected="selected">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>"><></option>
+                            <option value="like1">%like</option>
+                            <option value="like2">like%</option>
+                            <option value="like3">%like%</option>
+                        }
+                        else if (ViewBag.SelectCondition == "<=")
+                        {
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=" selected="selected">&lt;=</option>
+                            <option value="<>"><></option>
+                            <option value="like1">%like</option>
+                            <option value="like2">like%</option>
+                            <option value="like3">%like%</option>
+                        }
+                        else if (ViewBag.SelectCondition == "<>")
+                        {
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>" selected="selected"><></option>
+                            <option value="like1">%like</option>
+                            <option value="like2">like%</option>
+                            <option value="like3">%like%</option>
+                        }
+                        else if (ViewBag.SelectCondition == "like1")
+                        {
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>"><></option>
+                            <option value="like1" selected="selected">%like</option>
+                            <option value="like2">like%</option>
+                            <option value="like3">%like%</option>
+                        }
+                        else if (ViewBag.SelectCondition == "like2")
+                        {
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>"><></option>
+                            <option value="like1">%like</option>
+                            <option value="like2" selected="selected">like%</option>
+                            <option value="like3">%like%</option>
+                        }
+                        else if (ViewBag.SelectCondition == "like3")
+                        {
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>"><></option>
+                            <option value="like1">%like</option>
+                            <option value="like2">like%</option>
+                            <option value="like3" selected="selected">%like%</option>
+                        }
+                        else
+                        {
+                            <option value="=" selected="selected">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>"><></option>
+                            <option value="like1">%like</option>
+                            <option value="like2">like%</option>
+                            <option value="like3">%like%</option>
+                        }
+                    </select>
+                    <input type="text" class="form-control" id="id_currencyId" name="currencyId" maxlength="4" value="@ViewBag.CurrencyId" style="display: inline-block; width: 200px;"/>
+                    <button type="submit" class="btn btn-default" id="btnSearch" name="action" value="btnSearch" aria-label="Left Align" style="display: inline-block;">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                }
+                <button class="btn btn-link" aria-label="Left Align" data-toggle="modal" data-target=".advanced-search-modal" style="display: inline-block;">
+                    進階查詢
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="divGrid">
+        @{
+            var webGrid = new WebGrid(source: (IEnumerable<Currency>) ViewData["DisplayData"], canPage: false, defaultSort: "CurrencyId", canSort: true, ajaxUpdateContainerId: "divGrid");
+        }
+
+        @webGrid.GetHtml(
+
+            tableStyle: "table table-striped table-hover rms-table cmsi07-table",
+            mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+            columns: webGrid.Columns(
+                webGrid.Column(columnName: "", header: "動作", style: "column-two-actions",
+                    format: @<text>
+                                @Html.ActionLink("編輯", "CUR", "Main", new {id = item.CurrencyId, type = "Edit"}, null)
+                                @Html.ActionLink("刪除", "Delete", "Main", new {id = item.CurrencyId}, new {@class = "delete_Currency"})
+                             </text>),
+                webGrid.Column(columnName: "CurrencyId", header: "幣別", style: "col-currency"),
+                webGrid.Column(columnName: "CurrencyName", header: "幣別名稱", style: "col-currency-name",
+                    format: @<text>
+                                <a href="@Url.Action("CUR", "Main", new {id = item.CurrencyId, type = "Detail"}, null)">@item.CurrencyName</a>
+                             </text>),
+                webGrid.Column(columnName: "EffectiveDate", header: "生效日期", style: "col-available-date"),
+                webGrid.Column(columnName: "ExchangeRate", header: "匯率")
+                )
+            )
+    </div>
+</section>
+<input type="hidden" title="module" value="CMSI07" />
+    @RenderPage("~/Areas/CMSI07/Views/Shared/advanced-search-modal.cshtml")
+

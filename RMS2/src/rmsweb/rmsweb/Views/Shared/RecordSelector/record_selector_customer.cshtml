@@ -1,0 +1,143 @@
+﻿<style type="text/css">
+    .record-selector-customer-modal table .actioncolumn {
+        width: 100px;
+    }
+
+    .record-selector-customer-modal table .CustomerIdType {
+        width: 150px;
+    }
+
+    .record-selector-customer-modal table .CustomerNameType {
+        width: 200px;
+    }
+
+    .record-selector-customer-modal table .CustomerTypeType {
+        width: 150px;
+    }
+
+    .record-selector-customer-modal table .ContactType {
+        width: 150px;
+    }
+
+    .record-selector-customer-modal table .TelNoType {
+        width: 150px;
+    }
+
+    .record-selector-customer-modal table .SalesType {
+        width: 150px;
+    }
+</style>
+<div class='modal fade record-selector-customer-modal' tabindex='-1' role='dialog' id="modal-customer" aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title'>客戶查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <select class="form-control" style="width: 200px; display: inline;" name="addCustomer_Col" id="addCustomer_Col">
+                            <option value="CustomerId">客戶代號</option>
+                            <option value="CustomerName">客戶簡稱</option>
+                            <option value="CustomerFName">客戶全名</option>
+                            <option value="CurrencyId">交易幣別</option>
+                            <option value="TaxRate">營業稅率</option>
+
+                            <option value="CustomerType">客戶型態</option>
+                            <option value="Sales">業務員</option>
+                            <option value="Contact">聯絡人</option>
+                            <option value="TelNo">電話</option>
+                            <option value="FaxNo">傳真</option>
+                            <option value="Email">E-mail</option>
+                            <option value="Remark">備註</option>
+                        </select>
+
+                        <select class="form-control" style="width: 100px; display: inline;" name="addCustomer_Condition" id="addCustomer_Condition">
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>">&lt;&gt;</option>
+                            <option value="like%">like%</option>
+                            <option value="%like">%like</option>
+                            <option value="%like%">%like%</option>
+                        </select>
+                        <input type="text" class="form-control" id="addCustomer_conditionValue" name="addCustomer_conditionValue" style="width: 200px; display: inline;" />
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" id="btncustomerInfo" style="display: inline;" ng-click="SearchcustomerList()">查詢</button>
+                    </div>
+                </div>
+            </div>
+                <div id="divCustGrid">
+                    <table class="table table-striped table-hover table-condensed table-header-fixed" data-swhgajax="true" data-swhgcontainer="divCustGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th class="actioncolumn">
+                                    選擇
+                                </th>
+                                <th class="CustomerIdType">
+                                    客戶代號
+                                </th>
+                                <th class="CustomerNameType">
+                                    客戶簡稱
+                                </th>
+                                <th class="CustomerTypeType">
+                                    客戶形態
+                                </th>
+                                <th class="ContactType">
+                                    聯絡人
+                                </th>
+                                <th class="TelNoType">
+                                    電話
+                                </th>
+                                <th class="SalesType">
+                                    業務員
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in customeritems">
+                                <td class='column-one-action'><a data-dismiss='modal' onclick='SelectCustomer(this)' href="#">選擇</a></td>
+                                <td class='CustomerIdType'>{{ item.CustomerId }}</td>
+                                <td class='CustomerNameType'>{{ item.CustomerName }}</td>
+                                <td class='CustomerTypeType'>{{ item.CustomerType }}</td>
+                                <td class='ContactType'>{{ item.Contact }}</td>
+                                <td class='TelNoType'>{{ item.TelNo }}</td>
+                                <td class='SalesType'>{{ item.SalesName }}</td>
+                                <td><input type='hidden' class='SalesIDType' name='sales' value='{{ item.Sales }}'></td>
+                                <td><input type='hidden' class='CurrencyIdType' name='version' value='{{ item.CurrencyId }}'></td>
+                                <td><input type='hidden' class='TaxRateType' name='version' value='{{ item.TaxRate }}'></td>
+                                <td><input type='hidden' class='FaxNoType' name='version' value='{{ item.FaxNo }}'></td>
+                                <td><input type='hidden' class='EmailType' name='version' value='{{ item.Email }}'></td>
+                                <td><input type='hidden' class='AddressSNameType' name='version' value='{{ item.AddressSName }}'></td>
+                                <td><input type='hidden' class='AddressType' name='version' value='{{ item.Address }}'></td>
+                                <td><input type='hidden' class='RemarkType' name='version' value='{{ item.Remark }}'></td>
+                                <td><input type='hidden' class='CustomerFNameType' name='version' value='{{ item.CustomerFName }}'></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <input type="hidden" id="CustPage" name="CustPage" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

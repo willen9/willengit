@@ -1,0 +1,133 @@
+﻿<style type="text/css">
+    .record-selector-ServiceArrangeSerial-modal table .actioncolumn {
+        width: 50px;
+    }
+
+    .record-selector-ServiceArrangeSerial-modal table .ProductNoType {
+        width: 100px;
+    }
+
+    .record-selector-WarrantySerialNo-modal table .ProductNameType {
+        width: 100px;
+    }
+
+    .record-selector-WarrantySerialNo-modal table .SerialNoType {
+        width: 100px;
+    }
+    
+    .record-selector-WarrantySerialNo-modal table .ChangeDateType {
+        width: 100px;
+    }
+
+    .record-selector-WarrantySerialNo-modal table .TargetIdType {
+        width: 100px;
+    }
+
+    .record-selector-WarrantySerialNo-modal table .TargetNameType {
+        width: 100px;
+    }
+
+    .record-selector-WarrantySerialNo-modal table .WarrantySDateType {
+        width: 100px;
+    }
+
+    .record-selector-WarrantySerialNo-modal table .WarrantyEDateType {
+        width: 100px;
+    }
+
+    .record-selector-WarrantySerialNo-modal table .WarrantyTypeType {
+        width: 100px;
+    }
+</style>
+<div class='modal fade record-selector-WarrantySerialNo-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title'>序號查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <select class="form-control" style="width: 200px; display: inline;" name="addWarrantySerialNoCol" id="addWarrantySerialNoCol">
+                            <option value="d.ProductNo">品號</option>
+                            <option value="SerialNo">序號</option>
+                            <option value="ChangeDate">異動日期</option>
+                            <option value="ChangeOrderType">異動單別</option>
+                            <option value="ChangeOrderNo">異動單號</option>
+                            <option value="ChangeOrderItemId">異動項次</option>
+                            <option value="TargetId">對象代號</option>
+                            <option value="TargetName">對象簡稱</option>
+                            <option value="DataDate">資料日期</option>
+                            <option value="DataTime">資料時間</option>
+                            <option value="WarrantyPeriod">保固期限</option>
+                            <option value="WarrantySDate">保固起日</option>
+                            <option value="WarrantyEDate">保固迄日</option>
+                            <option value="WarrantyType">保固類型</option>
+                            <option value="Remark">備註</option>
+                        </select>
+
+                        <select class="form-control" style="width: 100px; display: inline;" name="addWarrantySerialNoCondition" id="addWarrantySerialNoCondition">
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>">&lt;&gt;</option>
+                            <option value="like%">like%</option>
+                            <option value="%like">%like</option>
+                            <option value="%like%">%like%</option>
+                        </select>
+                        <input type="text" class="form-control" id="addWarrantySerialNoconditionValue" name="addWarrantySerialNoconditionValue" style="width: 200px; display: inline;" />
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" id="btnWarrantySerialNo" style="display: inline;">查詢</button>
+                    </div>
+                </div>
+            </div>
+                <div id="divWarrantySerialNoGrid" style="height: 500px;overflow-y: auto;">
+                    <table class="table table-striped table-hover table-condensed" data-swhgajax="true" data-swhgcontainer="divWarrantySerialNoGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                    品號
+                                </th>
+                                <th scope="col">
+                                    品名
+                                </th>
+                                <th scope="col">
+                                    序號
+                                </th>
+                                <th scope="col">
+                                    異動日期
+                                </th>
+                                <th scope="col">
+                                    對象代號
+                                </th>
+                                <th scope="col">
+                                    對象簡稱
+                                </th>
+                                <th scope="col">
+                                    保固期限
+                                </th>
+                                <th scope="col">
+                                    保固起日
+                                </th>
+                                <th scope="col">
+                                    保固迄日
+                                </th>
+                                <th scope="col">
+                                    保固類型
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <input type="hidden" id="WarrantySerialNoPage" name="WarrantySerialNoPage" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

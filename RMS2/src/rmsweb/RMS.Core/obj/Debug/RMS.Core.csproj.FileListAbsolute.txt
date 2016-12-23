@@ -1,0 +1,4 @@
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\RMS.Core\bin\Debug\RMS.Core.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\RMS.Core\bin\Debug\RMS.Core.pdb
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\RMS.Core\obj\Debug\RMS.Core.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\RMS.Core\obj\Debug\RMS.Core.pdb

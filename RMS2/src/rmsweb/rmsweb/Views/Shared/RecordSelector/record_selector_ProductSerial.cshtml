@@ -1,0 +1,130 @@
+﻿<style type="text/css">
+    .record-selector-ProductSerial-modal table .actioncolumn {
+        width: 50px;
+    }
+
+    .record-selector-ProductSerial-modal table .ContractTypeType {
+        width: 100px;
+    }
+
+    .record-selector-ProductSerial-modal table .ContractNoType {
+        width: 100px;
+    }
+
+    .record-selector-ProductSerial-modal table .ItemIdType {
+        width: 100px;
+    }
+
+    .record-selector-ProductSerial-modal table .ProductNoType {
+        width: 100px;
+    }
+
+    .record-selector-ProductSerial-modal table .ProductNameType {
+        width: 100px;
+    }
+
+    .record-selector-ProductSerial-modal table .SerialNoType {
+        width: 100px;
+    }
+
+    .record-selector-ProductSerial-modal table .RoutineServiceFreqType {
+        width: 100px;
+    }
+
+    .record-selector-ProductSerial-modal table .WarrantyPeriodType {
+        width: 100px;
+    }
+
+    .record-selector-ProductSerial-modal table .WarrantySDateType {
+        width: 100px;
+    }
+
+    .record-selector-ProductSerial-modal table .WarrantyEDateType {
+        width: 100px;
+    }
+</style>
+<div class='modal fade record-selector-ProductSerial-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title'>品名查詢</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-inline">
+                    <div class="form-group">
+                        @*<label for="txtProductNoSerial" class="control-label">品號</label>
+            <input type="text" class="form-control" id="txtProductNoSerial" name="txtProductNoSerial" style="width: 200px; display: inline;" />*@
+                        <select class="form-control" style="width: 200px; display: inline;" name="addCol" id="addCol">
+                            <option value="ContractType">合約單別</option>
+                            <option value="ContractNo">合約單號</option>
+                            <option value="ItemId">項次</option>
+                            <option value="ProductNo">品號</option>
+                            <option value="SerialNo">序號</option>
+                            <option value="IsClosed">結案碼</option>
+                        </select>
+
+                        <select class="form-control" style="width: 100px; display: inline;" name="addCondition" id="addCondition">
+                            <option value="=">=</option>
+                            <option value=">">&gt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<">&lt;</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="<>">&lt;&gt;</option>
+                            <option value="like%">like%</option>
+                            <option value="%like">%like</option>
+                            <option value="%like%">%like%</option>
+                        </select>
+                        <input type="text" class="form-control" id="addconditionValue" name="addconditionValue" style="width: 200px; display: inline;" />
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default" id="btnSelectProductSerialNo" style="display: inline;">查詢</button>
+                    </div>
+                </div>
+            </div>
+                <div id="divProductSerialGrid" style="height: 500px;overflow-y: auto;">
+                    <table class="table table-striped table-hover table-condensed" data-swhgajax="true" data-swhgcontainer="divProductSerialGrid" data-swhgcallback="">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                </th>
+                                <th scope="col">
+                                    合約單別
+                                </th>
+                                <th scope="col">
+                                    合約單號
+                                </th>
+                                <th scope="col">
+                                    項次
+                                </th>
+                                <th scope="col">
+                                    品號
+                                </th>
+                                <th scope="col">
+                                    品名
+                                </th>
+                                <th scope="col">
+                                    序號
+                                </th>
+                                <th scope="col">
+                                    定期保養
+                                </th>
+                                <th scope="col">
+                                    保固期限
+                                </th>
+                                <th scope="col">
+                                    保固起日
+                                </th>
+                                <th scope="col">
+                                    保固迄日
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <input type="hidden" id="ProductSerialPage" name="ProductSerialPage" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

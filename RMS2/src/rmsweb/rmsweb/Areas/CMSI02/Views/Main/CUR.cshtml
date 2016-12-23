@@ -1,0 +1,178 @@
+﻿<script type="text/javascript">
+    $(document).ready(function() {
+        $("input[type='text']").keypress(function(event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                var tabIndex = $(this).attr("tabindex");
+                if (!isNaN(tabIndex)) {
+                    $("[tabindex='" + (parseInt(tabIndex) + 1) + "']").focus();
+                    $("[tabindex='" + (parseInt(tabIndex) + 1) + "']").select();
+                }
+            }
+        });
+
+        $('#defaultForm').bootstrapValidator({
+            ////        live: 'disabled',
+            //message: 'This value is not valid',
+            //feedbackIcons: {
+            //    valid: 'glyphicon glyphicon-ok',
+            //    invalid: 'glyphicon glyphicon-remove',
+            //    validating: 'glyphicon glyphicon-refresh'
+            //},
+            fields: {
+                deptid: {
+                    validators: {
+                        notEmpty: {
+                            message: '部門代號不能為空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 6,
+                            message: '部門代號長度為1~6'
+                        },
+                        callback: {
+                            message: '部門代號已存在！',
+                            callback: function(value, validator) {
+                                var res = true;
+                                if (document.getElementById("id_deptid").readOnly == true) {
+                                    return res;
+                                }
+                                if (value.length > 0) {
+                                    $.ajax({
+                                        //url: '/cmsi04/curid',
+                                        url: '@Url.Action("CURMID", "Main")',
+                                        data: JSON.stringify({ "deptid": value }),
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function(data) {
+                                            res = data;
+                                        }
+                                    });
+                                }
+                                return res;
+                            }
+                        }
+}
+                },
+                deptname: {
+                    validators: {
+                        notEmpty: {
+                            message: '部門名稱不能為空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 40,
+                            message: '部門名稱長度為1~40'
+                        }
+                    }
+                },
+                remark: {
+                    validators: {
+
+                        stringLength: {
+                            min: 0,
+                            max: 255,
+                            message: '備註最大長度為255'
+                        }
+                    }
+                }
+}
+        });
+
+        $("#btnDelete").click(function () {
+            if (confirm("是否確定刪除" + $("#id_deptname").val() + "部門？")) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+    })
+</script>
+<section class="content-header">
+    <h1>部門基本資料維護</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            @using (Ajax.BeginForm("CUR", "Main", new AjaxOptions { HttpMethod = "POST" }, new { id = "defaultForm" }))
+            {
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_deptid" class="col-sm-3 control-label">部門代號</label>
+                        <div class="col-sm-21">
+                            @if (ViewBag.Type == "New")
+                            {
+                                <input type="text" class="form-control" id="id_deptid" name="deptid" value="@ViewBag.ID" maxlength="6" tabindex="1" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_deptid" name="deptid" value="@ViewBag.ID" maxlength="6" readonly="readonly" tabindex="1" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_deptname" class="col-sm-3 control-label">部門名稱</label>
+                        <div class="col-sm-21">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="id_deptname" name="deptname" value="@ViewBag.Name" maxlength="40" readonly="readonly" tabindex="2" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_deptname" name="deptname" value="@ViewBag.Name" maxlength="40" tabindex="2" />
+                            }
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_remark" class="col-sm-3 control-label">備註</label>
+                        <div class="col-sm-21">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <textarea class="form-control" id="id_remark" name="remark" cols="40" rows="5" readonly="readonly" maxlength="255" tabindex="3">@ViewBag.Remark</textarea>
+                            }
+                            else
+                            {
+                                <textarea class="form-control" id="id_remark" name="remark" cols="40" rows="5" maxlength="255" tabindex="3">@ViewBag.Remark</textarea>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+                <div class="text-right">
+                    @if (ViewBag.Type == "New")
+                {
+                        <button type="submit" class="btn btn-primary" name="action" value="btnSaveNew" tabindex="4">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i> 存檔
+                        </button>
+                        <button type="submit" class="btn btn-primary" name="action" value="btnNextNew" tabindex="5">存檔並新增</button>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="6">取消</a>
+                    }
+                    else if (ViewBag.Type == "Edit")
+                    {
+                        <button type="submit" class="btn btn-primary" name="action" value="btnSaveEdit" tabindex="4">
+                            <i class="fa fa-floppy-o" aria-hidden="true"></i> 存檔
+                        </button>
+                        <button type="submit" class="btn btn-primary" name="action" value="btnNextEdit" tabindex="5">存檔並新增</button>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="6">取消</a>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary" name="action" value="btnEdit" tabindex="4">編輯</button>
+                        @*<button type="submit" class="btn btn-primary" name="action" value="btnAdd" tabindex="5">複製并新增</button>*@
+                        <button type="submit" class="btn btn-primary" id="btnDelete" name="action" value="btnDelete" tabindex="6">刪除</button>
+                                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="7">返回列表</a>
+                    }
+                </div>
+            }            
+        </div>
+    </div>    
+</section>
+<input type="hidden" title="module" value="CMSI02" />

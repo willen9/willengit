@@ -1,0 +1,89 @@
+﻿<script type="text/javascript">
+    function checkSure(from) {
+        if ($("#id_WarrantyPeriod").val() == '') {
+            alert("請輸入保固期限!");
+            return false;
+        }
+
+        if ($("#id_WarrantyPeriod").val() != "") {
+            if (isNaN($("#id_WarrantyPeriod").val())) {
+                alert("保固期限請輸入數字!");
+                return false;
+            }
+        }
+
+        if (parseInt($("#id_WarrantyPeriod").val()) == 0)
+        {
+            alert("保固期限必須大於0!");
+            return false;
+        }
+
+        return true;
+    }
+
+    function checkWarranty() {
+        if ($("#id_WarrantyPeriod").val() == '') {
+            alert("請輸入保固期限!");
+            return;
+        }
+
+        if ($("#id_WarrantyPeriod").val() != "") {
+            if (isNaN($("#id_WarrantyPeriod").val())) {
+                alert("保固期限請輸入數字!");
+                return;
+            }
+        }
+
+        if (parseInt($("#id_WarrantyPeriod").val()) == 0) {
+            alert("保固期限必須大於0!");
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("checkSure", "Main")',
+            data: $('#from-PurchasedSerial').serialize(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    window.location.href = '@Url.Action("Index", "Main")';
+                }
+            }
+        })
+    };
+</script>
+<div class='modal fade warranty-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>確認</h4>
+            </div>
+                <div class='modal-body'>
+                    <div class="form-group">
+                        <label for="id_WarrantyPeriod" class="control-label">保固期限</label>
+                        <input type="text" class="form-control" id="id_WarrantyPeriod" name="WarrantyPeriod" style="width: 200px; display: inline;" onkeydown="onlyNumber();" maxlength="3" />
+                    </div>
+                    <div class="form-group">
+                        <label for="id_WarrantyRemark" class="control-label">備註</label>
+                        <textarea class="form-control" id="id_WarrantyRemark" name="WarrantyRemark" cols="40" rows="5" maxlength="255" tabindex="10"></textarea>
+                    </div>
+                </div>
+                <div class='modal-footer'>
+                    @if (@ViewBag.Type == "Details")
+                    {
+                        <button type="button" class="btn btn-default" name="action" value="btnWarranty" onclick="checkWarranty()">確定</button>
+                    }
+                    @if (@ViewBag.Type == "Index")
+                    {
+                        <button type="submit" class="btn btn-default" name="action" value="btnWarranty" onclick="return checkSure(this)">確定</button>
+                    }
+
+                    <button type='button' class='btn btn-default' data-dismiss='modal'>取消</button>
+                </div>
+        </div>
+    </div>
+</div>

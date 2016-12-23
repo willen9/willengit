@@ -1,0 +1,57 @@
+﻿
+<div class='modal fade BOM_D-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>商品資料</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="id_BOM_DComponentNo" class="control-label col-sm-4">元件品號</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_BOM_DComponentNo" name="BOM_DComponentNo" maxlength="40" style="width: 90%; display: inline;" tabindex="6" />
+                            <button type="button" class="btn btn-default" id="btnComponentNo" aria-label="Left Align" style="display: inline;" tabindex="7">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_BOM_DProductName" class="control-label col-sm-4">品名</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_BOM_DProductName" name="BOM_DProductName" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_BOM_DSpecification" class="control-label col-sm-4">規格</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_BOM_DSpecification" name="BOM_DSpecification" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_BOM_DUnit" class="control-label col-sm-4">單位</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_BOM_DUnit" name="BOM_DUnit" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_BOM_DQTY" class="control-label col-sm-4">組成用量</label>
+                        <div class="col-sm-20">
+                            <input type="text" class="form-control" id="id_BOM_DQTY" name="BOM_DQTY" maxlength="12" onblur="if(isNaN(this.value))this.value=''" tabindex="8" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_BOM_DRemark" class="control-label col-sm-4">備註</label>
+                        <div class="col-sm-20">
+                            <textarea class="form-control" id="id_BOM_DRemark" name="id_BOM_DRemark" cols="40" rows="5" maxlength="255" tabindex="9"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='modal-footer'>
+                <button type="button" class="btn btn-default" name="action" value="btnAllot" onclick="check()" tabindex="10">確定</button>
+                <button type='button' class='btn btn-default' data-dismiss='modal' tabindex="11">取消</button>
+            </div>
+        </div>
+    </div>
+</div>

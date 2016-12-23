@@ -1,0 +1,17 @@
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\bin\DataAccessLayer.dll.config
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\bin\DataAccessLayer.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\bin\DataAccessLayer.pdb
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\bin\BusinessLayer.Models.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\bin\DataAccess.MySQL.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\bin\EntityFramework.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\bin\EntityFramework.SqlServer.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\bin\MySql.Data.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\bin\MySql.Data.Entity.EF6.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\bin\System.Linq.Dynamic.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\bin\BusinessLayer.Models.pdb
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\bin\DataAccess.MySQL.pdb
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\bin\EntityFramework.xml
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\bin\EntityFramework.SqlServer.xml
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\obj\Debug\DataAccessLayer.csprojResolveAssemblyReference.cache
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\obj\Debug\DataAccessLayer.dll
+C:\Users\wanghm\Desktop\RMS2\src\rmsweb\DataAccessLayer\obj\Debug\DataAccessLayer.pdb

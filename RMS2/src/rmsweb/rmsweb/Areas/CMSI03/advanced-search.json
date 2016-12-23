@@ -1,0 +1,14 @@
+﻿{
+  "EmployeeId": "員工代號",
+  "EmployeeName": "員工姓名",
+  "TelNo": "電話號碼",
+  "MobilePhone": "手機號碼",
+  "DepartmentId": "部門",
+  "Address": "通訊地址",
+  "Company": "公司別",
+  "UserGroup": "群組",
+  "Creator": "建立人員",
+  "employee.CreateDate": "建立日期",
+  "Modifier": "修改人員",
+  "employee.ModiDate": "修改日期"
+}

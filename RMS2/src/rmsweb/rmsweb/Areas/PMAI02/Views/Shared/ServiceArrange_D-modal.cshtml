@@ -1,0 +1,46 @@
+﻿@using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+{
+<div class='modal fade ServiceArrange_D-modal' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h4 class='modal-title'>支援項目</h4>
+            </div>
+            <div class='modal-body'>
+                <label for="id_ServiceArrange_DItemId" class="control-label">項次</label>
+                <input type="text" class="form-control" id="id_ServiceArrange_DItemId" name="ServiceArrange_DItemId" style="width: 200px; display: inline;" readonly />
+                <br />
+                <label for="id_ServiceArrange_DArrangeMonth" class="control-label">保養月份</label>
+                <input type="text" class="form-control" id="id_ServiceArrange_DArrangeMonth" name="ServiceArrange_DArrangeMonth" style="width: 200px; display: inline;" maxlength="6" />
+                <br />
+                <label for="id_ServiceArrange_DAddressSName" class="control-label">地址簡稱</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="id_ServiceArrange_DAddressSName" name="ServiceArrange_DAddressSName"/>
+                    <span class="input-group-addon" id="btnAddress" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                </div>
+                <br />
+                <label for="id_ServiceArrange_DAddress" class="control-label">地址</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="id_ServiceArrange_DAddress" name="ServiceArrange_DAddress" />
+                </div>
+                <br />
+                <label for="id_ServiceArrange_DIsClosed" class="control-label">結案碼</label>
+                <select class="form-control" style="width: 100px;display:inline;" name="ServiceArrange_DIsClosed" id="id_ServiceArrange_DIsClosed">
+                    <option value="N:未拋轉">N:未拋轉</option>
+                    <option value="Y:已拋轉">Y:已拋轉</option>
+                    <option value="F:指定結案">F:指定結案</option>
+                </select>
+                <br />
+                <label for="id_ServiceArrange_DRemark" class="control-label">備註</label>
+                <textarea class="form-control" id="id_ServiceArrange_DRemark" name="id_ServiceArrange_DRemark" cols="40" rows="5" maxlength="255" tabindex="9"></textarea>
+                <br />
+                
+            </div>
+            <div class='modal-footer'>
+                <button type="button" class="btn btn-default" name="action" value="btnAllot" onclick="checkProductD()" tabindex="10">確定</button>
+                <button type='button' class='btn btn-default' data-dismiss='modal' tabindex="11">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+}

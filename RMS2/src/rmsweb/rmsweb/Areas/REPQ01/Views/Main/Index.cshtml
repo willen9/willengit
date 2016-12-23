@@ -1,0 +1,425 @@
+﻿@section Javascripts
+{
+    <script type="text/javascript" src="@Url.Content("~/bower_components/Chart.js/dist/Chart.bundle.js")"></script>
+}
+<section class="content-header">
+    <h1>基本維修率及覆修率列表</h1>
+</section>
+<section class="content">
+@using (Ajax.BeginForm("Index", "Main", FormMethod.Post, new AjaxOptions { UpdateTargetId = "DivGrid" }))
+{
+    <div class="box box-info basic-search">
+        <div class="box-body">
+            <div class="form-inline">
+                <div class="form-group">
+                    <label for="id-query-product-no">品號</label>
+                    <select class="form-control" name="col01">
+                        <option value="=" >=</option>
+                        <option value=">">&gt;</option>
+                        <option value=">=">&gt;=</option>
+                        <option value="<">&lt;</option>
+                        <option value="<=">&lt;=</option>
+                        <option value="<>">&lt;&gt;</option>
+                        <option value="like1">%like</option>
+                        <option value="like2">like%</option>
+                        <option value="like3">%like%</option>
+                    </select>
+                    <input type="text" class="form-control" id="id-query-product-no" name="ProductNo" value="@ViewBag.ProductNo">
+                </div>
+                <div class="form-group">
+                    <label for="id-query-customer-no">客戶代號</label>
+                    <select class="form-control" name="col02">
+                        <option value="=">=</option>
+                        <option value=">">&gt;</option>
+                        <option value=">=">&gt;=</option>
+                        <option value="<">&lt;</option>
+                        <option value="<=">&lt;=</option>
+                        <option value="<>">&lt;&gt;</option>
+                        <option value="like1">%like</option>
+                        <option value="like2">like%</option>
+                        <option value="like3">%like%</option>
+                    </select>
+                    <input type="text" class="form-control" id="id-query-customer-no" name="CustomerNo" value="@ViewBag.CustomerNo">
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-default" id="btnSearch" name="action" value="btnSearch" aria-label="Left Align" style="display: inline-block;">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-link" aria-label="Left Align" data-toggle="modal" data-target=".advanced-search-modal" style="display: inline-block;">
+                        進階查詢
+                    </button>
+                </div>
+                <input type="hidden" name="strAdvCol" value="@ViewBag.strAdvCol" />
+                <input type="hidden" name="strAdvCondition" value="@ViewBag.strAdvCondition" />
+                <input type="hidden" name="strAdvValue" value="@ViewBag.strAdvValue" />
+            </div>
+        </div>           
+    </div>
+    if (@ViewBag.Search == false)
+    {
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        銷售排行榜前10名之維修率
+                    </div>
+                    <div class="box-body">
+                        <canvas id="chart01" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        銷售排行榜前10名之覆修率
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="chart02" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+        var ctx = document.getElementById("chart01");
+        var labelsName = new Array();
+        var data01 = new Array();
+        var data02 = new Array();
+        $.ajax({
+            url: '@Url.Action("SearchPartLifetime", "Main")',
+            type: "POST",
+            datatype: 'JSON',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (doc) {
+                var Maintain = eval(doc);
+                if (Maintain.length > 0)
+                {
+                    for (var i = 0; i < Maintain.length; i++) {
+                        labelsName[i] = Maintain[i].ProductNo
+                        data01[i] = Maintain[i].RGANum
+                        data02[i] = Maintain[i].PartNume
+                    };
+                }
+            }
+        })
+        var test = ["1", "2", "3"];
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labelsName,
+                datasets: [{
+                    type: 'bar',
+                    label: '維修台數',
+                    data: data01,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)'
+                    ],
+                    borderWidth: 1
+                },
+                {
+                    type: 'bar',
+                    label: '銷售台數',
+                    data: data02,
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)'
+                    ],
+                    borderWidth: 1
+                }
+               ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+        </script>
+        <script>
+        var ctx = document.getElementById("chart02");
+        var labelsName = new Array();
+        var data01 = new Array();
+        var data02 = new Array();
+        $.ajax({
+            url: '@Url.Action("SearchPartLifetimeCover", "Main")',
+            type: "POST",
+            datatype: 'JSON',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (doc) {
+                var Maintain = eval(doc);
+                if (Maintain.length > 0) {
+                    for (var i = 0; i < Maintain.length; i++) {
+                        labelsName[i] = Maintain[i].ProductNo
+                        data01[i] = Maintain[i].RGANum
+                        data02[i] = Maintain[i].PartNume
+                    };
+                }
+            }
+        })
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labelsName,
+                datasets: [{
+                    type: 'bar',
+                    label: '維修台數',
+                    data: data01,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)'
+                    ],
+                    borderWidth: 1
+                },
+                {
+                    type: 'bar',
+                    label: '銷售台數',
+                    data: data02,
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)'
+                    ],
+                    borderWidth: 1
+                }
+               ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+        </script>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        銷售排行榜前10名之維修率
+                    </div>
+                    <div class="box-body">
+                        <canvas id="chart01" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+        var ctx = document.getElementById("chart01");
+        var data01 = [@ViewBag.Wpar,0];
+        var data02 = [0,@ViewBag.Cpar];
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['銷售率','覆修率'],
+                datasets: [{
+                    type: 'bar',
+                    label: '維修台數',
+                    data: data01,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(255,99,132,1)'
+                    ],
+                    borderWidth: 1
+                },
+                {
+                    type: 'bar',
+                    label: '銷售台數',
+                    data: data02,
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(54, 162, 235, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)'
+                    ],
+                    borderWidth: 1
+                }
+               ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+
+        @*function sum() {
+            $.ajax({
+                url: '@Url.Action("SearchWarranty", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divWarranty_D table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divWarranty_D table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectComponentNo(this)'>選擇</a>" +
+                                "<td class='ComponentNoType'>" + Maintain[i].ComponentNo + "</td>" +
+                                "<td class='ProductNameType'>" + Maintain[i].ProductName + "</td>" +
+                                "<td class='SpecificationType'>" + Maintain[i].Specification + "</td>" +
+                                "<td class='UnitType'>" + Maintain[i].Unit + "</td>" +
+                                "</tr>");
+
+                    }
+                    $(".Warranty_D-modal").modal();
+                }
+            })
+        }
+
+            function w() {
+                $.ajax({
+                    url: '@Url.Action("SearchPartLifetimeCover", "Main")',
+                    type: "POST",
+                    datatype: 'JSON',
+                    async: false,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (doc) {
+                        var Maintain = eval(doc);
+                        if (Maintain.length > 0) {
+                            for (var i = 0; i < Maintain.length; i++) {
+                                labelsName[i] = Maintain[i].ProductNo
+                                data01[i] = Maintain[i].RGANum
+                                data02[i] = Maintain[i].PartNume
+                            };
+                        }
+                    }
+                })
+            }
+
+            function c() {
+                $.ajax({
+                    url: '@Url.Action("SearchPartLifetimeCover", "Main")',
+                    type: "POST",
+                    datatype: 'JSON',
+                    async: false,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (doc) {
+                        var Maintain = eval(doc);
+                        if (Maintain.length > 0) {
+                            for (var i = 0; i < Maintain.length; i++) {
+                                labelsName[i] = Maintain[i].ProductNo
+                                data01[i] = Maintain[i].RGANum
+                                data02[i] = Maintain[i].PartNume
+                            };
+                        }
+                    }
+                })
+            }*@
+        </script>
+
+        <table>
+            <tr>
+                <td>計量項目</td>
+                <td>台數</td>
+                <td>比率</td>
+            </tr>
+            <tr>
+                <td>銷售</td>
+                <td><a href="@Url.Action("DetailSum", "Main", new { col=@ViewBag.strAdvCol, condition = @ViewBag.strAdvCondition, value = @ViewBag.strAdvValue })">@ViewBag.Sum</a></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>維修</td>
+                <td><a href="@Url.Action("Detailw", "Main", new { col=@ViewBag.strAdvCol, condition = @ViewBag.strAdvCondition, value = @ViewBag.strAdvValue })">@ViewBag.W</a></td>
+                <td>@ViewBag.Wpar</td>
+            </tr>
+            <tr>
+                <td>比率</td>
+                <td><a href="@Url.Action("Detailc", "Main", new { col=@ViewBag.strAdvCol, condition = @ViewBag.strAdvCondition, value = @ViewBag.strAdvValue })">@ViewBag.C</a></td>
+                <td>@ViewBag.Cpar</td>
+            </tr>
+        </table>
+    }
+
+}
+</section>
+<input type="hidden" title="module" value="REPQ01" />

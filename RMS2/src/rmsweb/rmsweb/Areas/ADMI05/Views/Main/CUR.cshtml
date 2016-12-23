@@ -1,0 +1,242 @@
+﻿@using BusinessLayer.Models
+@{
+    ViewBag.Title = "AddPage";
+}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#from-ProductCategory').bootstrapValidator({
+            fields: {
+                ProgramId: {
+                    validators: {
+                        notEmpty: {
+                            message: '程式代號不能為空！'
+                        },
+                        callback: {
+                            message: '程式代號已存在！',
+                            callback: function(value, validator) {
+                                var res = true;
+                                if (document.getElementById("Id_ProgramId").readOnly == true) {
+                                    return res;
+                                }
+                                if (value.length > 0) {
+                                    $.ajax({
+                                        //url: '/cmsi04/curid',
+                                        url: '@Url.Action("CURID", "Main")',
+                                        data: JSON.stringify({ "ProgramId": value }),
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function(data) {
+                                            res = data;
+                                        }
+                                    });
+                                }
+                                return res;
+                            }
+                        }
+                    }
+                },
+                ModuleId:
+                {
+                    validators: {
+                        notEmpty: {
+                            message: '模組代號不能為空！'
+                        },
+                        callback: {
+                            message: '模組代號不存在！',
+                            callback: function(value, validator) {
+                                var res = true;
+                                if (value.length > 0) {
+                                    $.ajax({
+                                        //url: '/cmsi04/curid',
+                                        url: '@Url.Action("CURMID", "Main")',
+                                        data: JSON.stringify({ "ModuleId": value }),
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function(data) {
+                                            res = data;
+                                        }
+                                    });
+                                }
+                                return res;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    function btnAdd() {
+        if (document.getElementById("Id_ProgramId").value == "") {
+            $("#msg_information").html("程式代號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        };
+        if (document.getElementById("Id_ModuleId").value == "") {
+            $("#msg_information").html("模組代號不能為空！");
+            $('.msg-modal-lg').modal();
+            return;
+        };
+        var Juect = true;
+        if (document.getElementById("Id_ProgramId").readOnly == true) {
+            $.ajax({
+                //url: '/cmsi04/curid',
+                url: '@Url.Action("CURID", "Main")',
+                data: JSON.stringify({ "ProgramId": document.getElementById("Id_ProgramId").value }),
+                type: 'POST',
+                async: false,
+                contentType: 'application/json; charset=utf-8',
+                success: function(data) {
+                    if (data == false) {
+                        $("#msg_information").html("程式代號已存在！");
+                        $('.msg-modal-lg').modal();
+                        Juect = false;
+                        return;
+                    }
+                    Juect = true;
+                }
+            });
+        }
+        if (!Juect) {
+            return;
+        }
+        $.ajax({
+            //url: '/cmsi04/curid',
+            url: '@Url.Action("CURMID", "Main")',
+            data: JSON.stringify({"ModuleId":document.getElementById("Id_ModuleId").value}),
+            type: 'POST',
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data == false) {
+                    $("#msg_information").html("模組代號不存在！");
+                    $('.msg-modal-lg').modal();
+                    Juect = false;
+                    return;
+                }
+                Juect = true;
+            }
+        });
+        @*if (!Juect) {
+            return;
+        }
+        $.ajax({
+            //url: '/cmsi04/add',
+            url: '@Url.Action("ADD", "Main")',
+            data: $('#from-ProductCategory').serialize(),
+            type: 'POST',
+            async: false,
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (data) {
+                var strData = data.split('-');
+                if (strData[0] == "NO") {
+                    $("#msg_information").html(strData[1]);
+                    $('.msg-modal-lg').modal();
+                } else {
+                    alert("1111");
+                    window.location.href = '@Url.Action("Index", "Main",null)'
+                    alert("2222");
+                }
+
+            }
+        })*@
+    };
+</script>
+<section class="content-header">
+    <h1>程式代號維護</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            <form id="from-ProductCategory" method="post" action="@Url.Action("CUR", "Main")">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_ModuleId" class="col-md-3 col-lg-3 control-label">程式代號</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="Id_ProgramId" name="ProgramId" value="@ViewBag.ProgramId" maxlength="3" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="Id_ProgramId" name="ProgramId" value="@ViewBag.ProgramId" maxlength="3" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_ModuleName" class="col-md-3 col-lg-3 control-label">程式名稱</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="Id_ProgramName" name="ProgramName" value="@ViewBag.ProgramName" maxlength="40" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="Id_ProgramName" name="ProgramName" value="@ViewBag.ProgramName" maxlength="40" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_ModuleName" class="col-md-3 col-lg-3 control-label">模組代號</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="Id_ModuleId" name="ModuleId" value="@ViewBag.ModuleId" maxlength="40" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="Id_ModuleId" name="ModuleId" value="@ViewBag.ModuleId" maxlength="40" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_Remark" class="col-md-3 col-lg-3 control-label">備註</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Detail")
+                            {
+                                <textarea class="form-control" id="Id_Remark" name="Remark" cols="40" rows="5" maxlength="255" readonly>@ViewBag.Remark</textarea>
+                            }
+                            else
+                            {
+                                <textarea class="form-control" id="Id_Remark" name="Remark" cols="40" rows="5" maxlength="255">@ViewBag.Remark</textarea>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <p style="color: red;">@ViewBag.Msg</p>
+                <div class="text-right">
+                    @if (@ViewBag.Type == "Edit")
+                    {
+                        <button type=submit class="btn btn-primary" name="action" value="Edit">存檔</button>
+                        <button type=submit class="btn btn-primary" name="action" value="EditAgain">存檔並新增</button>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+                    else if (ViewBag.Type == "Detail")
+                    {
+                        <button type=submit class="btn btn-primary" name="action" value="EditDetails">編輯</button>
+                        <a class="btn btn-primary" onclick="deleteInfo('@Url.Action("Delete", "Main", new {ProgId = @ViewBag.ProgramId})', '@ViewBag.ProgramId')" href="#">刪除</a>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+                    else
+                    {
+                        <button type=submit class="btn btn-primary" name="action" value="ADD">存檔</button>
+                        <button type=submit class="btn btn-primary" name="action" value="SaveAgain">存檔並新增</button>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)">取消</a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+@RenderPage("../../../../Views/Shared/RecordSelector/msg-dialog.cshtml")
+@RenderPage("../../../../Views/Shared/RecordSelector/delete-dialog.cshtml")

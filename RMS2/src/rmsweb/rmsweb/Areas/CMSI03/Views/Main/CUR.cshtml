@@ -1,0 +1,406 @@
+﻿@{
+    ViewBag.Title = "AddPage";
+}
+<style type="text/css">
+    .advanced-department-modal table .actioncolumn {
+        width: 50px;
+    }
+
+    .advanced-department-modal table .departmentId {
+        width: 150px;
+    }
+
+    .advanced-department-modal table .departmentName {
+        width: 200px;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("input[type='text']").keypress(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                var tabIndex = $(this).attr("tabindex");
+                if (!isNaN(tabIndex)) {
+                    $("[tabindex='" + (parseInt(tabIndex) + 1) + "']").focus();
+                    $("[tabindex='" + (parseInt(tabIndex) + 1) + "']").select();
+                }
+            }
+        });
+
+        $("#btnDelete").click(function () {
+            if (confirm("是否確定刪除" + $("#id_employeeName").val() + "員工？")) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        @*$("#btnSearchDepart").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchDepartment", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "DepartmentId": "", "Col": "", "Condition": "", "conditionValue": "", Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divDepartmentGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divDepartmentGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectDepartment(this)'>選擇</a>" +
+                                "<td class='DepartmentIdType'>" + Maintain[i].DepartmentId + "</td>" +
+                                "<td class='DepartmentNameType'>" + Maintain[i].DepartmentName + "</td>" +
+                                "<td class='RemarkTyep'>" + Maintain[i].Remark + "</td>" +
+                                "</tr>");
+
+                    }
+                }
+            });
+            $("#txtDepartmentId").val("");
+            $("#txtDepartmentName").val("");
+            $("#DepartmentPage").val("1");
+            $(".record-selector-department-modal").modal();
+        });*@
+
+        @*$("#btnDepartmentInfo").click(function () {
+            $.ajax({
+                url: '@Url.Action("SearchDepartment", "Main")',
+                type: "POST",
+                datatype: 'JSON',
+                data: JSON.stringify({ "DepartmentId": $("#txtDepartmentId").val(), "Col": $("#addDepartment_Col").val(), "Condition": $("#addDepartment_Condition").val(), "conditionValue": $("#addDepartment_conditionValue").val(), Page: 1 }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#divDepartmentGrid table tbody").empty();
+                    var Maintain = eval(data);
+                    for (var i = 0; i < Maintain.length; i++) {
+                        $("#divDepartmentGrid table tbody").append("<tr>" +
+                                "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectDepartment(this)'>選擇</a>" +
+                                "<td class='DepartmentIdType'>" + Maintain[i].DepartmentId + "</td>" +
+                                "<td class='DepartmentNameType'>" + Maintain[i].DepartmentName + "</td>" +
+                                "<td class='RemarkTyep'>" + Maintain[i].Remark + "</td>" +
+                                "</tr>");
+                    }
+                }
+            });
+            $("#DepartmentPage").val("1");
+        });*@
+
+        @*$("#divDepartmentGrid").scroll(function () {
+            var Page = document.getElementById("DepartmentPage").value;;
+            if (Page != 0) {
+                var scrollTop = $(this).scrollTop();
+                //var scrollHeight = $(document).height();
+                //var windowHeight = $(this).height();
+                if (scrollTop + 500 >= (870 - 370) * (Page - 1)) {
+                    //此处是滚动条到底部时候触发的事件，在这里写要加载的数据，或者是拉动滚动条的操作
+                    Page = parseInt(Page) + 1;
+                    $.ajax({
+                        url: '@Url.Action("SearchDepartment", "Main")',
+                        type: "POST",
+                        datatype: 'JSON',
+                        data: JSON.stringify({ "DepartmentId": $("#txtDepartmentId").val(), "Col": $("#addDepartment_Col").val(), "Condition": $("#addDepartment_Condition").val(), "conditionValue": $("#addDepartment_conditionValue").val(), Page: Page }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            var Maintain = eval(data);
+                            for (var i = 0; i < Maintain.length; i++) {
+                                $("#divDepartmentGrid table tbody").append("<tr>" +
+                                    "<td class='actioncolumn'><a class='btn btn-link' data-dismiss='modal' onclick='SelectDepartment(this)'>選擇</a>" +
+                                    "<td class='DepartmentIdType'>" + Maintain[i].DepartmentId + "</td>" +
+                                    "<td class='DepartmentNameType'>" + Maintain[i].DepartmentName + "</td>" +
+                                    "<td class='RemarkTyep'>" + Maintain[i].Remark + "</td>" +
+                                    "</tr>");
+                            }
+                        }
+                    });
+                    $("#DepartmentPage").val(Page);
+                }
+            }
+        });*@
+
+        $("#contactModal").click(function () {
+            $("#btnSearchDepart").click();
+        });
+
+        $('#id_dept').blur(function () {
+            if (document.getElementById("id_dept").readOnly == true) {
+                return;
+            }
+            if ($("#id_dept").val().trim() != "") {
+                $.ajax({
+                    url: '@Url.Action("SearchDepartment", "Main")',
+                    data: JSON.stringify({ "DepartmentId": $("#id_dept").val().trim(), "Col": $("#addDepartment_Col").val(), "Condition": $("#addDepartment_Condition").val(), "conditionValue": $("#addDepartment_conditionValue").val(), Page: 1 }),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        var modal = eval(data);
+                        if (modal.length == 0) {
+                            alert("部門代號不存在");
+                            $('#id_dept').val("");
+                            $("#spName").html("");
+                            $("#id_deptName").val("");
+                            $('#id_dept').focus();
+                        } else {
+                            $("#spName").html(modal[0].DepartmentName);
+                            $("#id_deptName").val(modal[0].DepartmentName);
+                        }
+                    }
+                });
+            } else {
+                $('#id_dept').val("");
+                $("#spName").html("");
+                $("#id_deptName").val("");
+            }
+        });
+
+        $('#defaultForm').bootstrapValidator({
+            ////        live: 'disabled',
+            //message: 'This value is not valid',
+            //feedbackIcons: {
+            //    valid: 'glyphicon glyphicon-ok',
+            //    invalid: 'glyphicon glyphicon-remove',
+            //    validating: 'glyphicon glyphicon-refresh'
+            //},
+            fields: {
+                employeeId: {
+                    validators: {
+                        notEmpty: {
+                            message: '員工代號不能為空'
+                        },
+                        callback: {
+                            message: '員工代號已存在！',
+                            callback: function (value, validator) {
+                                var res = true;
+                                if (document.getElementById("id_employeeId").readOnly == true) {
+                                    return res;
+                                }
+                                if (value.length > 0) {
+                                    $.ajax({
+                                        //url: '/cmsi04/curid',
+                                        url: '@Url.Action("CURMID", "Main")',
+                                        data: JSON.stringify({ "employeeId": value }),
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function (data) {
+                                            res = data;
+                                        }
+                                    });
+                                }
+                                return res;
+                            }
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 10,
+                            message: '員工代號長度為1~10'
+                        }
+                    }
+                },
+                tel: {
+                    validators: {
+                        stringLength: {
+                            min: 0,
+                            max: 20,
+                            message: '電話號碼最大長度為20'
+                        }
+                    }
+                },
+                employeeName: {
+                    validators: {
+                        notEmpty: {
+                            message: '員工姓名不能為空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 40,
+                            message: '員工姓名長度為1~40'
+                        }
+                    }
+                },
+                cell: {
+                    validators: {
+                        stringLength: {
+                            min: 0,
+                            max: 20,
+                            message: '手機號碼最大長度為20'
+                        }
+                    }
+                },
+                address: {
+                    validators: {
+                        stringLength: {
+                            min: 0,
+                            max: 255,
+                            message: '通訊地址最大長度為255'
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    function SelectDepartment(id) {
+        $("#id_dept").val($(id).closest('tr').find(".DepartmentIdType").html());
+        $("#spName").html($(id).closest('tr').find(".DepartmentNameType").html());
+        $("#id_deptName").val($(id).closest('tr').find(".DepartmentNameType").html());
+    }
+
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function ($scope, $http) {
+        $scope.Department = null;
+        $scope.SearchDepart = function () {
+            $http({
+                url: '@Url.Action("SearchDepartment", "Main")',
+                params: { "DepartmentId": "", "Col": "", "Condition": "", "conditionValue": "", Page: 0 }
+            }).success(function (data, status) {
+                $scope.Department = data;
+            })
+        };
+        $scope.SearchDepartment = function () {
+            $http({
+                url: '@Url.Action("SearchDepartment", "Main")',
+                params: { "DepartmentId": $("#txtDepartmentId").val(), "Col": $("#addDepartment_Col").val(), "Condition": $("#addDepartment_Condition").val(), "conditionValue": $("#addDepartment_conditionValue").val(), Page: 0 }
+            }).success(function (data, status) {
+                $scope.Department = data;
+            })
+        };
+    });
+
+</script>
+
+<section class="content-header">
+    <h1>員工基本資料維護</h1>
+</section>
+<section class="content" ng-app="myApp" ng-controller="myCtrl">
+    @Html.Raw(ViewBag.js)
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application</div>
+        <div class="panel-body">
+            @using (Ajax.BeginForm("CUR", "Main", new AjaxOptions { HttpMethod = "POST" }, new { id = "defaultForm" }))
+            {
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_employeeId" class="control-label col-md-3 col-lg-3">員工代號</label>
+                        <div class="col-md-9 col-lg-9">
+                            @if (ViewBag.Type == "New")
+                            {
+                                <input type="text" class="form-control" id="id_employeeId" name="employeeId" value="@ViewBag.EmployeeNumber" maxlength="10" tabindex="1" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_employeeId" name="employeeId" value="@ViewBag.EmployeeNumber" readonly="readonly" maxlength="10" tabindex="1" />
+                            }
+                        </div>
+                        <label for="id_tel" class="control-label col-md-3 col-lg-3">電話號碼</label>
+                        <div class="col-md-9 col-lg-9">
+                            @if (ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="id_tel" name="tel" value="@ViewBag.TelNo" readonly="readonly" maxlength="20" tabindex="2" />
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_tel" name="tel" value="@ViewBag.TelNo" maxlength="20" tabindex="2" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="id_employeeName" class="col-md-3 col-lg-3 control-label">員工姓名</label>
+                            <div class="col-md-9 col-lg-9">
+                                @if (ViewBag.Type == "Detail")
+                                {
+                                    <input type="text" class="form-control" id="id_employeeName" name="employeeName" value="@ViewBag.Name" readonly="readonly" maxlength="40" tabindex="3" />
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="id_employeeName" name="employeeName" value="@ViewBag.Name" maxlength="40" tabindex="3" />
+                                }
+                            </div>
+                            <label for="id_cell" class="control-label col-md-3 col-lg-3">手機號碼</label>
+                            <div class="col-md-9 col-lg-9">
+                                @if (ViewBag.Type == "Detail")
+                                {
+                                    <input type="text" class="form-control" id="id_cell" name="cell" value="@ViewBag.MobilePhone" readonly="readonly" maxlength="20" tabindex="4" />
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="id_cell" name="cell" value="@ViewBag.MobilePhone" maxlength="20" tabindex="4" />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="id_dept" class="control-label col-md-3 col-lg-3">部門</label>
+                            <div class="col-md-9 col-lg-9">
+                                @if (ViewBag.Type == "Detail")
+                                {
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="id_dept" name="deptId" value="@ViewBag.DepartmentId" readonly="readonly" maxlength="6" tabindex="5" />
+                                        <span class="input-group-addon" id="btnSearchDepart" style="cursor:pointer;"><span class="fa fa-hand-pointer-o"></span></span>
+                                    </div>                                    
+                                    <span style="display: inline;" id="spName">@ViewBag.DepartmentName</span>
+                                    <input type="hidden" id="id_deptName" name="dept" value="@ViewBag.DepartmentName" />
+                                }
+                                else
+                                {
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="id_dept" name="deptId" value="@ViewBag.DepartmentId" maxlength="6" tabindex="5" />
+                                        <span class="input-group-addon" id="btnCustomer" style="cursor:pointer;" tabindex="6" data-toggle="modal" data-target="#modal-department" ng-click="SearchDepart()"><span class="fa fa-hand-pointer-o"></span></span>
+                                    </div>                                    
+                                    <span style="display: inline;" id="spName">@ViewBag.DepartmentName</span>
+                                    <input type="hidden" id="id_deptName" name="dept" value="@ViewBag.DepartmentName" />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="id_address" class="control-label col-md-3 col-lg-3">通訊地址</label>
+                            <div class="col-md-21 col-lg-21">
+                                @if (ViewBag.Type == "Detail")
+                                {
+                                    <input type="text" class="form-control" id="id_address" name="address" value="@ViewBag.Address" readonly="readonly" maxlength="255" tabindex="6" />
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="id_address" name="address" value="@ViewBag.Address" maxlength="255" tabindex="6" />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        @if (ViewBag.Type == "New")
+                        {
+                            <button type="submit" class="btn btn-primary" name="action" value="btnSaveNew" tabindex="7">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i> 存檔
+                            </button>
+                                <button type="submit" class="btn btn-primary" name="action" value="btnNextNew" tabindex="8">存檔並新增</button>
+                                <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="9">取消</a>
+                        }
+                        else if (ViewBag.Type == "Edit")
+                        {
+                            <button type="submit" class="btn btn-primary" name="action" value="btnSaveEdit" tabindex="7">
+                                <i class="fa fa-floppy-o" aria-hidden="true"></i> 存檔
+                            </button>
+                                <button type="submit" class="btn btn-primary" name="action" value="btnNextEdit" tabindex="8">存檔並新增</button>
+                                <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="9">取消</a>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary" name="action" value="btnEdit" tabindex="7">編輯</button>
+                                @*<button type="submit" class="btn btn-primary" name="action" value="btnAdd" tabindex="8">複製并新增</button>*@
+                                <button type="submit" class="btn btn-primary" id="btnDelete" name="action" value="btnDelete" tabindex="9">刪除</button>
+                                    <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="10">返回列表</a>
+                        }
+                    </div>
+            }
+        </div>
+    </div>
+    @RenderPage("~/Views/Shared/RecordSelector/record_selector_department.cshtml")
+</section>
+
+<input type="hidden" title="module" value="CMSI03" />
+

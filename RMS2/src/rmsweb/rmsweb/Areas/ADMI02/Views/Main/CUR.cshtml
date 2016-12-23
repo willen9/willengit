@@ -1,0 +1,274 @@
+﻿@using BusinessLayer.Models
+@{
+    ViewBag.Title = "AddPage";
+}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#from-ProductCategory').bootstrapValidator({
+            fields: {
+                GroupId:
+                {
+                    validators: {
+                        notEmpty: {
+                            message: '群組代號不能為空！'
+                        },
+                        callback: {
+                            message: '群組代號已存在！',
+                            callback: function(value, validator) {
+                                var res = true;
+                                if (document.getElementById("GroupId").readOnly == true) {
+                                    return res;
+                                }
+                                if (value.length > 0) {
+                                    $.ajax({
+                                        //url: '/cmsi04/curid',
+                                        url: '@Url.Action("CURMID", "Main")',
+                                        data: JSON.stringify({ "GroupId": value }),
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        success: function(data) {
+                                            res = data;
+                                        }
+                                    });
+                                }
+                                return res;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+<section class="content-header">
+    <h1>群組資料維護</h1>
+</section>
+<section class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-pencil fa-fw"></i> Application
+        </div>
+        <div class="panel-body">
+            <form id="from-ProductCategory" method="post" action="@Url.Action("CUR", "Main")">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_UserGroup" class="col-md-3 col-lg-3 control-label">群組代號</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="GroupId" name="GroupId" value="@ViewBag.GroupId" maxlength="3" readonly/>
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="GroupId" name="GroupId" value="@ViewBag.GroupId" maxlength="3" tabindex="1"/>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_GroupName" class="col-md-3 col-lg-3 control-label">群組名稱</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="GroupName" name="GroupName" value="@ViewBag.GroupName" readonly/>
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="GroupName" name="GroupName" value="@ViewBag.GroupName" tabindex="2"/>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="id_Remark" class="col-md-3 col-lg-3 control-label">備註</label>
+                        <div class="col-md-21 col-lg-21">
+                            @if (@ViewBag.Type == "Edit" || @ViewBag.Type == "Detail")
+                            {
+                                <input type="text" class="form-control" id="id_Remark" name="Remark" value="@ViewBag.Remark" maxlength="255" readonly/>
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" id="id_Remark" name="Remark" value="@ViewBag.Remark" maxlength="255" tabindex="3"/>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <h4>權限明細</h4>
+                <hr/>
+            <div id="divAddresstGrid" style="height: 200px; overflow-y: auto;">
+                @{
+                    var webGrid = new WebGrid(source: (IEnumerable<Group>) ViewData["DisplayData"], canPage: false, canSort: true, defaultSort: "GroupId", ajaxUpdateContainerId: "divGrid");
+                }
+                @webGrid.GetHtml(
+                    tableStyle: "table table-striped table-hover table-condensed",
+                    mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                    columns: webGrid.Columns(
+                        webGrid.Column(columnName: "ProgId", header: "程式代號", style: "departmentId", format:
+                            @<text>
+                                <span class="display-mode-address">@item.ProgId</span>
+                                <input type="hidden" value="@item.ProgId" class="txtProgId" maxlength="255" name="txtProgId"/>
+                             </text>),
+                        webGrid.Column(columnName: "ProgName", header: "程式名稱", style: "departmentName", format:
+                            @<text>
+                                <span class="display-mode-address">@item.ProgName</span>
+                                <input type="hidden" value="@item.ProgName" class="txtProgName" maxlength="255" name="txtProgName"/>
+                             </text>),
+                        webGrid.Column(columnName: "ExcuteProg", header: "執行", style: "departmentName", format:
+                            @<text>
+                                @*<span class="display-mode-address">@item.ExcuteProg</span>
+                                    <input type="hidden" value="@item.ExcuteProg" class="txtExcuteProg" maxlength="255" name="txtExcuteProg"/>*@
+                                @if (@item.ExcuteProg != "")
+                                {
+                                    <input type="checkbox" class="txtExcuteProg" name="txtExcuteProg" checked=""/>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" class="txtExcuteProg" name="txtExcuteProg"/>
+                                }
+                             </text>),
+                        webGrid.Column(columnName: "NewData", header: "新增", style: "departmentName", format:
+                            @<text>
+                                @*<span class="display-mode-address">@item.NewData</span>
+                                    <input type="hidden" value="@item.NewData" class="txtNewData" maxlength="30" name="txtNewData"/>*@
+                                @if (@item.ExcuteProg != "")
+                                {
+                                    <input type="checkbox" class="txtNewData" name="txtNewData" checked=""/>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" class="txtNewData" name="txtNewData"/>
+                                }
+                             </text>),
+                        webGrid.Column(columnName: "ModiData", header: "修改", style: "departmentName", format:
+                            @<text>
+                                @*<span class="display-mode-address">@item.ModiData</span>
+                                    <input type="hidden" value="@item.ModiData" class="txtModiData" maxlength="20" name="txtModiData"/>*@
+                                @if (@item.ExcuteProg != "")
+                                {
+                                    <input type="checkbox" class="txtModiData" name="txtModiData" checked=""/>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" class="txtModiData" name="txtModiData"/>
+                                }
+                             </text>),
+                        webGrid.Column(columnName: "Confirm", header: "確認", style: "departmentName", format:
+                            @<text>
+                                @*<span class="display-mode-address">@item.Confirm</span>
+                                    <input type="hidden" value="@item.Confirm" class="txtConfirm" maxlength="20" name="txtConfirm"/>*@
+                                @if (@item.ExcuteProg != "")
+                                {
+                                    <input type="checkbox" class="txtConfirm" name="txtConfirm" checked=""/>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" class="txtConfirm" name="txtConfirm"/>
+                                }
+                             </text>),
+                        webGrid.Column(columnName: "Disconfirm", header: "取消確認", style: "departmentName", format:
+                            @<text>
+                                @*<span class="display-mode-address">@item.Disconfirm</span>
+                                    <input type="hidden" value="@item.Disconfirm" class="txtDisconfirm" maxlength="255" name="txtDisconfirm"/>*@
+                                @if (@item.ExcuteProg != "")
+                                {
+                                    <input type="checkbox" class="txtDisconfirm" name="txtDisconfirm" checked=""/>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" class="txtDisconfirm" name="txtDisconfirm"/>
+                                }
+                             </text>),
+                        webGrid.Column(columnName: "DelData", header: "刪除", style: "departmentName", format:
+                            @<text>
+                                @*<span class="display-mode-address">@item.DelData</span>
+                                    <input type="hidden" value="@item.DelData" class="txtDelData" maxlength="255" name="txtDelData"/>*@
+                                @if (@item.ExcuteProg != "")
+                                {
+                                    <input type="checkbox" class="txtDelData" name="txtDelData" checked=""/>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" class="txtDelData" name="txtDelData"/>
+                                }
+                             </text>),
+                        webGrid.Column(columnName: "Invalid", header: "作廢", style: "departmentName", format:
+                            @<text>
+                                @*<span class="display-mode-address">@item.Remark</span>
+                                    <input type="hidden" value="@item.Remark" class="txtAddressRemark" maxlength="255" name="txtAddressRemark"/>*@
+                                @if (@item.ExcuteProg != "")
+                                {
+                                    <input type="checkbox" class="txtInvalid" name="txtInvalid" checked=""/>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" class="txtInvalid" name="txtInvalid"/>
+                                }
+                             </text>),
+                        webGrid.Column(columnName: "Print", header: "列印", style: "departmentName", format:
+                            @<text>
+                                @*<span class="display-mode-address">@item.Remark</span>
+                                    <input type="hidden" value="@item.Remark" class="txtAddressRemark" maxlength="255" name="txtAddressRemark"/>*@
+                                @if (@item.ExcuteProg != "")
+                                {
+                                    <input type="checkbox" class="txtPrint" name="txtPrint" checked=""/>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" class="txtPrint" name="txtPrint"/>
+                                }
+                             </text>),
+                        webGrid.Column(columnName: "Export", header: "匯出", style: "departmentName", format:
+                            @<text>
+                                @*<span class="display-mode-address">@item.Remark</span>
+                                    <input type="hidden" value="@item.Remark" class="txtAddressRemark" maxlength="255" name="txtAddressRemark"/>*@
+                                @if (@item.ExcuteProg != "")
+                                {
+                                    <input type="checkbox" class="txtExport" name="txtExport" checked=""/>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" class="txtExport" name="txtExport"/>
+                                }
+                             </text>),
+                        webGrid.Column(columnName: "Cost", header: "成本", style: "departmentName", format:
+                            @<text>
+                                <span class="display-mode-address">@item.Cost</span>
+                                    <input type="hidden" value="@item.Cost" class="txtCost" maxlength="255" name="txtCost"/>
+                             </text>),
+                        webGrid.Column(columnName: "Price", header: "售價", style: "departmentName", format:
+                            @<text>
+                                <span class="display-mode-address">@item.Price</span>
+                                    <input type="hidden" value="@item.Price" class="txtPrice" maxlength="255" name="txtPrice"/>
+                             </text>)
+                        )
+                    )
+            </div>
+                <div class="text-right">
+                    @if (ViewBag.Type == "New")
+                    {
+                        <button type="submit" class="btn btn-primary savebefore" name="action" value="btnSaveNew" tabindex="15">存檔</button>
+                        <button type="submit" class="btn btn-primary savebefore" name="action" value="btnNextNew" tabindex="16">存檔並新增</button>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="17">取消</a>
+                    }
+                    else if (ViewBag.Type == "Edit")
+                    {
+                        <button type="submit" class="btn btn-primary savebefore" name="action" value="btnSaveEdit" tabindex="15">存檔</button>
+                        <button type="submit" class="btn btn-primary savebefore" name="action" value="btnNextEdit" tabindex="16">存檔並新增</button>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="17">取消</a>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary" name="action" value="btnEdit" tabindex="15">編輯</button>
+                        <button type="submit" class="btn btn-primary" name="action" value="btnAdd" tabindex="16">複製并新增</button>
+                        <button type="submit" class="btn btn-primary" id="btnDelete" name="action" value="btnDelete" tabindex="17">刪除</button>
+                        <a class="btn btn-primary" href="@Url.Action("Index", "Main", null)" tabindex="18">取消</a>
+                    }
+                    <input type="hidden" id="txtSaveAddress1" name="txtSaveAddress1" />
+                    <input type="hidden" id="txtSaveAddress2" name="txtSaveAddress2" />
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
