@@ -1,0 +1,15 @@
+﻿.navbar-inverse .navbar-nav > li > a {
+    color: #fff;
+}
+
+.nav-tabs > li > a{
+    color: #000;
+}
+
+.nav-tabs > li.active,
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:focus
+{
+    color: #000;
+    font-weight: 700;
+}

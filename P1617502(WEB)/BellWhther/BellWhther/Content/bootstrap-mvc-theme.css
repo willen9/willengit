@@ -1,0 +1,17 @@
+﻿.mvc-component-modal .modal-header{
+    background-color:#f0f0f0; 
+    border-bottom:1px solid #cccccc;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.mvc-component-modal .modal-body{
+    min-height: 80px;
+}
+
+.mvc-component-modal .modal-footer{
+    background-color:#f0f0f0; 
+    border-bottom:1px solid #cccccc;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}

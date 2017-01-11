@@ -1,0 +1,109 @@
+﻿@using System.Web.Optimization
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    @Styles.Render("~/content/basestyles")
+    <link href="~/Content/AdminLTE.css" rel="stylesheet" />
+    <link href="~/Content/skins/skin-black-light.css" rel="stylesheet" />
+    @RenderSection("Styles", false)
+    @Scripts.Render("~/basescripts")
+    @RenderSection("Javascripts", false)
+    <title>貝爾威勒標籤管理系統</title>
+    <script>
+        'use strict';
+        $(function () {
+            //var i = $(".colli");
+            //var element = $('.treeview-menu');
+            //if (element.hasClass('menu-open')) {
+            //    i.removeClass('fa-angle-down');
+            //    i.addClass('fa-angle-up');
+            //} else {
+            //    i.removeClass('fa-angle-up');
+            //    i.addClass('fa-angle-down');
+            //}
+
+            //$(".coll").click(function () {
+            //    var i = $(".colli");
+            //    var element = $('.treeview-menu');
+            //    if (element.hasClass('menu-open')) {
+            //        i.removeClass('fa-angle-up');
+            //        i.addClass('fa-angle-down');
+            //    } else {
+            //        i.removeClass('fa-angle-down');
+            //        i.addClass('fa-angle-up');
+            //    }
+            //});
+
+            //$(".col2").click(function () {
+            //    var i = $(".colli");
+            //    i.removeClass('fa-angle-down');
+            //    i.addClass('fa-angle-up');
+            //});
+        });
+
+    </script>
+</head>
+<body class="hold-transition skin-black-light sidebar-mini layout-boxed">
+    <div class="wrapper">
+        <header class="main-header">
+            <a href="/" class="logo" style="padding: 0px;">
+                <span class="logo-mini"><b style="font-size: 9px;">BellWhther</b></span>
+                <img class="logo-lg" src="~/images/logo.png" alt="" />
+            </a>
+            <nav class="navbar navbar-static-top" role="navigation">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <div class="pull-left">
+
+                    </div>
+                    <div class="pull-right" style="margin-top: 8px;">
+                        <a href="@Url.Action("Logout", "Login")" class="btn btn-default"> <span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;登出</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <ul class="nav sidebar-menu">
+                    <li class="treeview">
+                        <a href="@Url.Action("Index","LabelMaintain")">
+                            <i class="fa fa-list fa-fw"></i> <span>Label資料維護</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="@Url.Action("Index","LabelSetting")">
+                            <i class="fa fa-list fa-fw"></i> <span>Label功能對應</span>
+                        </a>
+                    </li>
+                    <li class="treeview test">
+                        <a href="@Url.Action("Index","PrtData")">
+                            <i class="fa fa-file-text-o fa-fw"></i> <span>歷程查詢</span>
+                        </a>
+                    </li>
+                    <li class="treeview" id="ddd">
+                        <a href="#" class="coll">
+                            <i class="fa fa-medkit l fa-fw"></i><span>權限管理</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-down pull-right colli"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index", "Groups")" class="col2"><span>群組權限設定</span></a></li>
+                            <li><a href="@Url.Action("Index", "Users")" class="col2"><span>員工資料維護</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+    </div>
+    <script src="~/Scripts/app.js"></script>
+</body>
+</html>

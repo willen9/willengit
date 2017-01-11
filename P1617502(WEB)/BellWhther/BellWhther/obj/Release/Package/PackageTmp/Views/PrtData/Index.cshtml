@@ -1,0 +1,482 @@
+﻿@using Model
+@using NPOI.OpenXmlFormats.Wordprocessing
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+}
+
+<style>
+    .col1 {
+        width: 150px;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $(".dateSel").datetimepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: 1,
+            forceParse: 1,
+            startView: 2,
+            minView: 2,
+            todayBtn: 1,
+            todayHighlight: 1
+        });
+
+        $("#chkAll").click(function () {
+            $("input[name='chk']:checkbox").prop("checked", this.checked);
+        });
+
+        $("input[name='chk']:checkbox").click(function () {
+            var chks = $("input[name='chk']").not("input[name='chk']:checked");
+            if (chks.length > 0) {
+                $("#chkAll").prop("checked", false);
+            } else {
+                $("#chkAll").prop("checked", true);
+            }
+        });
+    });
+</script>
+<div class="container-fluid">
+    <section class="content-header">
+        <h1>歷程查詢作業</h1>
+    </section>
+    <section class="content">
+        @Html.Raw(ViewBag.js)
+        @using (Ajax.BeginForm("Index", "LabelMaintain", new AjaxOptions { HttpMethod = "POST" }, new { id = "defaultForm", @class = "form-horizontal" }))
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-14 col-sm-14 col-md-12">
+                            <button class="btn btn-primary" name="action" value="search" id="btnSearch">
+                                <i class="fa fa-search" aria-hidden="true"></i> 查詢
+                            </button>
+                            <button class="btn btn-primary" name="action" value="print" id="btnPrt">
+                                <i class="fa fa-print" aria-hidden="true"></i> 補印
+                            </button>
+                            <button class="btn btn-primary" name="action" value="export" id="btnExport">
+                                <i class="fa fa-file-excel-o" aria-hidden="true"></i> 匯出
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="slBtw" class="col-md-3 col-lg-3 control-label text-right">BTW:</label>
+                        <div class="col-md-5 col-lg-5" id="divSel">
+                            @Html.DropDownList("slBtw", ViewData["slBtwDisplay"] as SelectList, new { id = "slBtw", @class = "btn btn-default dropdown-toggle form-control", @tabindex = "1" })
+                        </div>
+                        <label for="txtCus" class="col-md-3 col-lg-3 control-label text-right">客戶代碼:</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="txtCus" name="txtCus" value="@ViewBag.Cus" tabindex="2" />
+                        </div>
+                        <label for="txtSale" class="col-md-3 col-lg-3 control-label text-right">銷售組織:</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="txtSale" name="txtSale" value="@ViewBag.Sale" tabindex="3" />
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="txtAssign" class="col-md-3 col-lg-3 control-label text-right">配銷通路:</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="txtAssign" name="txtAssign" value="@ViewBag.Assign" tabindex="4" />
+                        </div>
+                        <label for="txtDep" class="col-md-3 col-lg-3 control-label text-right">部門別:</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="txtDep" name="txtDep" value="@ViewBag.Dep" tabindex="5" />
+                        </div>
+                        <label for="txtProdNo" class="col-md-3 col-lg-3 control-label text-right">廠內料號:</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="txtProdNo" name="txtProdNo" value="@ViewBag.ProdNo" tabindex="6" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtDate" class="col-md-3 col-lg-3 control-label text-right">日期:</label>
+                        <div class="col-md-5 col-lg-5">
+                            <div class="input-group">
+                                <input type="text" class="form-control dateSel" id="txtDateStart" name="txtDateStart" value="@ViewBag.DateStart" tabindex="7" readonly="readonly" />
+                                <span class="input-group-addon" id="spanDtStart"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                        <label for="txtDateEnd" class="col-md-1 col-lg-1 control-label text-right">~</label>
+                        <div class="col-md-5 col-lg-5">
+                            <div class="input-group">
+                                <input type="text" class="form-control dateSel" id="txtDateEnd" name="txtDateEnd" value="@ViewBag.DateEnd" tabindex="8" readonly="readonly" />
+                                <span class="input-group-addon" id="spanDtEnd"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group" style="overflow-x: auto; width: 100%;">
+                        <div id="divGrid">
+                            @{
+                                <input type="checkbox" id="chkAll" style="position: absolute; margin-left: 8px; margin-top: 13px;" />
+                                var webGrid = new WebGrid(source: (IEnumerable<LabelSetting>)ViewData["DisplayData"], canPage: false, canSort: false, defaultSort: "Type", ajaxUpdateContainerId: "divGrid");
+                            }
+                            @webGrid.GetHtml(
+                            tableStyle: "table table-striped table-hover table-border table-responsive ",
+                            mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                            columns: webGrid.Columns(
+                                webGrid.Column(
+                                    format:
+                                    @<text>
+                                        <input type="checkbox" id="chk" name="chk" value="@item.DocEntry" />
+                                    </text>),
+                                webGrid.Column(columnName: "Type", header: "BTW",format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Type
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "CustomerCode", header: "客戶代碼", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.CustomerCode
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "SPEC", header: "廠內料號", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.SPEC
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "VKORG", header: "銷售組織", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.VKORG
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "VTWEG", header: "配銷通路", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.VTWEG
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "SPART", header: "部門別", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.SPART
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "CustomerName1", header: "客戶名稱1", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.CustomerName1
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "CustomerName2", header: "客戶名稱2", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.CustomerName2
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "EnterpriseGroup", header: "企業群組", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.EnterpriseGroup
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Sorg", header: "Sorg", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Sorg
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "CustomerPartNo", header: "客戶料號", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.CustomerPartNo
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "DC", header: "生產日期", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.DC
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Qty", header: "數量", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Qty
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "ItemDescreption1", header: "廠內物料描述", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.ItemDescreption1
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "ItemDescreption2", header: "客戶物料描述", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.ItemDescreption2
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "LN", header: "生產周別", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.LN
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "PurchasOrder", header: "採購單號", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.PurchasOrder
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "LCP", header: "材質", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.LCP
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "MSLLevel", header: "MSL Level", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.MSLLevel
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "DC1", header: "原廠DC前1碼年", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.DC1
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "DC2", header: "原廠DC前2碼月", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.DC2
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "DC3", header: "原廠DC前3碼日", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.DC3
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "VC", header: "供應商代碼", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.VC
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "CustomerVer", header: "客戶版本號", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.CustomerVer
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Warranty", header: "保固期", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Warranty
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "ItemName", header: "項目名稱", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.ItemName
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "MachineType", header: "機種", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.MachineType
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "ItemNo", header: "國騰品號", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.ItemNo
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "customerItemNo", header: "客戶品號", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.customerItemNo
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "LotNo", header: "LOT", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.LotNo
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Rev", header: "REV", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Rev
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Weight1", header: "單量", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Weight1
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Weight2", header: "淨量", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Weight2
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Weight3", header: "毛量", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Weight3
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "CartonStatus", header: "箱號狀況", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.CartonStatus
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "OriginalVer", header: "本廠版本號", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.OriginalVer
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Ary", header: "流水碼進制", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Ary
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "AryInitialCycle", header: "流水碼歸0時間", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.AryInitialCycle
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Season1", header: "每季第一個月", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Season1
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Season2", header: "每季第二個月", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Season2
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Season3", header: "每季第三個月", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Season3
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "CurrentSeason1", header: "季標籤確認第一個月", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.CurrentSeason1
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "CurrentSeason2", header: "季標籤確認第二個月", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.CurrentSeason2
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "CurrentSeason3", header: "季標籤確認第三個月", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.CurrentSeason3
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Year", header: "年", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Year
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Month", header: "月", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Month
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "day", header: "日", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.day
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "NextLabel", header: "下一張BTW", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.NextLabel
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "INV", header: "發票編號", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.INV
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "ZoneCode", header: "廠區代碼", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.ZoneCode
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Other1", header: "其他1", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Other1
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Other2", header: "其他2", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Other2
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Other3", header: "其他3", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Other3
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Other4", header: "其他4", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Other4
+                                    </div>
+                                </text>),
+                                webGrid.Column(columnName: "Other5", header: "其他5", format:
+                                @<text>
+                                    <div class="col1">
+                                        @item.Other5
+                                    </div>
+                                </text>)
+                                )
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="mode" id="mode" value="@ViewBag.Fail" />
+                                }
+
+        @if (!string.IsNullOrEmpty(@ViewBag.Fail))
+        {
+            <script type="text/javascript">
+                $(function () {
+                    if ("@ViewBag.Fail" === "P") {
+                        var keys = "@ViewBag.Chk";
+                        var array = keys.split(',');
+                        $.each(array, function (i, value) {
+                            $("input[name='chk'][value='" + value + "']").prop("checked", true);
+                        });
+                    }
+                })
+            </script>
+        }
+    </section>
+</div>
+
+

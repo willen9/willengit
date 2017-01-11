@@ -1,0 +1,384 @@
+﻿@using Model
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $("#btnNew").click(function () {
+            $("#btnSearch").attr({ "disabled": "disabled" });
+            $("#btnNew").attr({ "disabled": "disabled" });
+            $("#btnModify").attr({ "disabled": "disabled" });
+            $("#btnDel").attr({ "disabled": "disabled" });
+            $("#btnSave").removeAttr("disabled");
+            $("#btnCancel").removeAttr("disabled");
+
+            $("#mode").val("N");
+            $("#slBtw").focus();
+        });
+
+        $("#btnModify").click(function () {
+            $("#btnSearch").attr({ "disabled": "disabled" });
+            $("#btnNew").attr({ "disabled": "disabled" });
+            $("#btnModify").attr({ "disabled": "disabled" });
+            $("#btnDel").attr({ "disabled": "disabled" });
+            $("#btnSave").removeAttr("disabled");
+            $("#btnCancel").removeAttr("disabled");
+
+            $("#slBtw").attr({ "disabled": "disabled" });
+            $("#txtCus").attr({ "readonly": "readonly" });
+
+            $("#mode").val("M");
+            $("#txtSale").select();
+        });
+
+        $("#btnCancel").click(function () {
+            try {
+                //$("#defaultForm").data('bootstrapValidator').resetForm();
+                $("#defaultForm").data('bootstrapValidator').destroy();
+                $('#defaultForm').data('bootstrapValidator', null);
+            }
+            catch (e) {
+
+            }
+
+            $("#slBtw").focus();
+            $("#btnSearch").removeAttr("disabled");
+            $("#btnNew").removeAttr("disabled");
+            $("#btnModify").removeAttr("disabled");
+            $("#btnDel").removeAttr("disabled");
+            $("#btnSave").attr({ "disabled": "disabled" });
+            $("#btnCancel").attr({ "disabled": "disabled" });
+
+            $("#slBtw").removeAttr("disabled");
+            $("#txtCus").removeAttr("readonly");
+
+            $("input[type='text']").val("");
+            $("#slBtw").val("==請選擇==");
+            $("#slBtwNext").val("==請選擇==");
+            $("#slAryInitialCycle").val("");
+            $("#slAry").val("");
+            $("#mode").val("");
+        });
+
+        $("#btnDel").click(function () {
+            if (!confirm("是否確定刪除選中項？")) {
+                return false;
+            }
+            var chks = $("input[name='chk']:checked");
+            if (chks.length === 0) {
+                alert("請勾選要刪除的項");
+                return false;
+            }
+            return true;
+        });
+
+        $("#chkAll").click(function () {
+            $("input[name='chk']:checkbox").prop("checked", this.checked);
+        });
+
+        $("input[name='chk']:checkbox").click(function () {
+            var chks = $("input[name='chk']").not("input[name='chk']:checked");
+            if (chks.length > 0) {
+                $("#chkAll").prop("checked", false);
+            } else {
+                $("#chkAll").prop("checked", true);
+            }
+        });
+
+        $("table>tbody>tr").click(function () {
+            $("#slBtw").val($(this).find("td").eq(1).text());
+            $("#txtCus").val($(this).find("td").eq(2).text());
+            $("#txtSale").val($(this).find("td").eq(3).text());
+            $("#txtAssign").val($(this).find("td").eq(4).text());
+            $("#txtDep").val($(this).find("td").eq(5).text());
+            $("#slAry").val($(this).find("td").eq(6).text());
+            $("#slAryInitialCycle").val($(this).find("td").eq(7).text());
+            $("#slBtwNext").val($(this).find("td").eq(8).text());
+            if ($("#slBtwNext").val() === null) {
+                $("#slBtwNext").val("==請選擇==");
+            }
+            $("#pkOld").val($(this).find("td").eq(0).find("input").val());
+
+            try {
+                $("#defaultForm").data('bootstrapValidator').destroy();
+                $('#defaultForm').data('bootstrapValidator', null);
+            }
+            catch (e) {
+
+            }
+        });
+    });
+
+    function CheckForm() {
+        if ($("#mode").val() === "N") {
+            formValidator();
+        }
+        else if ($("#mode").val() === "M") {
+            $("#slBtw").removeAttr("disabled");
+            formValidator();
+            $('#defaultForm').data('bootstrapValidator').validate();
+            if (!$('#defaultForm').data('bootstrapValidator').isValid()) {
+                $("#slBtw").attr({ "disabled": "disabled" });
+            }
+        }
+    }
+
+    function formValidator() {
+        $("#defaultForm").bootstrapValidator({
+            fields: {
+                slBtw: {
+                    validators: {
+                        callback: {
+                            message: "請選擇BTW",
+                            callback: function (value, validator) {
+                                if ($("#slBtw").val() === "==請選擇==") {
+                                    return false;
+                                }
+                                return true;
+                            }
+                        }
+                    }
+                },
+                txtCus: {
+                    validators: {
+                        notEmpty: {
+                            message: "客戶代碼不能為空"
+                        }
+                    }
+                },
+                slBtwNext: {
+                    validators: {
+                        callback: {
+                            message: '下張BTW不能與BTW相同',
+                            callback: function (value, validator) {
+                                if ($("#slBtw").val() === $("#slBtwNext").val()) {
+                                    return false;
+                                }
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    };
+</script>
+<div class="container-fluid">
+    <section class="content-header">
+        <h1>Label功能對應作業</h1>
+    </section> <section class="content">
+        @Html.Raw(ViewBag.js)
+        @using (Ajax.BeginForm("Index", "LabelSetting", new AjaxOptions { HttpMethod = "POST" }, new { id = "defaultForm", @class = "form-horizontal" }))
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-14 col-sm-14 col-md-12">
+                            <button class="btn btn-primary" name="action" value="search" id="btnSearch">
+                                <i class="fa fa-search" aria-hidden="true"></i> 查詢
+                            </button>
+                            <button class="btn btn-primary" type="button" id="btnNew">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i> 新增
+                            </button>
+                            <button class="btn btn-primary" type="button" id="btnModify">
+                                <i class="fa fa-edit" aria-hidden="true"></i> 修改
+                            </button>
+                            <button class="btn btn-primary" name="action" value="delete" id="btnDel">
+                                <i class="fa fa-times-circle" aria-hidden="true"></i> 刪除
+                            </button>
+                        </div>
+                        <div class="col-xs-8 col-sm-8 col-md-8 col-xs-offset-2 col-sm-offset-2 col-md-offset-4">
+                            <button class="btn btn-primary" disabled="disabled" name="action" value="save" id="btnSave" onclick="CheckForm()" type="submit">
+                                <i class="fa fa-save" aria-hidden="true"></i> 保存
+                            </button>
+                            <button class="btn btn-primary" disabled="disabled" type="button" id="btnCancel">
+                                <i class="fa fa-rotate-left" aria-hidden="true"></i> 取消
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="slBtw" class="col-md-3 col-lg-3 control-label text-right">BTW:</label>
+                        <div class="col-md-5 col-lg-5" id="divSel">
+                            @Html.DropDownList("slBtw", ViewData["slBtwDisplay"] as SelectList, new { id = "slBtw", @class = "btn btn-default dropdown-toggle form-control", @tabindex = "1" })
+                        </div>
+                        <label for="txtCus" class="col-md-3 col-lg-3 control-label text-right">客戶代碼:</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="txtCus" name="txtCus" value="@ViewBag.Cus" tabindex="2" />
+                        </div>
+                        <label for="txtSale" class="col-md-3 col-lg-3 control-label text-right">銷售組織:</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="txtSale" name="txtSale" value="@ViewBag.Sale" tabindex="3" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtAssign" class="col-md-3 col-lg-3 control-label text-right">配銷通路:</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="txtAssign" name="txtAssign" value="@ViewBag.Assign" tabindex="4" />
+                        </div>
+                        <label for="txtDep" class="col-md-3 col-lg-3 control-label text-right">部門別:</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="txtDep" name="txtDep" value="@ViewBag.Dep" tabindex="5"/>
+                        </div>
+                        <label for="slAry" class="col-md-3 col-lg-3 control-label text-right">流水碼進制:</label>
+                        <div class="col-md-5 col-lg-5">
+
+                            <select id="slAry" class="form-control" name="slAry" tabindex="6">
+                                @if (@ViewBag.slAry == "36進制")
+                                {
+                                    <option value=""></option>
+                                    <option value="十進制">十進制</option>
+                                    <option value="16進制">16進制</option>
+                                    <option value="34進制">34進制</option>
+                                    <option value="36進制" selected="selected">36進制</option>
+                                }
+                                else if (@ViewBag.slAry == "十進制")
+                                {
+                                    <option value="" ></option>
+                                    <option value="十進制" selected="selected">十進制</option>
+                                    <option value="16進制">16進制</option>
+                                    <option value="34進制">34進制</option>
+                                    <option value="36進制">36進制</option>
+                                }
+                                else if (@ViewBag.slAry == "16進制")
+                                {
+                                    <option value=""></option>
+                                    <option value="十進制">十進制</option>
+                                    <option value="16進制" selected="selected">16進制</option>
+                                    <option value="34進制">34進制</option>
+                                    <option value="36進制">36進制</option>
+                                }
+                                else if (@ViewBag.slAry == "34進制")
+                                {
+                                    <option value=""></option>
+                                    <option value="十進制">十進制</option>
+                                    <option value="16進制">16進制</option>
+                                    <option value="34進制" selected="selected">34進制</option>
+                                    <option value="36進制">36進制</option>
+                                }
+                                else
+                                {
+                                    <option value="" selected="selected"></option>
+                                    <option value="十進制">十進制</option>
+                                    <option value="16進制">16進制</option>
+                                    <option value="34進制">34進制</option>
+                                    <option value="36進制">36進制</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="slAryInitialCycle" class="col-md-3 col-lg-3 control-label text-right">歸0時間:</label>
+                        <div class="col-md-5 col-lg-5">
+                            <select id="slAryInitialCycle" class="form-control" name="slAryInitialCycle" tabindex="7">
+                                @if (@ViewBag.slAryInitialCycle == "日")
+                                {
+                                    <option value=""></option>
+                                    <option value="年">年</option>
+                                    <option value="月">月</option>
+                                    <option value="日" selected="selected">日</option>
+                                }
+                                else if (@ViewBag.slAryInitialCycle == "年")
+                                {
+                                    <option value=""></option>
+                                    <option value="年"  selected="selected">年</option>
+                                    <option value="月">月</option>
+                                    <option value="日">日</option>
+                                }
+                                else if (@ViewBag.slAryInitialCycle == "月")
+                                {
+                                    <option value=""></option>
+                                    <option value="年">年</option>
+                                    <option value="月" selected="selected">月</option>
+                                    <option value="日">日</option>
+                                }
+                                else
+                                {
+                                    <option value="" selected="selected"></option>
+                                    <option value="年">年</option>
+                                    <option value="月">月</option>
+                                    <option value="日">日</option>
+                                }
+                            </select>
+                        </div>
+                        <label for="slBtwNext" class="col-md-3 col-lg-3 control-label text-right">下張BTW:</label>
+                        <div class="col-md-5 col-lg-5">
+                            @Html.DropDownList("slBtwNext", ViewData["slBtwDisplay"] as SelectList, new { id = "slBtwNext", @class = "btn btn-default dropdown-toggle form-control", @tabindex = "8" })
+                        </div>
+                    </div>
+                    <div class="form-group" style="overflow-x: auto">
+                        <div id="divGrid">
+                            @{
+                                <input type="checkbox" id="chkAll" style="position: absolute; margin-left: 8px; margin-top: 13px;" />
+                                var webGrid = new WebGrid(source: (IEnumerable<LabelSetting>)ViewData["DisplayData"], canPage: false, canSort: false, defaultSort: "Type", ajaxUpdateContainerId: "divGrid");
+                            }
+                            @webGrid.GetHtml(
+                            tableStyle: "table table-striped table-hover table-border table-responsive",
+                            mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                            columns: webGrid.Columns(
+                                webGrid.Column(
+                                    format:
+                                    @<text>
+                                        <input type="checkbox" id="chk" name="chk" value="@item.Type-@item.CustomerCode-@item.VKORG-@item.VTWEG-@item.SPART" />
+                                    </text>),
+                                webGrid.Column(columnName: "Type", header: "BTW"),
+                                webGrid.Column(columnName: "CustomerCode", header: "客戶代碼"),
+                                webGrid.Column(columnName: "VKORG", header: "銷售組織"),
+                                webGrid.Column(columnName: "VTWEG", header: "配銷通路"),
+                                webGrid.Column(columnName: "SPART", header: "部門別"),
+                                webGrid.Column(columnName: "Ary", header: "流水碼進制"),
+                                webGrid.Column(columnName: "AryInitialCycle", header: "流水碼歸0時間"),
+                                webGrid.Column(columnName: "NextLabel", header: "下一張BTW")
+                                )
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="mode" id="mode" value="@ViewBag.Fail"/>
+            <input type="hidden" name="pkOld" id="pkOld" value="@ViewBag.PkOld" />
+                                }
+
+        @if (!string.IsNullOrEmpty(@ViewBag.Fail))
+        {
+            <script type="text/javascript">
+                $(function () {
+                    if ("@ViewBag.Fail" === "N") {
+                        $("#btnSearch").attr({ "disabled": "disabled" });
+                        $("#btnNew").attr({ "disabled": "disabled" });
+                        $("#btnModify").attr({ "disabled": "disabled" });
+                        $("#btnDel").attr({ "disabled": "disabled" });
+                        $("#btnSave").removeAttr("disabled");
+                        $("#btnCancel").removeAttr("disabled");
+                        $("#mode").val("N");
+                        $("#slBtw").focus();
+                    }
+                    else if ("@ViewBag.Fail" === "M") {
+                        $("#btnSearch").attr({ "disabled": "disabled" });
+                        $("#btnNew").attr({ "disabled": "disabled" });
+                        $("#btnModify").attr({ "disabled": "disabled" });
+                        $("#btnDel").attr({ "disabled": "disabled" });
+                        $("#btnSave").removeAttr("disabled");
+                        $("#btnCancel").removeAttr("disabled");
+
+                        $("#slBtw").attr({ "disabled": "disabled" });
+                        $("#txtCus").attr({ "readonly": "readonly" });
+
+                        $("#mode").val("M");
+                        $("#txtSale").select();
+                    }
+                    else if ("@ViewBag.Fail" === "D") {
+                        var keys = "@ViewBag.Chk";
+                        var array = keys.split(',');
+                        $.each(array, function (i, value) {
+                            $("input[name='chk'][value='" + value + "']").prop("checked", true);
+                        });
+                    }
+                })
+            </script>
+        }
+    </section>
+</div>

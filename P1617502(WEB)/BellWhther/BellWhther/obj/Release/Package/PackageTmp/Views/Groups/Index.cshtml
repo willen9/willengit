@@ -1,0 +1,276 @@
+﻿@using Model
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $("#btnSearch").click(function () {
+            $("#slGroups").change();
+        });
+
+        $("#btnNew").click(function () {
+            $("#btnSearch").attr({ "disabled": "disabled" });
+            $("#btnNew").attr({ "disabled": "disabled" });
+            $("#btnModify").attr({ "disabled": "disabled" });
+            $("#btnDel").attr({ "disabled": "disabled" });
+            $("#btnSave").removeAttr("disabled");
+            $("#btnCancel").removeAttr("disabled");
+
+            $("input[type=checkbox]").removeAttr("disabled");
+            $("input[type=checkbox]").prop("checked", false);
+            $("#slGroups").attr("disabled", "disabled");
+            $("#slGroups").val("==請選擇==");
+            $("#txtGroup").removeAttr("disabled");
+            $("#txtGroup").select();
+            $("#mode").val("N");
+        });
+
+        $("#btnModify").click(function () {
+            $("#btnSearch").attr({ "disabled": "disabled" });
+            $("#btnNew").attr({ "disabled": "disabled" });
+            $("#btnModify").attr({ "disabled": "disabled" });
+            $("#btnDel").attr({ "disabled": "disabled" });
+            $("#btnSave").removeAttr("disabled");
+            $("#btnCancel").removeAttr("disabled");
+           
+            $("input[type=checkbox]").removeAttr("disabled");
+            $("#mode").val("M");
+        });
+
+        $("#btnCancel").click(function () {
+            try {
+                //$("#defaultForm").data('bootstrapValidator').resetForm();
+                $("#defaultForm").data('bootstrapValidator').destroy();
+                $('#defaultForm').data('bootstrapValidator', null);
+            }
+            catch (e) {
+
+            }
+
+            $("#btnSearch").removeAttr("disabled");
+            $("#btnNew").removeAttr("disabled");
+            $("#btnModify").removeAttr("disabled");
+            $("#btnDel").removeAttr("disabled");
+            $("#btnSave").attr({ "disabled": "disabled" });
+            $("#btnCancel").attr({ "disabled": "disabled" });
+
+            $("input[type='text']").val("");
+            $("input[type='text']").attr("disabled", "disabled");
+            $("input[type=checkbox]").prop("checked", false);
+            $("input[type=checkbox]").attr("disabled","disabled");
+            $("#slGroups").val("==請選擇==");
+
+            $("#mode").val("");
+        });
+
+        $("#btnDel").click(function () {
+            if (!confirm("是否確定刪除群組？")) {
+                return false;
+            }
+            if ($("#slGroups").val() === "==請選擇==") {
+                alert("請勾選要刪除的群組");
+                return false;
+            }
+            $("input[name='chk']").removeAttr("disabled");
+            return true;
+        });
+
+        $("#chkAll").click(function () {
+            $("input[name='chk']:checkbox").prop("checked", this.checked);
+        });
+
+        $("input[name='chk']:checkbox").click(function () {
+            var chks = $("input[name='chk']").not("input[name='chk']:checked");
+            if (chks.length > 0) {
+                $("#chkAll").prop("checked", false);
+            } else {
+                $("#chkAll").prop("checked", true);
+            }
+        });
+
+        $("#slGroups").change(function () {
+            if ($("#slGroups").val() === "==請選擇==") {
+                $("input[type=checkbox]").prop("checked", false);
+            } else {
+                $.ajax({
+                    url:'@Url.Action("SlChange", "Groups")',
+                    type:'POST',
+                    datatype: "text",
+                    contentType: "application/json; charset=utf-8",
+                    data:JSON.stringify({"GroupId":$("#slGroups").val()}),
+                    success: function (data) {
+                        $("input[type=checkbox]").prop("checked", false);
+                        var array = data.split(',');
+                      
+                        $.each(array, function (i, value) {
+                            $("input[name='chk'][value='" + value + "']").prop("checked", true);
+                        });
+                        var chks = $("input[name='chk']").not("input[name='chk']:checked");
+                        if (chks.length > 0) {
+                            $("#chkAll").prop("checked", false);
+                        } else {
+                            $("#chkAll").prop("checked", true);
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    function CheckForm() {
+        formValidator();
+    }
+
+    function formValidator() {
+        if ($("#mode").val() === "M") {
+            $("#defaultForm").bootstrapValidator({
+                fields: {
+                    slGroups: {
+                        validators: {
+                            callback: {
+                                message: "請選擇群組名稱",
+                                callback: function (value, validator) {
+                                    if ($("#slGroups").val() === "==請選擇==") {
+                                        return false;
+                                    }
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        else if ($("#mode").val() === "N") {
+            $("#defaultForm").bootstrapValidator({
+                fields: {
+                    txtGroup: {
+                        validators: {
+                            notEmpty: {
+                                message: "新增群組不能為空"
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    };
+</script>
+<div class="container-fluid">
+    <section class="content-header">
+        <h1>群組權限設定作業</h1>
+    </section>
+    <section class="content">
+        @Html.Raw(ViewBag.js)
+        @using (Ajax.BeginForm("Index", "Groups", new AjaxOptions { HttpMethod = "POST" }, new { id = "defaultForm", @class = "form-horizontal" }))
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-14 col-sm-14 col-md-12">
+                            <button class="btn btn-primary" type="button" id="btnSearch">
+                                <i class="fa fa-search" aria-hidden="true"></i> 查詢
+                            </button>
+                            <button class="btn btn-primary" type="button" id="btnNew">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i> 新增
+                            </button>
+                            <button class="btn btn-primary" type="button" id="btnModify">
+                                <i class="fa fa-edit" aria-hidden="true"></i> 修改
+                            </button>
+                            <button class="btn btn-primary" name="action" value="delete" id="btnDel">
+                                <i class="fa fa-times-circle" aria-hidden="true"></i> 刪除
+                            </button>
+                        </div>
+                        <div class="col-xs-8 col-sm-8 col-md-8 col-xs-offset-2 col-sm-offset-2 col-md-offset-4">
+                            <button class="btn btn-primary" disabled="disabled" name="action" value="save" id="btnSave" onclick="CheckForm()" type="submit">
+                                <i class="fa fa-save" aria-hidden="true"></i> 保存
+                            </button>
+                            <button class="btn btn-primary" disabled="disabled" type="button" id="btnCancel">
+                                <i class="fa fa-rotate-left" aria-hidden="true"></i> 取消
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="slGroups" class="col-md-3 col-lg-3 control-label text-right">群組名稱:</label>
+                        <div class="col-md-5 col-lg-5" id="divSel">
+                            @Html.DropDownList("slGroups", ViewData["slGroupsDisplay"] as SelectList, new {id = "slGroups", @class = "btn btn-default dropdown-toggle form-control", @tabindex = "1"})
+                        </div>
+                        <label for="txtGroup" class="col-md-3 col-lg-3 control-label text-right">新增群組:</label>
+                        <div class="col-md-5 col-lg-5">
+                            <input type="text" class="form-control" id="txtGroup" name="txtGroup" value="@ViewBag.Group" tabindex="2" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="form-group" style="overflow-x: auto">
+                        <div id="divGrid">
+                            @{
+                                <input type="checkbox" id="chkAll" style="position: absolute; margin-left: 8px; margin-top: 13px;" disabled="disabled" />
+                                var webGrid = new WebGrid(source: (IEnumerable<SysFunctions>)ViewData["DisplayData"], canPage: false, canSort: false, defaultSort: "SysFunctionsID", ajaxUpdateContainerId: "divGrid");
+                            }
+                            @webGrid.GetHtml(
+                            tableStyle: "table table-striped table-hover table-border table-responsive",
+                            mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                            columns: webGrid.Columns(
+                                webGrid.Column(
+                                    format:
+                                    @<text>
+                                        <input type="checkbox" id="chk" name="chk" value="@item.SysFunctionsID" disabled="disabled"/>
+                                    </text>),
+                                webGrid.Column(columnName: "SysFunctionsID", header: "程式代號"),
+                                webGrid.Column(columnName: "SysFunctionsName", header: "作業別")
+                                )
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="mode" id="mode" value="@ViewBag.Fail" />
+                                }
+
+        @if (!string.IsNullOrEmpty(@ViewBag.Fail))
+        {
+            <script type="text/javascript">
+                $(function () {
+                    if ("@ViewBag.Fail" === "N") {
+                        $("#btnSearch").attr({ "disabled": "disabled" });
+                        $("#btnNew").attr({ "disabled": "disabled" });
+                        $("#btnModify").attr({ "disabled": "disabled" });
+                        $("#btnDel").attr({ "disabled": "disabled" });
+                        $("#btnSave").removeAttr("disabled");
+                        $("#btnCancel").removeAttr("disabled");
+                        $("#mode").val("N");
+                        $("#txtGroup").select();
+                    }
+                    else if ("@ViewBag.Fail" === "M") {
+                        $("#btnSearch").attr({ "disabled": "disabled" });
+                        $("#btnNew").attr({ "disabled": "disabled" });
+                        $("#btnModify").attr({ "disabled": "disabled" });
+                        $("#btnDel").attr({ "disabled": "disabled" });
+                        $("#btnSave").removeAttr("disabled");
+                        $("#btnCancel").removeAttr("disabled");
+
+                        $("#mode").val("M");
+                        var keys = "@ViewBag.Chk";
+                        var array = keys.split(',');
+                        $.each(array, function (i, value) {
+                            $("input[name='chk'][value='" + value + "']").prop("checked", true);
+                        });
+                    }
+                    else if ("@ViewBag.Fail" === "D") {
+                        var keys = "@ViewBag.Chk";
+                        var array = keys.split(',');
+                        $.each(array, function (i, value) {
+                            $("input[name='chk'][value='" + value + "']").prop("checked", true);
+                        });
+                    }
+                })
+            </script>
+        }
+    </section>
+</div>
+
+
+

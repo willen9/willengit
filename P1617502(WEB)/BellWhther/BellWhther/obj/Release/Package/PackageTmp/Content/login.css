@@ -1,0 +1,11 @@
+﻿	    		
+#form-signin {
+	width: 450px;
+	margin: 0 auto;
+    padding: 10px 10px 15px 10px;
+    background-color: #FAFAFA;
+}
+
+#form-signin button[type=submit] {
+    width: 100%;
+}
