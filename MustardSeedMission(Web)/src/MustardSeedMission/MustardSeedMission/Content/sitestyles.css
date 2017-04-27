@@ -1,0 +1,279 @@
+﻿/*bootstrap 3 modal vertically center*/
+.modal-vertical-center {
+  text-align: center;
+  padding: 0!important;
+}
+
+.modal-vertical-center:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px;
+}
+
+.modal-vertical-center .modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+
+
+/*default operation styles*/
+.toolbar-container{
+    padding-bottom: 15px;
+}
+
+.basic-search-container{
+    padding-top: 15px;
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+div .basic-search .form-inline {
+    margin-bottom: 5px;
+}
+
+div .basic-search {
+    padding: 5px;
+}
+
+.table-header-fixed {    
+    table-layout: fixed;
+    width: 100%;
+}
+
+.table-header-fixed thead > tr {
+    display: block;
+    position: relative;    
+    width: 100%;
+}
+
+.table-header-fixed tbody {
+    display: block;
+    overflow: auto;
+    height: 500px;
+    width: 100%;
+}
+
+.panel .form-group [class*="col-"] {
+    margin-bottom: 5px;
+}
+
+.user-menu .dropdown-menu {
+    position: absolute;
+    right: 0;
+    left: auto;
+    width: 100px;
+    border-color: #eee;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.user-footer {
+    background-color: #f9f9f9;
+    padding: 10px;
+}
+
+.form-inline .form-group {
+    margin-right: 5px;
+}
+
+.tab-content {
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd; 
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;  
+    padding: 10px;
+}
+
+.rms-table {
+    font-size: 14px;
+}
+
+table .column-one-action {
+    width: 45px;
+}
+
+table .column-two-actions {
+    width: 90px;
+}
+
+table .column-three-actions {
+    width: 135px;
+}
+
+/* CMSI02 */
+.cmsi02-table .col-department-id {
+    width: 180px;
+}
+
+.cmsi02-table .col-department-name {
+    width: 300px;
+}
+
+/* CMSI03 */
+.cmsi03-table .col-employee-id {
+    width: 140px;
+}
+
+.cmsi03-table .col-employee-name {
+    width: 150px;
+}
+
+.cmsi03-table .col-department {
+    width: 120px;
+}
+
+.cmsi03-table .col-tel {
+    width: 150px;
+}
+
+/* CMSI04 */
+.cmsi04-table .col-category-type {
+    width: 100px;
+}
+
+.cmsi04-table .col-category-id {
+    width: 140px;
+}
+
+/* CMSI05 */
+.cmsi05-table .col-product-id {
+    width: 160px;
+}
+
+.cmsi05-table .col-product-name {
+    width: 230px;
+}
+
+.cmsi05-table .col-product-spec {
+    width: 170px;
+}
+
+.cmsi05-table .col-stock-unit {
+    width: 80px;
+}
+
+.cmsi05-table .col-category {
+    width: 120px;
+}
+
+/* CMSI06 Calendar */
+.fc-view {
+    border-left: 1px solid #ddd;    
+    border-right: 1px solid #ddd;
+}
+
+/* CMSI07 */
+.cmsi07-table .col-currency {
+    width: 100px;
+}
+
+.cmsi07-table .col-currency-name {
+    width: 170px;
+}
+
+.cmsi07-table .col-available-date {
+    width: 100px;
+}
+
+/* CMSI08 */
+.cmsi08-table .col-brand-id {
+    width: 140px;
+}
+
+/* CMSI09*/
+.cmsi09-table .col-customer-id {
+    width: 140px;
+}
+
+.cmsi09-table .col-customer-name {
+    width: 150px;
+}
+
+.cmsi09-table .col-contact {
+    width: 150px;
+}
+
+.cmsi09-table .col-tel {
+    width: 150px;
+}
+
+/* CMSI10 */
+.cmsi10-table .col-vender-id {
+    width: 140px;
+}
+
+.cmsi10-table .col-vender-name {
+    width: 150px;
+}
+
+.cmsi10-table .col-contact {
+    width: 150px;
+}
+
+.cmsi10-table .col-tel {
+    width: 150px;
+}
+
+/* CMSI11 */
+.cmsi11-table .col-position-id {
+    width: 140px;
+}
+
+.cmsi11-table .col-position-name {
+    width: 150px;
+}
+
+.cmsi11-table .col-position-type {
+    width: 100px;
+}
+
+/* SUPI03 */
+.supi03-table .col-order-type {
+    width: 95px;
+}
+
+.supi03-table .col-order-name {
+    width: 170px;
+}
+
+.supi03-table .col-order-category {
+    width: 140px;
+}
+
+/* SUPI04 */
+.supi04-table .col-item-no {
+    width: 100px;
+}
+
+.supi03-table .col-item-name {
+    width: 140px;
+}
+
+/* SUPI05 */
+.supi05-table .col-order-type {
+    width: 90px;
+}
+
+.supi05-table .col-order-number {
+    width: 140px;
+}
+
+.supi05-table .col-customer-name {
+    width: 140px;
+}
+
+.supi05-table .col-support-unit {
+    width: 130px;
+}
+
+.supi05-table .col-support-item {
+    width: 120px;
+}
+
+.supi05-table .col-creator {
+    width: 110px;
+}

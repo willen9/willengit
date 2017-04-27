@@ -1,0 +1,661 @@
+﻿@using MustardSeedMission.Models
+@using MustardSeedMission.ViewModels
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DefaultLayoutPage.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $("#btnSearch").click(function () {
+            $("#Basic08_Modal01_btnConfirm").removeAttr("disabled");
+        });
+
+        $("#btnNew").click(function () {
+            try {
+                $("#Basic08_Modal02_Form").data('bootstrapValidator').destroy();
+                $('#Basic08_Modal02_Form').data('bootstrapValidator', null);
+            } catch (e) {
+
+            }
+            formValidator();
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            //var day = date.getDate();
+            $("#Basic08_Modal02_Form")[0].reset();
+            //$("#Basic08_Modal02_Month").text(year + "/" + month + "/" + day);
+            $("#Basic08_Modal02_Month").text(year + "/" + month);
+            $("#Basic08_Modal02_Developer").text($("#txtLogin").val());
+            $("#Basic08_Modal02_DeveloperName").text($("#txtLoginName").val());
+        });
+
+        $("#btnModify").click(function () {
+            var sel = $(".selectedRow");
+            if (sel.length === 0) {
+                alert("請選擇修改項");
+                return;
+            }
+            var region = sel.find("td:eq(2)").find(".sr-only").text();
+            var zone = sel.find("td:eq(3)").find(".sr-only").text();
+            SlChange(region, zone);
+        });
+
+        $("#btnDel").click(function () {
+            if ($("#divGrid table :checkbox:checked").length === 0) {
+                alert("請選擇要刪除的項");
+                return;
+            }
+            if (!confirm("確定刪除選中項？")) {
+                return;
+            }
+            var checked = $("#divGrid table :checkbox:checked");
+            var chk = "";
+            checked.each(function () {
+                chk += $(this).val() + ",";
+            });
+            if (chk.length > 0) {
+                $("#Basic08_Modal01_Del_Chk").val(chk.substring(0, chk.length - 1));
+                if ($("#Basic08_Modal01_Month").val() !== "") {
+                    var reg = /^[1-2]\d{3}\/([0]\d|[1][0-2])$/;
+                    if (!reg.test($("#Basic08_Modal01_Month").val())) {
+                        $("#Basic08_Modal01_Month").val("");
+                    }
+                    try {
+                        $("#Basic08_Modal01_Form").data('bootstrapValidator').destroy();
+                        $('#Basic08_Modal01_Form').data('bootstrapValidator', null);
+                    } catch (e) {
+
+                    }
+                }
+                $("#Basic08_Modal01_btnDel").click();
+            }
+        });
+
+        $("#divGrid table tbody tr").click(function () {
+            $(".selectedRow").removeClass("selectedRow");
+            $(this).addClass("selectedRow");
+        });
+
+        $("#btnExport").click(function () {
+            if ($("#divGrid table tbody tr").length === 0) {
+                alert("請先查詢數據");
+                return;
+            }
+            if ($("#Basic08_Modal01_Month").val() !== "") {
+                var reg = /^[1-2]\d{3}\/([0]\d|[1][0-2])$/;
+                if (!reg.test($("#Basic08_Modal01_Month").val())) {
+                    $("#Basic08_Modal01_Month").val("");
+                }
+                try {
+                    $("#Basic08_Modal01_Form").data('bootstrapValidator').destroy();
+                    $('#Basic08_Modal01_Form').data('bootstrapValidator', null);
+                } catch (e) {
+
+                }
+            }
+            $("#Basic08_Modal01_btnExport").click();
+        });
+
+        $("#Basic08_Modal01_BackYM").change(function () {
+            if ($("#Basic08_Modal01_BackYM:checked").length > 0) {
+                $("#Basic08_Modal01_BackYMStart").removeAttr("disabled");
+                $("#Basic08_Modal01_BackYMEnd").removeAttr("disabled");
+            } else {
+                $("#Basic08_Modal01_BackYMStart").attr("disabled", "disabled");
+                $("#Basic08_Modal01_BackYMEnd").attr("disabled", "disabled");
+                $("#Basic08_Modal01_BackYMStart").val("");
+                $("#Basic08_Modal01_BackYMEnd").val("");
+            }
+        });
+
+        $("#Basic08_Modal01_YM").change(function () {
+            if ($("#Basic08_Modal01_YM:checked").length > 0) {
+                $("#Basic08_Modal01_YMStart").removeAttr("disabled");
+                $("#Basic08_Modal01_YMEnd").removeAttr("disabled");
+            } else {
+                $("#Basic08_Modal01_YMStart").attr("disabled", "disabled");
+                $("#Basic08_Modal01_YMEnd").attr("disabled", "disabled");
+                $("#Basic08_Modal01_YMStart").val("");
+                $("#Basic08_Modal01_YMEnd").val("");
+            }
+        });
+
+        $("#Basic08_Modal01_BackYM").change();
+
+        $("#Basic08_Modal01_YM").change();
+
+        $("#Basic08_Modal02_Region").change(function () {
+            $.ajax({
+                url: '@Url.Action("GetZoneByRegion", "Basic08")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ region: $("#Basic08_Modal02_Region").val() }),
+                success: function (data) {
+                    $("#Basic08_Modal02_SerArea").empty();
+                    var modals = eval(data);
+                    $("#Basic08_Modal02_SerArea").append('<option value="">==請選擇==</option>');
+                    for (var i = 0; i < modals.length; i++) {
+                        $("#Basic08_Modal02_SerArea").append('<option value="' + modals[i].Code + '">' + modals[i].Name + '</option>');
+                    }
+                    $("#Basic08_Modal02_SerArea").val("");
+                    try {
+                        $("#Basic08_Modal02_Form").data('bootstrapValidator').destroy();
+                        $('#Basic08_Modal02_Form').data('bootstrapValidator', null);
+                    } catch (e) {
+
+                    }
+                },
+                error: function (message) {
+                    alert("獲取所屬服務區失敗,原因：" + message);
+                }
+            });
+        });
+
+        $("#Basic08_Modal02_SerArea").change(function () {
+            if ($("#Basic08_Modal02_SerArea").val() !== "") {
+                $.ajax({
+                    url: '@Url.Action("GetRegionByZone", "Basic08")',
+                    type: "POST",
+                    datatype: "text",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ zone: $("#Basic08_Modal02_SerArea").val() }),
+                    success: function (data) {
+                        $("#Basic08_Modal02_Region").val(data);
+                        try {
+                            $("#Basic08_Modal02_Form").data('bootstrapValidator').destroy();
+                            $('#Basic08_Modal02_Form').data('bootstrapValidator', null);
+                        } catch (e) {
+
+                        }
+                    },
+                    error: function (message) {
+                        alert("獲取所屬聯誼區失敗,原因：" + message);
+                    }
+                });
+            }
+        });
+
+        $("#Basic08_Modal03_Region").change(function () {
+            var region = $("#Basic08_Modal03_Region").val();
+            var zone = $("#Basic08_Modal03_SerArea").val();
+            SlChange(region, zone);
+        });
+
+        $("#Basic08_Modal03_SerArea").change(function () {
+            var region = $("#Basic08_Modal03_Region").val();
+            var zone = $("#Basic08_Modal03_SerArea").val();
+            SlChange(region, zone);
+        });
+
+        $("#Basic08_Modal03_btnConfirm").click(function () {
+            var input = $("#Basic08_Modal03_Grid table tbody input");
+            var names = new Array();
+            var index = 0;
+            var check = true;
+            input.each(function () {
+                if ($(this).val() === "") {
+                    alert("店家名稱不能為空");
+                    check = false;
+                    return;
+                };
+
+                for (var i = 0; i < names.length; i++) {
+                    if (names[i] === $(this).val()) {
+                        alert("店家名稱重複");
+                        check = false;
+                        return;
+                    }
+                }
+                names[index++] = $(this).val();
+            });
+            if (!check) {
+                return;
+            }
+            var trs = $("#Basic08_Modal03_Grid table tbody tr");
+            if (trs.length === 0) {
+                alert("無數據需要保存");
+                return;
+            }
+            var modal = new Array();
+            for (var i = 0; i < trs.length; i++) {
+                modal[i] = {
+                    SerialNo: trs.eq(i).find("td").eq(0).find("label").text(),
+                    Code: trs.eq(i).find("td").eq(1).find("label").text(),
+                    Name: trs.eq(i).find("td").eq(2).find("input").val(),
+                    BusinessCode: trs.eq(i).find("td").eq(5).find("select").val(),
+                    ModificationCode: trs.eq(i).find("td").eq(6).find("select").val(),
+                    Level: i
+                }
+            }
+            $.ajax({
+                url: '@Url.Action("PostUpdate", "Basic08")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ Modal: modal }),
+                success: function (data) {
+                    if (data === "OK") {
+                        alert("修改成功");
+                        if ($("#Basic08_Modal01_Month").val() !== "") {
+                            var reg = /^[1-2]\d{3}\/([0]\d|[1][0-2])$/;
+                            if (!reg.test($("#Basic08_Modal01_Month").val())) {
+                                $("#Basic08_Modal01_Month").val("");
+                            }
+                            try {
+                                $("#Basic08_Modal01_Form").data('bootstrapValidator').destroy();
+                                $('#Basic08_Modal01_Form').data('bootstrapValidator', null);
+                            } catch (e) {
+
+                            }
+                        }
+                        $("#Basic08_Modal01_btnConfirm2").click();
+                    } else {
+                        alert(data);
+                    }
+                },
+                error: function (message) {
+                    alert("修改失敗,原因：" + message);
+                }
+            });
+        });
+    });
+
+    function Basic08_Modal01_btnConfirmClick() {
+        try {
+            $("#Basic08_Modal01_Form").data('bootstrapValidator').destroy();
+            $('#Basic08_Modal01_Form').data('bootstrapValidator', null);
+        } catch (e) {
+
+        }
+        formValiad();
+        $("#Basic08_Modal01_Form").data('bootstrapValidator').validate();
+        if (!$('#Basic08_Modal01_Form').data('bootstrapValidator').isValid()) {
+            return false;
+        }
+        return true;
+    }
+
+    function formValiad() {
+        $("#Basic08_Modal01_Form").bootstrapValidator({
+            fields: {
+                Basic08_Modal01_Month: {
+                    validators: {
+                        regexp: {
+                            regexp: /^[1-2]\d{3}\/([0]\d|[1][0-2])$/,
+                            message: '開發月份格式不正确(YYYY/MM)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function Basic08_Modal02_btnConfirmClick() {
+        formValidator();
+        $("#Basic08_Modal02_Form").data('bootstrapValidator').validate();
+        if (!$('#Basic08_Modal02_Form').data('bootstrapValidator').isValid()) {
+            return;
+        } else {
+            var model = {
+                Name: $("#Basic08_Modal02_ShopName").val(),
+                ZoneCode: $("#Basic08_Modal02_SerArea").val(),
+                BusinessCode: $("#Basic08_Modal02_BusinessCategory").val(),
+                DevelopDate: $("#Basic08_Modal02_Month").text(),
+                Developer: $("#Basic08_Modal02_Developer").text(),
+                DBC: $("#Basic08_Modal02_BoxName").val(),
+                Sunday: $("#Basic08_Modal02_chk7:checked").length === 1,
+                Monday: $("#Basic08_Modal02_chk1:checked").length === 1,
+                Tuesday: $("#Basic08_Modal02_chk2:checked").length === 1,
+                Wednesday: $("#Basic08_Modal02_chk3:checked").length === 1,
+                Thursday: $("#Basic08_Modal02_chk4:checked").length === 1,
+                Friday: $("#Basic08_Modal02_chk5:checked").length === 1,
+                Saturday: $("#Basic08_Modal02_chk6:checked").length === 1,
+                ReceiptZIP: $("#Basic08_Modal02_PostArea").val(),
+                ReceipAddress: $("#Basic08_Modal02_PostAddress").val(),
+                ZIP: $("#Basic08_Modal02_ShowPostArea").val(),
+                Address: $("#Basic08_Modal02_ShowAddress").val(),
+                Tel: $("#Basic08_Modal02_Tel").val(),
+                Description: $("#Basic08_Modal02_Remark").val(),
+                FSTime: $("#Basic08_Modal02_FirstStart").val(),
+                FETime: $("#Basic08_Modal02_FirstEnd").val(),
+                SSTime: $("#Basic08_Modal02_SndStart").val(),
+                SETime: $("#Basic08_Modal02_SndEnd").val()
+            }
+            $.ajax({
+                url: '@Url.Action("PostAdd", "Basic08")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(model),
+                success: function (data) {
+                    if (data === "OK") {
+                        alert("新增成功");
+                        if ($("#Basic08_Modal01_Month").val() !== "") {
+                            var reg = /^[1-2]\d{3}\/([0]\d|[1][0-2])$/;
+                            if (!reg.test($("#Basic08_Modal01_Month").val())) {
+                                $("#Basic08_Modal01_Month").val("");
+                            }
+                            try {
+                                $("#Basic08_Modal01_Form").data('bootstrapValidator').destroy();
+                                $('#Basic08_Modal01_Form').data('bootstrapValidator', null);
+                            } catch (e) {
+
+                            }
+                        }
+                        $("#Basic08_Modal01_btnConfirm2").click();
+                    } else {
+                        alert(data);
+                    }
+                },
+                error: function (message) {
+                    alert("新增失敗,原因：" + message);
+                }
+            });
+        }
+    }
+
+    function formValidator() {
+        $("#Basic08_Modal02_Form").bootstrapValidator({
+            fields: {
+                Basic08_Modal02_ShopName: {
+                    validators: {
+                        notEmpty: {
+                            message: "店家名稱不能為空"
+                        }
+                    }
+                },
+                Basic08_Modal02_Region: {
+                    validators: {
+                        callback: {
+                            message: "所屬聯誼區不能為空",
+                            callback: function (value, validator) {
+                                if ($("#Basic08_Modal02_Region").val() === "") {
+                                    return false;
+                                }
+                                return true;
+                            }
+                        }
+                    }
+                },
+                Basic08_Modal02_SerArea: {
+                    validators: {
+                        callback: {
+                            message: "所屬服務區不能為空",
+                            callback: function (value, validator) {
+                                if ($("#Basic08_Modal02_SerArea").val() === "") {
+                                    return false;
+                                }
+                                return true;
+                            }
+                        }
+                    }
+                },
+                Basic08_Modal02_FirstEnd: {
+                    validators: {
+                        callback: {
+                            message: "第一段迄營業時間不能小于起營業時間",
+                            callback: function (value, validator) {
+                                var start = $("#Basic08_Modal02_FirstStart").val();
+                                var end = $("#Basic08_Modal02_FirstEnd").val();
+                                if (start.length > 0 && end.length > 0 && start > end) {
+                                    return false;
+                                }
+                                return true;
+                            }
+                        }
+                    }
+                },
+                Basic08_Modal02_SndEnd: {
+                    validators: {
+                        callback: {
+                            message: "第二段迄營業時間不能小于起營業時間",
+                            callback: function (value, validator) {
+                                var start = $("#Basic08_Modal02_SndStart").val();
+                                var end = $("#Basic08_Modal02_SndEnd").val();
+                                if (start.length > 0 && end.length > 0 && start > end) {
+                                    return false;
+                                }
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function SlChange(region, zone) {
+        $.ajax({
+            url: '@Url.Action("GetZoneByRegion", "Basic08")',
+            type: "POST",
+            datatype: "text",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ region: region }),
+            success: function (data) {
+                $("#Basic08_Modal03_Region").val(region);
+                var modals = eval(data);
+                $("#Basic08_Modal03_SerArea").empty();
+                //$("#Basic08_Modal03_SerArea").append('<option value="">==請選擇==</option>');
+                for (var i = 0; i < modals.length; i++) {
+                    $("#Basic08_Modal03_SerArea").append('<option value="' + modals[i].Code + '">' + modals[i].Name + '</option>');
+                }
+                $("#Basic08_Modal03_SerArea").val(zone);
+                $.ajax({
+                    url: '@Url.Action("GetModifyData", "Basic08")',
+                    type: "POST",
+                    datatype: "text",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ region: region, zone: zone }),
+                    success: function (data) {
+                        var modals = eval(data);
+                        $("#Basic08_Modal03_Grid table tbody").empty();
+                        for (var i = 0; i < modals.length; i++) {
+                            if (i % 2 === 0) {
+                                $("#Basic08_Modal03_Grid table tbody").append('<tr id=' + i + '>' +
+                                    '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].SerialNo + '</label></td>' +
+                                    '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].Code + '</label></td>' +
+                                    '<td><input type="text" id="txtName" class="form-control" value="' + modals[i].Name + '" maxlength="50" /></td>' +
+                                    '<td><button type="button" class="btn btn-primary" onclick="btnUpClick(this)"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></td>' +
+                                    '<td><button type="button" class="btn btn-primary" onclick="btnDownClick(this)"><i class="fa fa-arrow-down" aria-hidden="true"></i></button></td>' +
+                                    '<td>' + $("#divHideBusinessCategory").html() + '<span class="sr-only">' + (modals[i].BusinessCode == null ? "" : modals[i].BusinessCode) + '</span></td>' +
+                                    '<td>' + $("#divHideModification").html() + '<span class="sr-only">' + (modals[i].ModificationCode === null ? "" : modals[i].ModificationCode) + '</span></td>' +
+                                    '</tr>');
+                            } else {
+                                $("#Basic08_Modal03_Grid table tbody").append('<tr class="alternatingRow" id=' + i + '>' +
+                                    '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].SerialNo + '</label></td>' +
+                                    '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].Code + '</label></td>' +
+                                    '<td><input type="text" id="txtName" class="form-control" value="' + modals[i].Name + '" maxlength="50" /></td>' +
+                                    '<td><button type="button" class="btn btn-primary" onclick="btnUpClick(this)"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></td>' +
+                                    '<td><button type="button" class="btn btn-primary" onclick="btnDownClick(this)"><i class="fa fa-arrow-down" aria-hidden="true"></i></button></td>' +
+                                    '<td>' + $("#divHideBusinessCategory").html() + '<span class="sr-only">' + (modals[i].BusinessCode == null ? "" : modals[i].BusinessCode) + '</span></td>' +
+                                    '<td>' + $("#divHideModification").html() + '<span class="sr-only">' + (modals[i].ModificationCode === null ? "" : modals[i].ModificationCode) + '</span></td>' +
+                                    '</tr>');
+                            }
+                        }
+                        var trs = $("#Basic08_Modal03_Grid table tbody tr");
+                        trs.each(function () {
+                            $(this).find("td").eq(5).find("select").val($(this).find("td").eq(5).find(".sr-only").text());
+                            $(this).find("td").eq(6).find("select").val($(this).find("td").eq(6).find(".sr-only").text());
+                        });
+                        $("#Basic08_Modal03").modal("show");
+                    },
+                    error: function (message) {
+                        alert("獲取店家主檔失敗,原因：" + message);
+                    }
+                });
+            },
+            error: function (message) {
+                alert("獲取所屬服務區失敗,原因：" + message);
+            }
+        });
+    }
+
+    function btnUpClick(obj) {
+        var index = $(obj).closest("tr").attr("id");
+        if (parseInt(index) === 0) {
+            return;
+        }
+        var name = $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(2).find("input").val();
+        var type = $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(5).find("select").val();
+        var exception = $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(6).find("select").val();
+        var indexPrev = parseInt(index) - 1;
+        var nameN = $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(2).find("input").val();
+        var typeN = $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(5).find("select").val();
+        var exceptionN = $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(6).find("select").val();
+
+        var trIndex = $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").html();
+        var trPrev = $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").html();
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").html(trPrev);
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").html(trIndex);
+
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(2).find("input").val(nameN);
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(5).find("select").val(typeN);
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(6).find("select").val(exceptionN);
+
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(2).find("input").val(name);
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(5).find("select").val(type);
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(6).find("select").val(exception);
+    }
+
+    function btnDownClick(obj) {
+        var index = $(obj).closest("tr").attr("id");
+        if (parseInt(index) + 1 === $("#Basic08_Modal03_Grid table tbody tr").length) {
+            return;
+        }
+        var name = $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(2).find("input").val();
+        var type = $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(5).find("select").val();
+        var exception = $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(6).find("select").val();
+        var indexPrev = parseInt(index) + 1;
+        var nameN = $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(2).find("input").val();
+        var typeN = $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(5).find("select").val();
+        var exceptionN = $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(6).find("select").val();
+
+        var trIndex = $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").html();
+        var trPrev = $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").html();
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").html(trPrev);
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").html(trIndex);
+
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(2).find("input").val(nameN);
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(5).find("select").val(typeN);
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(6).find("select").val(exceptionN);
+
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(2).find("input").val(name);
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(5).find("select").val(type);
+        $("#Basic08_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(6).find("select").val(exception);
+    }
+</script>
+<section class="content-header">
+    <h1>店家主檔維護作業</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    <form id="from" class="form-horizontal" method="post" action="@Url.Action("Index", "Basic08")">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnSearch" data-toggle="modal" data-target="#Basic08_Modal01">
+                            <i class="fa fa-search" aria-hidden="true"></i> 查詢
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnNew" data-toggle="modal" data-target="#Basic08_Modal02">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i> 新增
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnModify">
+                            <i class="fa fa-edit" aria-hidden="true"></i> 修改
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnDel">
+                            <i class="fa fa-times-circle" aria-hidden="true"></i> 刪除
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnExport">
+                            <i class="fa fa-file-excel-o" aria-hidden="true"></i> 匯出
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="divGrid">
+                @{
+                    @*<input type="checkbox" id="chkAll" style="position: absolute; margin-left: 8px; margin-top: 13px;" />*@
+                var webGrid = new WebGrid(source: (IEnumerable<StoreViewModel>)ViewData["DisplayData"], canPage: false, canSort: false, defaultSort: "Code", ajaxUpdateContainerId: "divGrid");
+                }
+                @webGrid.GetHtml(
+                    tableStyle: "table table-bordered table-responsive",
+                    headerStyle: "headerStyle",
+                    alternatingRowStyle: "alternatingRow",
+                    selectedRowStyle: "selectedRow",
+                    mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                    columns: webGrid.Columns(
+                        webGrid.Column(format:
+                        @<text>
+                            <input type="checkbox" id="chk" name="chk" value="@item.Code" />
+                        </text>, style: "chkStyle"),
+                        webGrid.Column(columnName: "SerialNo", header: "序號"),
+                        webGrid.Column(columnName: "", header: "所屬聯誼區", format:
+                        @<text>
+                            <span>@item.RegionName</span>
+                            <span class="sr-only">@item.RegionCode</span>
+                        </text>),
+                        webGrid.Column(columnName: "", header: "所屬服務區", format:
+                        @<text>
+                            <span>@item.ZoneName</span>
+                            <span class="sr-only">@item.ZoneCode</span>
+                        </text>),
+                        webGrid.Column(columnName: "Code", header: "店家代碼"),
+                        webGrid.Column(columnName: "Name", header: "店家名稱"),
+                        webGrid.Column(columnName: "", header: "營業種類代碼", format:
+                        @<text>
+                            <span>@item.BusinessName</span>
+                            <span class="sr-only">@item.BusinessCode</span>
+                        </text>),
+                        webGrid.Column(columnName: "", header: "異動原因", format:
+                        @<text>
+                            <span>@item.ModificationName</span>
+                            <span class="sr-only">@item.ModificationCode</span>
+                        </text>)
+                        )
+                    )
+            </div>
+        </div>
+    </form>
+</section>
+<input type="hidden" id="txtLogin" value="@ViewBag.Login" />
+<input type="hidden" id="txtLoginName" value="@ViewBag.LoginName" />
+<div class="hide" id="divHideBusinessCategory">
+    <select class="form-control" id="slHide_BusinessCategory">
+        <option value="">==請選擇==</option>
+        @{
+            var allBusinessCategoryHide = (IEnumerable<BusinessCategory>)ViewData["AllBusinessCategory"];
+            foreach (var item in allBusinessCategoryHide)
+            {
+                <option value="@item.Code">@item.Name</option>
+            }
+        }
+    </select>
+</div>
+<div class="hide" id="divHideModification">
+    <select class="form-control" id="slHide_Modification">
+        <option value="">==請選擇==</option>
+        @{
+            var allModificationHide = (IEnumerable<Modification>)ViewData["AllModification"];
+            foreach (var item in allModificationHide)
+            {
+                <option value="@item.Code">@item.Name</option>
+            }
+        }
+    </select>
+</div>
+@Html.Partial("PartialPage/_PartialPage_Basic08_Modal01")
+@Html.Partial("PartialPage/_PartialPage_Basic08_Modal02")
+@Html.Partial("PartialPage/_PartialPage_Basic08_Modal03")
+
+
+

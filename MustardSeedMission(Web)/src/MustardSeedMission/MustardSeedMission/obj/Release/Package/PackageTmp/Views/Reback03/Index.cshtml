@@ -1,0 +1,162 @@
+﻿@using MustardSeedMission.Models
+@using MustardSeedMission.ViewModels
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DefaultLayoutPage.cshtml";
+}
+<script>
+    $(document).ready(function() {
+        $("#slOrderNo").change(function() {
+            $("#btnSearchHide").click();
+        });
+
+        $("#btnConfirm").click(function () {
+            if ($("#slOrderNo").val() === "") {
+                alert("請選擇回收單號");
+                return false;
+            }
+            if ($("#divGrid table tbody tr").length === 0) {
+                alert("無數據要保存");
+                return false;
+            }
+            var input = $("#divGrid table tbody tr input[type='text']");
+            var ex = /^\d+$/;
+            var chk = "";
+            input.each(function() {
+                var val = $(this).val();
+                if (val === "") {
+                    chk = "1";
+                    return;
+                }
+                if (!ex.test(val)) {
+                    chk = "2";
+                    return;
+                }
+            });
+            if (chk === "1") {
+                alert("值不能為空");
+                return false;
+            }
+            if (chk === "2") {
+                alert("值必須為非負整數");
+                return false;
+            }
+            return true;
+        });
+    });
+</script>
+<section class="content-header">
+    <h1>登打作業</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    <form id="from" class="form-horizontal" method="post" action="@Url.Action("Index", "Reback03")">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="action" value="btnConfirm" id="btnConfirm">
+                            <i class="fa fa-check-circle" aria-hidden="true"></i> 確認
+                        </button>
+                        <button class="btn btn-primary hide" type="submit" name="action" value="btnSearch" id="btnSearchHide">
+                            <i class="fa fa-check-circle" aria-hidden="true"></i> 查詢
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="slOrderNo" class="col-sm-5 col-md-3 col-lg-3 control-label">回收單單號：</label>
+                    <div class="col-sm-8  col-md-5 col-lg-5">
+                        <select id="slOrderNo" name="slOrderNo" class="form-control">
+                            <option value="">==請選擇==</option>
+                            @{
+                                var allDonationHead = (IEnumerable<DonationHead>)ViewData["AllDonationHead"];
+                                if (!string.IsNullOrEmpty(@ViewBag.DocEntry))
+                                {
+                                    foreach (var item in allDonationHead)
+                                    {
+                                        if (@item.DocEntry == @ViewBag.DocEntry)
+                                        {
+                                            <option value="@item.DocEntry" selected="selected">@item.DocEntry</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.DocEntry">@item.DocEntry</option>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (var item in allDonationHead)
+                                    {
+                                        <option value="@item.DocEntry">@item.DocEntry</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="divGrid">
+                @{
+                    var webGrid = new WebGrid(source: (IEnumerable<DonationListViewModel>)ViewData["DisplayData"], canPage: false, canSort: false, defaultSort: "Serialno", ajaxUpdateContainerId: "divGrid");
+                }
+                @webGrid.GetHtml(
+                    tableStyle: "table table-bordered table-responsive",
+                    headerStyle: "headerStyle",
+                    alternatingRowStyle: "alternatingRow",
+                    selectedRowStyle: "selectedRow",
+                    mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                    columns: webGrid.Columns(
+                        webGrid.Column(columnName: "DocEntry", header: "回收單號",format:
+                        @<text>
+                            <label class="form-control-static"  style="font-weight: normal">@item.DocEntry</label> 
+                        </text>),
+                        webGrid.Column(columnName: "WorkDay", header: "回收日期", format:
+                        @<text>
+                            <label class="form-control-static"  style="font-weight: normal">@item.WorkDay</label>
+                        </text>),
+                        webGrid.Column(columnName: "OperatorName", header: "回收人員", format:
+                        @<text>
+                            <label class="form-control-static"  style="font-weight: normal">@item.OperatorName</label>
+                        </text>),
+                        webGrid.Column(columnName: "StoreCode", header: "店家代碼", format:
+                        @<text>
+                            <label class="form-control-static"  style="font-weight: normal">@item.StoreCode</label>
+                        </text>),
+                        webGrid.Column(columnName: "StoreName", header: "店家名稱", format:
+                        @<text>
+                            <label class="form-control-static"  style="font-weight: normal">@item.StoreName</label>
+                        </text>),
+                        webGrid.Column(columnName: "", header: "總金額", format:
+                        @<text>
+                            <input type="text" class="form-control" name="CheckTotal" value="@item.CheckTotal" style="width: 70px" maxlength="9"/>
+                            <input type="checkbox" id="chk" name="chk" checked="checked"  class="hide" value="@item.Serialno-@item.StoreCode"/>
+                        </text>),
+                        webGrid.Column(columnName: "", header: "發票", format:
+                        @<text>
+                            <input type="text" class="form-control" name="CheckInvoice" value="@item.CheckInvoice" style="width: 70px" maxlength="9"/>
+                        </text>),
+                        webGrid.Column(columnName: "", header: "外鈔", format:
+                        @<text>
+                            <input type="text" class="form-control" name="Checkcurrency" value="@item.Checkcurrency" style="width: 70px" maxlength="9"/>
+                        </text>)
+                        )
+                    )
+            </div>
+        </div>
+    </form>
+</section>
+
+
+
+
+
+
+
+
+
+
+

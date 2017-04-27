@@ -1,0 +1,117 @@
+﻿@using MustardSeedMission.Models
+<div class="modal fade" id="Reback01_Modal01" tabindex="-1" role="dialog" aria-labelledby="Lable_Reback01_Modal01">
+    @using (Ajax.BeginForm("Index", "Reback01", new AjaxOptions { HttpMethod = "POST" }, new { id = "Reback01_Modal01_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Reback01_Modal01">工作計畫建立作業-查詢</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Reback01_Modal01_LinkArea" class="col-sm-7 col-md-6 col-lg-6 control-label">所屬聯誼區：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <select class="form-control" id="Reback01_Modal01_LinkArea" name="Reback01_Modal01_LinkArea">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var Reback01_Modal01_Region = (IEnumerable<Region>)ViewData["AllRegion"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Reback01_Modal01_SlRegion))
+                                    {
+                                        foreach (var region in Reback01_Modal01_Region)
+                                        {
+                                            if (@region.Code.ToString() == @ViewBag.Reback01_Modal01_SlRegion)
+                                            {
+                                                <option value="@region.Code" selected="selected">@region.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@region.Code">@region.Name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var region in Reback01_Modal01_Region)
+                                        {
+                                            <option value="@region.Code">@region.Name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Reback01_Modal01_SerArea" class="col-sm-7 col-md-6 col-lg-6 control-label">所屬服務區：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <select class="form-control" id="Reback01_Modal01_SerArea" name="Reback01_Modal01_SerArea">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var Reback01_Modal01_Zone = (IEnumerable<Zone>)ViewData["AllZone"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Reback01_Modal01_SlZone))
+                                    {
+                                        foreach (var zone in Reback01_Modal01_Zone)
+                                        {
+                                            if (@zone.Code.ToString() == @ViewBag.Reback01_Modal01_SlZone)
+                                            {
+                                                <option value="@zone.Code" selected="selected">@zone.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@zone.Code">@zone.Name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var zone in Reback01_Modal01_Zone)
+                                        {
+                                            <option value="@zone.Code">@zone.Name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Reback01_Modal01_Plan" class="col-sm-7 col-md-6 col-lg-6 control-label">計劃代碼：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <select class="form-control" id="Reback01_Modal01_Plan" name="Reback01_Modal01_Plan">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var Reback01_Modal01_PlanList = (IEnumerable<PlanList>)ViewData["AllPlanList"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Reback01_Modal01_SlPlanList))
+                                    {
+                                        foreach (var planlist in Reback01_Modal01_PlanList)
+                                        {
+                                            if (@planlist.Code.ToString() == @ViewBag.Reback01_Modal01_SlPlanList)
+                                            {
+                                                <option value="@planlist.Code" selected="selected">@planlist.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@planlist.Code">@planlist.Name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var planlist in Reback01_Modal01_PlanList)
+                                        {
+                                            <option value="@planlist.Code">@planlist.Name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="Reback01_Modal01_btnConfirm" value="Reback01_Modal01_btnConfirm" name="action" class="btn btn-primary"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

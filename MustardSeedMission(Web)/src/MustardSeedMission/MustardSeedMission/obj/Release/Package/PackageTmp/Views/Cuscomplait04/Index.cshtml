@@ -1,0 +1,196 @@
+﻿@using MustardSeedMission.Models
+@using MustardSeedMission.ViewModels
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DefaultLayoutPage.cshtml";
+}
+<script>
+    $(document).ready(function() {
+        $("#btnSearch").click(function() {
+            $("#Lable_Cuscomplait04_Modal01").text("客訴單類別主檔建立作業-查詢");
+            $("#Cuscomplait04_Modal01_No").removeAttr("disabled");
+            $("#Cuscomplait04_Modal01_Div_No").removeClass("hide");
+            $("#Cuscomplait04_Modal01_No").val($("#txtCode").val());
+            $("#Cuscomplait04_Modal01_TypeName").val($("#txtName").val());
+            $("#txtMode").val("S");
+        });
+
+        $("#btnNew").click(function() {
+            $("#Lable_Cuscomplait04_Modal01").text("客訴單類別主檔建立作業-新增");
+            $("#Cuscomplait04_Modal01_No").removeAttr("disabled");
+            $("#Cuscomplait04_Modal01_Div_No").addClass("hide");
+            $("#Cuscomplait04_Modal01_No").val("");
+            $("#Cuscomplait04_Modal01_TypeName").val("");
+            $("#txtMode").val("N");
+        });
+
+        $("#btnModify").click(function() {
+            var sel = $(".selectedRow");
+            if (sel.length === 0) {
+                alert("請選擇修改項");
+                return;
+            }
+            $("#Lable_Cuscomplait04_Modal01").text("客訴單類別主檔建立作業-修改");
+            $("#Cuscomplait04_Modal01_Div_No").removeClass("hide");
+            $("#Cuscomplait04_Modal01_No").attr("disabled", "disabled");
+            $("#Cuscomplait04_Modal01_No").val(sel.find("td:eq(1)").text());
+            $("#Cuscomplait04_Modal01_TypeName").val(sel.find("td:eq(2)").text());
+            $("#txtMode").val("M");
+            $("#Cuscomplait04_Modal01").modal("show");
+        });
+
+        $("#Cuscomplait04_Modal01_btnConfirmShow").click(function() {
+            if ($("#txtMode").val() === "S") {
+                $("#Cuscomplait04_Modal01_btnConfirm").click();
+            } else if ($("#txtMode").val() === "N") {
+                if ($("#Cuscomplait04_Modal01_TypeName").val() === "") {
+                    alert("客訴單類別名稱不能為空");
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("PostAdd", "Cuscomplait04")',
+                    type: "POST",
+                    datatype: "text",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ name: $("#Cuscomplait04_Modal01_TypeName").val() }),
+                    success: function(data) {
+                        if (data === "OK") {
+                            alert("新增成功");
+                            $("#Cuscomplait04_Modal01_No").val($("#txtCode").val());
+                            $("#Cuscomplait04_Modal01_TypeName").val($("#txtName").val());
+                            $("#Cuscomplait04_Modal01_btnConfirm").click();
+                        } else {
+                            alert(data);
+                        }
+                    },
+                    error: function(message) {
+                        alert("新增失敗,原因：" + message);
+                    }
+                });
+            } else if ($("#txtMode").val() === "M") {
+                if ($("#Cuscomplait04_Modal01_TypeName").val() === "") {
+                    alert("客訴單類別名稱不能為空");
+                    return;
+                }
+                var category = {
+                    Code: $("#Cuscomplait04_Modal01_No").val(),
+                    Name: $("#Cuscomplait04_Modal01_TypeName").val()
+                }
+                $.ajax({
+                    url: '@Url.Action("PostUpdate", "Cuscomplait04")',
+                    type: "POST",
+                    datatype: "text",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ category: category }),
+                    success: function(data) {
+                        if (data === "OK") {
+                            alert("修改成功");
+                            $("#Cuscomplait04_Modal01_No").val($("#txtCode").val());
+                            $("#Cuscomplait04_Modal01_TypeName").val($("#txtName").val());
+                            $("#Cuscomplait04_Modal01_btnConfirm").click();
+                        } else {
+                            alert(data);
+                        }
+                    },
+                    error: function(message) {
+                        alert("修改失敗,原因：" + message);
+                    }
+                });
+            } else {
+                alert("操作方式不明");
+            }
+        });
+
+        $("#btnDel").click(function() {
+            if ($(":checkbox:checked").length === 0) {
+                alert("請選擇要刪除的項");
+                return false;
+            }
+            if (!confirm("確定刪除選中項？")) {
+                return false;
+            }
+            return true;
+        });
+
+        $("#divGrid table tbody tr").click(function() {
+            $(".selectedRow").removeClass("selectedRow");
+            $(this).addClass("selectedRow");
+        });
+
+        $("#btnExport").click(function() {
+            if ($("#divGrid table tbody tr").length === 0) {
+                alert("請先查詢數據");
+                return false;
+            }
+            return true;
+        });
+    });
+</script>
+<section class="content-header">
+    <h1>客訴單類別主檔建立作業</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    <form id="defaultform" class="form-horizontal" method="post" action="@Url.Action("Index", "Cuscomplait04")">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnSearch" data-toggle="modal" data-target="#Cuscomplait04_Modal01">
+                            <i class="fa fa-search" aria-hidden="true"></i> 查詢
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnNew" data-toggle="modal" data-target="#Cuscomplait04_Modal01">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i> 新增
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnModify">
+                            <i class="fa fa-edit" aria-hidden="true"></i> 修改
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="action" value="delete" id="btnDel">
+                            <i class="fa fa-times-circle" aria-hidden="true"></i> 刪除
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="action" value="export" id="btnExport">
+                            <i class="fa fa-file-excel-o" aria-hidden="true"></i> 匯出
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="divGrid">
+                @{
+                    @*<input type="checkbox" id="chkAll" style="position: absolute; margin-left: 8px; margin-top: 13px;" />*@
+                    var webGrid = new WebGrid(source: (IEnumerable<Category>) ViewData["DisplayData"], canPage: false, canSort: false, defaultSort: "Code", ajaxUpdateContainerId: "divGrid");
+                }
+                @webGrid.GetHtml(
+                    tableStyle: "table table-bordered table-responsive",
+                    headerStyle: "headerStyle",
+                    alternatingRowStyle: "alternatingRow",
+                    selectedRowStyle: "selectedRow",
+                    mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                    columns: webGrid.Columns(
+                        webGrid.Column(format:
+                            @<text>
+                                <input type="checkbox" id="chk" name="chk" value='@item.Code'/>
+                             </text>, style: "chkStyle"),
+                        webGrid.Column(columnName: "Code", header: "客訴單類別代碼"),
+                        webGrid.Column(columnName: "Name", header: "客訴單類別名稱")
+                        )
+                    )
+            </div>
+        </div>
+        <input type="hidden" id="txtCode" name="txtCode" value="@ViewBag.Cuscomplait03_Modal01_Category" />
+        <input type="hidden" id="txtName" name="txtName" value="@ViewBag.Cuscomplait04_Modal01_TypeName" />
+    </form>
+</section>
+@Html.Partial("PartialPage/_PartialPage_Cuscomplait04_Modal01")
+
+
+
+

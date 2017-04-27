@@ -1,0 +1,58 @@
+﻿@using MustardSeedMission.Models
+<div class="modal fade" id="Basic04_Modal03" tabindex="-1" role="dialog" aria-labelledby="Lable_Basic04_Modal03">
+    @using (Ajax.BeginForm("Index", "Basic04", new AjaxOptions { HttpMethod = "POST" }, new { id = "Basic04_Modal03_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Basic04_Modal03">服務區主檔維護作業-修改</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="Basic04_Modal03_Grid">
+                        <table class="table table-bordered table-responsive" data-swhgajax="true" data-swhgcontainer="Basic04_Modal03_Grid" data-swhgcallback="" id="Basic04_Modal03_Grid_Table">
+                            <thead>
+                                <tr class="headerStyle">
+                                    <th scope="col">
+                                        聯誼區名稱
+                                    </th>
+                                    <th scope="col">
+                                        服務區代碼
+                                    </th>
+                                    <th scope="col">
+                                        服務區名稱
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <select class="form-control" id="Basic04_Modal03_RName" name="Basic04_Modal03_RName">
+                                        @{
+                                            var groups = (IEnumerable<Region>)ViewData["AllRegion"];
+                                            foreach (var group in groups)
+                                            {
+                                                <option value="@group.Code">@group.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </td>
+                                <td ><label id="Basic04_Modal03_SerId" class="form-control-static" style="font-weight: normal"></label></td>
+                                <td>
+                                    <input type="text" id="Basic04_Modal03_SerName" name="Basic04_Modal03_SerName"  class="form-control" maxlength="20"/>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="Basic04_Modal03_btnConfirm" class="btn btn-primary"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+

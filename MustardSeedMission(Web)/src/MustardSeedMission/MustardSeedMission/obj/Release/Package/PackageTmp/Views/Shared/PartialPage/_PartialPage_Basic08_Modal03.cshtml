@@ -1,0 +1,84 @@
+﻿@using MustardSeedMission.Models
+<div class="modal fade" id="Basic08_Modal03" tabindex="-1" role="dialog" aria-labelledby="Lable_Basic08_Modal03">
+    @using (Ajax.BeginForm("Index", "Basic08", new AjaxOptions { HttpMethod = "POST" }, new { id = "Basic08_Modal03_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Basic08_Modal03">店家主檔維護作業-修改</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Basic08_Modal03_Region" class="col-sm-5 col-md-4 col-lg-4  control-label">所屬聯誼區：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal03_Region" name="Basic08_Modal03_Region">
+                                @{
+                                    var allRegion = (IEnumerable<Region>)ViewData["AllRegion"];
+                                    foreach (var item in allRegion)
+                                    {
+                                        <option value="@item.Code">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal03_SerArea" class="col-sm-5 col-md-4 col-lg-4 control-label">所屬服務區：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal03_SerArea" name="Basic08_Modal03_SerArea">
+                                @{
+                                    var allZone = (IEnumerable<Zone>)ViewData["AllZone"];
+                                    foreach (var item in allZone)
+                                    {
+                                        <option value="@item.Code">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div id="Basic08_Modal03_Grid">
+                        <table class="table table-bordered table-responsive" id="Basic08_Modal03_Grid_Table"  data-swhgajax="true" data-swhgcontainer="Basic08_Modal03_Grid" data-swhgcallback="">
+                            <thead>
+                                <tr class="headerStyle">
+                                    <th scope="col">
+                                        序號
+                                    </th>
+                                    <th scope="col">
+                                        店家代碼
+                                    </th>
+                                    <th scope="col">
+                                        店家名稱
+                                    </th>
+                                    <th scope="col">
+                                        排序增
+                                    </th>
+                                    <th scope="col">
+                                        排序減
+                                    </th>
+                                    <th scope="col">
+                                        營業種類代碼
+                                    </th>
+                                    <th scope="col">
+                                        異動原因
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="Basic08_Modal03_btnConfirm" class="btn btn-primary"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+
+

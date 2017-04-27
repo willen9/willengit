@@ -1,0 +1,61 @@
+﻿@using MustardSeedMission.Models
+<div class="modal fade" id="Cuscomplait04_Modal01" tabindex="-1" role="dialog" aria-labelledby="Lable_Cuscomplait04_Modal01">
+    @using (Ajax.BeginForm("Index", "Cuscomplait04", new AjaxOptions { HttpMethod = "POST" }, new { id = "Cuscomplait04_Modal01_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Cuscomplait04_Modal01">客訴單類別主檔建立作業</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" id="Cuscomplait04_Modal01_Div_No">
+                        <label for="Cuscomplait04_Modal01_No" class="col-sm-7 col-md-6 col-lg-6 control-label" id="Cuscomplait04_Modal01_Lable">客訴單類別代碼：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <select class="form-control" id="Cuscomplait04_Modal01_No" name="Cuscomplait04_Modal01_No">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allCategory = (IEnumerable<Category>)ViewData["AllCategory"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Cuscomplait03_Modal01_Category))
+                                    {
+                                        foreach (var item in allCategory)
+                                        {
+                                            if (@item.Code.ToString() == @ViewBag.Cuscomplait03_Modal01_Category)
+                                            {
+                                                <option value="@item.Code" selected="selected">@item.Code</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Code">@item.Code</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in allCategory)
+                                        {
+                                            <option value="@item.Code">@item.Code</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Cuscomplait04_Modal01_TypeName" class="col-sm-7 col-md-6 col-lg-6 control-label">客訴單類別名稱：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <input type="text" class="form-control" id="Cuscomplait04_Modal01_TypeName" name="Cuscomplait04_Modal01_TypeName" value="@ViewBag.Cuscomplait04_Modal01_TypeName" maxlength="20"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="Cuscomplait04_Modal01_btnConfirmShow" class="btn btn-primary"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="submit" id="Cuscomplait04_Modal01_btnConfirm" value="Cuscomplait04_Modal01_btnConfirm" name="action" class="btn btn-primary hide"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                    <input type="hidden" id="txtMode" name="txtMode" value="@ViewBag.Mode"/>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

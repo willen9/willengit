@@ -1,0 +1,247 @@
+﻿@using MustardSeedMission.Models
+<div class="modal fade" id="Basic08_Modal02" tabindex="-1" role="dialog" aria-labelledby="Lable_Basic08_Modal02">
+    @using (Ajax.BeginForm("Index", "Basic08", new AjaxOptions { HttpMethod = "POST" }, new { id = "Basic08_Modal02_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Basic08_Modal02">店家主檔維護作業-新增</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Basic08_Modal02_Region" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">所屬聯誼區：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal02_Region" name="Basic08_Modal02_Region">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allRegion = (IEnumerable<Region>)ViewData["AllRegion"];
+                                    foreach (var item in allRegion)
+                                    {
+                                        <option value="@item.Code">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <label for="Basic08_Modal02_FirstStart" class="col-sm-5 col-md-5 col-lg-5 control-label">第一段起營業時間：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal02_FirstStart" name="Basic08_Modal02_FirstStart">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var date = DateTime.Parse("00:00:00");
+                                    while (true)
+                                    {
+                                        if (date.CompareTo(DateTime.Parse("23:30:00")) == 0)
+                                        {
+                                            <option value="@date.ToString("HH:mm:ss")">@date.ToString("HH:mm:ss")</option>
+                                            break;
+                                        }
+                                        <option value="@date.ToString("HH:mm:ss")">@date.ToString("HH:mm:ss")</option>
+                                        date = date.AddMinutes(30);
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal02_SerArea" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">所屬服務區：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal02_SerArea" name="Basic08_Modal02_SerArea">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allZone = (IEnumerable<Zone>)ViewData["AllZone"];
+                                    foreach (var item in allZone)
+                                    {
+                                        <option value="@item.Code">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <label for="Basic08_Modal02_FirstEnd" class="col-sm-5 col-md-5 col-lg-5 control-label">第一段迄營業時間：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal02_FirstEnd" name="Basic08_Modal02_FirstEnd">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    date = DateTime.Parse("00:00:00");
+                                    while (true)
+                                    {
+                                        if (date.CompareTo(DateTime.Parse("23:30:00")) == 0)
+                                        {
+                                            <option value="@date.ToString("HH:mm:ss")">@date.ToString("HH:mm:ss")</option>
+                                            break;
+                                        }
+                                        <option value="@date.ToString("HH:mm:ss")">@date.ToString("HH:mm:ss")</option>
+                                        date = date.AddMinutes(30);
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">店家代碼：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <label class="control-label form-control-static" id="Basic08_Modal02_ShopId" name="Basic08_Modal02_ShopId"></label>
+                        </div>
+                        <label for="Basic08_Modal02_SndStart" class="col-sm-5 col-md-5 col-lg-5 control-label">第二段起營業時間：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal02_SndStart" name="Basic08_Modal02_SndStart">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    date = DateTime.Parse("00:00:00");
+                                    while (true)
+                                    {
+                                        if (date.CompareTo(DateTime.Parse("23:30:00")) == 0)
+                                        {
+                                            <option value="@date.ToString("HH:mm:ss")">@date.ToString("HH:mm:ss")</option>
+                                            break;
+                                        }
+                                        <option value="@date.ToString("HH:mm:ss")">@date.ToString("HH:mm:ss")</option>
+                                        date = date.AddMinutes(30);
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal02_ShopName" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">店家名稱：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal02_ShopName" name="Basic08_Modal02_ShopName" maxlength="50"/>
+                        </div>
+                        <label for="Basic08_Modal02_SndEnd" class="col-sm-5 col-md-5 col-lg-5 control-label">第二段迄營業時間：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal02_SndEnd" name="Basic08_Modal02_SndEnd">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    date = DateTime.Parse("00:00:00");
+                                    while (true)
+                                    {
+                                        if (date.CompareTo(DateTime.Parse("23:30:00")) == 0)
+                                        {
+                                            <option value="@date.ToString("HH:mm:ss")">@date.ToString("HH:mm:ss")</option>
+                                            break;
+                                        }
+                                        <option value="@date.ToString("HH:mm:ss")">@date.ToString("HH:mm:ss")</option>
+                                        date = date.AddMinutes(30);
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal02_BusinessCategory" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">營業種類名稱：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal02_BusinessCategory" name="Basic08_Modal02_BusinessCategory">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allBusinessCategory = (IEnumerable<BusinessCategory>)ViewData["AllBusinessCategory"];
+                                    foreach (var item in allBusinessCategory)
+                                    {
+                                        <option value="@item.Code">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <label for="Basic08_Modal02_PostArea" class="col-sm-5 col-md-5 col-lg-5 control-label">收據郵遞區號：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal02_PostArea" name="Basic08_Modal02_PostArea" maxlength="10"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">開發月份：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <label class="control-label form-control-static" id="Basic08_Modal02_Month"></label>
+                        </div>
+                        <label for="Basic08_Modal02_PostAddress" class="col-sm-5 col-md-5 col-lg-5 control-label">收據地址：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal02_PostAddress" name="Basic08_Modal02_PostAddress" maxlength="50"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label" for="Basic08_Modal02_Developer">開發人員：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <label class="control-label form-control-static sr-only" id="Basic08_Modal02_Developer"></label>
+                            <label class="control-label form-control-static" id="Basic08_Modal02_DeveloperName"></label>
+                        </div>
+                        <label for="Basic08_Modal02_ShowPostArea" class="col-sm-5 col-md-5 col-lg-5 control-label">擺放郵遞區號：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal02_ShowPostArea" name="Basic08_Modal02_ShowPostArea" maxlength="10"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal02_BoxName" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">盒型名稱：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal02_BoxName" name="Basic08_Modal02_BoxName">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allDonationBox = (IEnumerable<DonationBox>)ViewData["AllDonationBox"];
+                                    foreach (var item in allDonationBox)
+                                    {
+                                        <option value="@item.Code">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <label for="Basic08_Modal02_ShowAddress" class="col-sm-5 col-md-5 col-lg-5 control-label">擺放地址：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal02_ShowAddress"  name="Basic08_Modal02_ShowAddress" maxlength="50"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label"></label>
+                        <div class="col-sm-7 col-md-6 col-lg-6"></div>
+                        <label for="Basic08_Modal02_Tel" class="col-sm-5 col-md-5 col-lg-5 control-label">電話：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal02_Tel" name="Basic08_Modal02_Tel" maxlength="20"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label form-control-static">可回收日期：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6"></div>
+                        <label for="Basic08_Modal02_Remark" class="col-sm-5 col-md-5 col-lg-5 control-label">備註：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal02_Remark" name="Basic08_Modal02_Remark" maxlength="200"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-11 col-md-11 col-lg-11 col-md-offset-2 col-lg-offset-2">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="Basic08_Modal02_chk1" name="Basic08_Modal02_Monday"  checked="checked"> 星期一
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="Basic08_Modal02_chk2" name="Basic08_Modal02_Tuesday"  checked="checked"> 星期二
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="Basic08_Modal02_chk3" name="Basic08_Modal02_Wednesday"  checked="checked"> 星期三
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="Basic08_Modal02_chk4" name="Basic08_Modal02_Thursday" checked="checked"> 星期四
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-11 col-md-11 col-lg-11 col-md-offset-2 col-lg-offset-2">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="Basic08_Modal02_chk5" name="Basic08_Modal02_Friday" checked="checked"> 星期五
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="Basic08_Modal02_chk6" name="Basic08_Modal02_Saturday" checked="checked"> 星期六
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="Basic08_Modal02_chk7" name="Basic08_Modal02_Sunday" checked="checked"> 星期日
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="Basic08_Modal02_btnConfirm" class="btn btn-primary" onclick="Basic08_Modal02_btnConfirmClick()"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+

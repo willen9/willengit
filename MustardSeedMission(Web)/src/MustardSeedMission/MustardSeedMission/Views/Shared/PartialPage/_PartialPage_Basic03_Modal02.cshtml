@@ -1,0 +1,25 @@
+﻿<div class="modal fade" id="Basic03_Modal02" tabindex="-1" role="dialog" aria-labelledby="Lable_Basic03_Modal02">
+    @using (Ajax.BeginForm("Index", "Basic03", new AjaxOptions { HttpMethod = "POST" }, new { id = "Basic03_Modal02_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Basic03_Modal02">聯誼區主檔維護作業-新增</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Basic03_Modal02_txtName" class="col-sm-7 col-md-6 col-lg-6 control-label">聯誼區名稱：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <input type="text" class="form-control" id="Basic03_Modal02_txtName" name="Basic03_Modal02_txtName" maxlength="20"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="Basic03_Modal02_btnConfirm" class="btn btn-primary"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>

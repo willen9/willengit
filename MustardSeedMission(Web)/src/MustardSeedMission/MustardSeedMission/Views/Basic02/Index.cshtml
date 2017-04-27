@@ -1,0 +1,415 @@
+﻿@using MustardSeedMission.Models
+@using MustardSeedMission.ViewModels
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DefaultLayoutPage.cshtml";
+}
+<script>
+    $(document).ready(function() {
+        $("#btnSearch").click(function() {
+            if ($("#slGroup").val() === "") {
+                alert("請選擇群組");
+                $("#divGrid table tbody").empty();
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("PostGetData", "Basic02")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ groupId: $("#slGroup").val() }),
+                success: function(data) {
+                    $("#divGrid table tbody").empty();
+                    var modals = eval(data);
+                    for (var i = 0; i < modals.length; i++) {
+                        if (i % 2 === 0) {
+                            $("#divGrid table tbody").append('<tr><td class="chkStyle"><input type="checkbox" id="chk" name="chk" value="' + modals[i].SysFunctionsID + '" /></td>' +
+                                '<td>' + modals[i].SysFunctionsID + '</td>' +
+                                '<td>' + modals[i].SysFunctionsName + '</td>' +
+                                (modals[i].Query ? '<td><input type="checkbox"   checked="checked" id="chkQuery"  disabled="disabled"/></td>' : '<td><input type="checkbox"  id="chkQuery"  disabled="disabled"/></td>') +
+                                (modals[i].AD ? '<td><input type="checkbox"   checked="checked" id="chkAD"  disabled="disabled"/></td>' : '<td><input type="checkbox"  id="chkAD"  disabled="disabled"/></td>') +
+                                (modals[i].Up ? '<td><input type="checkbox"   checked="checked" id="chkUp"  disabled="disabled"/></td>' : '<td><input type="checkbox"  id="chkUp"  disabled="disabled"/></td>') +
+                                (modals[i].De ? '<td><input type="checkbox"   checked="checked" id="chkDe"  disabled="disabled"/></td>' : '<td><input type="checkbox"  id="chkDe"  disabled="disabled"/></td>') +
+                                '</tr>');
+                        } else {
+                            $("#divGrid table tbody").append('<tr class="alternatingRow"><td class="chkStyle"><input type="checkbox" id="chk" name="chk" value="' + modals[i].SysFunctionsID + '" /></td>' +
+                                '<td>' + modals[i].SysFunctionsID + '</td>' +
+                                '<td>' + modals[i].SysFunctionsName + '</td>' +
+                                (modals[i].Query ? '<td><input type="checkbox"  checked="checked" id="chkQuery"  disabled="disabled"/></td>' : '<td><input type="checkbox" id="chkQuery"  disabled="disabled"/></td>') +
+                                (modals[i].AD ? '<td><input type="checkbox"  checked="checked" id="chkAD"  disabled="disabled"/></td>' : '<td><input type="checkbox"  id="chkAD"  disabled="disabled"/></td>') +
+                                (modals[i].Up ? '<td><input type="checkbox"  checked="checked" id="chkUp"  disabled="disabled"/></td>' : '<td><input type="checkbox"  id="chkUp"  disabled="disabled"/></td>') +
+                                (modals[i].De ? '<td><input type="checkbox" checked="checked" id="chkDe"  disabled="disabled"/></td>' : '<td><input type="checkbox" id="chkDe"  disabled="disabled"/></td>') +
+                                '</tr>');
+                        }
+                    }
+                    $("#txtGroup").val($("#slGroup").val());
+                },
+                error: function(message) {
+                    alert("查詢失敗,原因：" + message);
+                }
+            });
+        });
+
+        $("#btnNew").click(function () {
+            try {
+                $("#Basic02_Modal01_Form").data('bootstrapValidator').destroy();
+                $('#Basic02_Modal01_Form').data('bootstrapValidator', null);
+            }
+            catch (e) {
+
+            }
+            formValidator();
+            $("#Basic02_Modal01_txtGroup").val("");
+            $("#Basic02_Modal01_txtGroup").removeAttr("disabled");
+            $("#Basic02_Modal01_Grid table tbody").empty();
+            $("#Lable_Basic02_Modal01").text("群組權限維護作業-新增");
+            $.ajax({
+                url: '@Url.Action("PostGetAllFunction", "Basic02")',
+                type: "GET",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                success: function(data) {
+                    var modals = eval(data);
+                    for (var i = 0; i < modals.length; i++) {
+                        if (i % 2 === 0) {
+                            $("#Basic02_Modal01_Grid table tbody").append('<tr>' +
+                                '<td class="chkStyle"><input type="checkbox" id="Basic02_Modal01_chk" name="Basic02_Modal01_chk" value="' + modals[i].SysFunctionsID + '"  onchange="chkChange(this)"/></td>' +
+                                '<td>' + modals[i].SysFunctionsID + '</td>' +
+                                '<td>' + modals[i].SysFunctionsName + '</td>' +
+                                (modals[i].Query ? '<td><input type="checkbox"   checked="checked" id="Basic02_Modal01_chkQuery"   /></td>' : '<td><input type="checkbox"   id="Basic02_Modal01_chkQuery"   /></td>') +
+                                (modals[i].AD ? '<td><input type="checkbox"   checked="checked" id="Basic02_Modal01_chkAD"   /></td>' : '<td><input type="checkbox"   id="Basic02_Modal01_chkAD"   /></td>') +
+                                (modals[i].Up ? '<td><input type="checkbox"   checked="checked" id="Basic02_Modal01_chkUp"   /></td>' : '<td><input type="checkbox"   id="Basic02_Modal01_chkUp"   /></td>') +
+                                (modals[i].De ? '<td><input type="checkbox"   checked="checked" id="Basic02_Modal01_chkDe"   /></td>' : '<td><input type="checkbox"   id="Basic02_Modal01_chkDe"   /></td>') +
+                                '</tr>');
+                        } else {
+                            $("#Basic02_Modal01_Grid table tbody").append('<tr class="alternatingRow">' +
+                                '<td class="chkStyle"><input type="checkbox" id="Basic02_Modal01_chk" name="Basic02_Modal01_chk" value="' + modals[i].SysFunctionsID + '"   onchange="chkChange(this)"/></td>' +
+                                '<td>' + modals[i].SysFunctionsID + '</td>' +
+                                '<td>' + modals[i].SysFunctionsName + '</td>' +
+                                (modals[i].Query ? '<td><input type="checkbox"   checked="checked" id="Basic02_Modal01_chkQuery"   /></td>' : '<td><input type="checkbox"   id="Basic02_Modal01_chkQuery"   /></td>') +
+                                (modals[i].AD ? '<td><input type="checkbox"   checked="checked" id="Basic02_Modal01_chkAD"   /></td>' : '<td><input type="checkbox"   id="Basic02_Modal01_chkAD"   /></td>') +
+                                (modals[i].Up ? '<td><input type="checkbox"   checked="checked" id="Basic02_Modal01_chkUp"   /></td>' : '<td><input type="checkbox"   id="Basic02_Modal01_chkUp"   /></td>') +
+                                (modals[i].De ? '<td><input type="checkbox"   checked="checked" id="Basic02_Modal01_chkDe"   /></td>' : '<td><input type="checkbox"   id="Basic02_Modal01_chkDe"   /></td>') +
+                                '</tr>');
+                        }
+                    }
+                    $("#mode").val("N");
+                },
+                error: function(message) {
+                    alert("新增顯示失敗,原因：" + message);
+                }
+            });
+        });
+
+        $("#btnModify").click(function() {
+            if ($("#slGroup").val() === "") {
+                alert("請選擇群組");
+                return;
+            }
+            try {
+                $("#Basic02_Modal01_Form").data('bootstrapValidator').destroy();
+                $('#Basic02_Modal01_Form').data('bootstrapValidator', null);
+            }
+            catch (e) {
+
+            }
+            formValidator();
+            $("#Lable_Basic02_Modal01").text("群組權限維護作業-修改");
+            $("#Basic02_Modal01_txtGroup").attr("disabled", "disabled");
+            $("#Basic02_Modal01_txtGroup").val($("#slGroup").val());
+            $("#Basic02_Modal01_Grid table tbody").empty();
+            $.ajax({
+                url: '@Url.Action("PostGetData", "Basic02")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ groupId: $("#slGroup").val() }),
+                success: function(data) {
+                    var modals = eval(data);
+                    for (var i = 0; i < modals.length; i++) {
+                        if (i % 2 === 0) {
+                            $("#Basic02_Modal01_Grid table tbody").append('<tr>' +
+                                '<td class="chkStyle" ><input type="checkbox" id="Basic02_Modal01_chk" name="Basic02_Modal01_chk" value="' + modals[i].SysFunctionsID + '"   onchange="chkChange(this)"/></td>' +
+                                '<td>' + modals[i].SysFunctionsID + '</td>' +
+                                '<td>' + modals[i].SysFunctionsName + '</td>' +
+                                (modals[i].Query ? '<td><input type="checkbox"  checked="checked" id="Basic02_Modal01_chkQuery"   /></td>' : '<td><input type="checkbox"  id="Basic02_Modal01_chkQuery"   /></td>') +
+                                (modals[i].AD ? '<td><input type="checkbox"  checked="checked" id="Basic02_Modal01_chkAD"   /></td>' : '<td><input type="checkbox"  id="Basic02_Modal01_chkAD"   /></td>') +
+                                (modals[i].Up ? '<td><input type="checkbox"  checked="checked" id="Basic02_Modal01_chkUp"   /></td>' : '<td><input type="checkbox"  id="Basic02_Modal01_chkUp"   /></td>') +
+                                (modals[i].De ? '<td><input type="checkbox"  checked="checked" id="Basic02_Modal01_chkDe"   /></td>' : '<td><input type="checkbox"  id="Basic02_Modal01_chkDe"   /></td>') +
+                                '</tr>');
+                        } else {
+                            $("#Basic02_Modal01_Grid table tbody").append('<tr class="alternatingRow">' +
+                                '<td class="chkStyle"><input type="checkbox" id="Basic02_Modal01_chk" name="Basic02_Modal01_chk" value="' + modals[i].SysFunctionsID + '"   onchange="chkChange(this)"/></td>' +
+                                '<td>' + modals[i].SysFunctionsID + '</td>' +
+                                '<td>' + modals[i].SysFunctionsName + '</td>' +
+                                (modals[i].Query ? '<td><input type="checkbox" checked="checked" id="Basic02_Modal01_chkQuery"   /></td>' : '<td><input type="checkbox"  id="Basic02_Modal01_chkQuery"   /></td>') +
+                                (modals[i].AD ? '<td><input type="checkbox" checked="checked" id="Basic02_Modal01_chkAD"   /></td>' : '<td><input type="checkbox"  id="Basic02_Modal01_chkAD"   /></td>') +
+                                (modals[i].Up ? '<td><input type="checkbox" checked="checked" id="Basic02_Modal01_chkUp"   /></td>' : '<td><input type="checkbox"  id="Basic02_Modal01_chkUp"   /></td>') +
+                                (modals[i].De ? '<td><input type="checkbox" checked="checked" id="Basic02_Modal01_chkDe"   /></td>' : '<td><input type="checkbox"  id="Basic02_Modal01_chkDe"   /></td>') +
+                                '</tr>');
+                        }
+                    }
+                    $("#mode").val("M");
+                    $("#Basic02_Modal01").modal("show");
+                },
+                error: function(message) {
+                    alert("修改顯示失敗,原因：" + message);
+                }
+            });
+        });
+
+        $("#btnDel").click(function () {
+            if ($("[name='chk']:checked").length === 0) {
+                alert("請勾選要刪除的項");
+                return false;
+            }
+            if (!confirm("確定刪除選中項？")) {
+                return false;
+            }
+            return true;
+        });
+
+        $("#Basic02_Modal01_btnConfirm").click(function() {
+            var bootstrapValidator = $("#Basic02_Modal01_Form").data('bootstrapValidator');
+            bootstrapValidator.validate();
+            if (!bootstrapValidator.isValid()) {
+                return;
+            } else {
+                var modal = new Array();
+                var functions = $("#Basic02_Modal01_Grid table tbody tr");
+                for (var i = 0; i < functions.length; i++) {
+                    modal[i] = {
+                        SysFunctionsID: functions.eq(i).find("td").eq(1).text(),
+                        AD: functions.eq(i).find("td").eq(4).find(":checkbox:checked").length === 1,
+                        De: functions.eq(i).find("td").eq(5).find(":checkbox:checked").length === 1,
+                        Up: functions.eq(i).find("td").eq(6).find(":checkbox:checked").length === 1,
+                        Query: functions.eq(i).find("td").eq(3).find(":checkbox:checked").length === 1
+                    }
+                }
+                if ($("#mode").val() === "N") {
+                    $.ajax({
+                        url: '@Url.Action("PostAdd", "Basic02")',
+                        type: "POST",
+                        datatype: "text",
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify({ GroupId: $("#Basic02_Modal01_txtGroup").val(), Modal: modal }),
+                        success: function(data) {
+                            if (data === "OK") {
+                                alert("新增成功");
+                                window.location.reload();
+                            } else {
+                                alert(data);
+                            }
+                        },
+                        error: function(message) {
+                            alert("新增失敗,原因：" + message);
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: '@Url.Action("PostUpdate", "Basic02")',
+                        type: "POST",
+                        datatype: "text",
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify({ GroupId: $("#Basic02_Modal01_txtGroup").val(), Modal: modal }),
+                        success: function(data) {
+                            if (data === "OK") {
+                                alert("修改成功");
+                                window.location.reload();
+                            } else {
+                                alert(data);
+                            }
+                        },
+                        error: function(message) {
+                            alert("修改失敗,原因：" + message);
+                        }
+                    });
+                }
+            }
+        });
+
+        formValidator();
+    })
+</script>
+<script>
+    function chkChange(obj) {
+        var tr = $(obj).closest("tr");
+        if (tr.find("td:eq(0)").find(":checked").length === 0) {
+            tr.find("td:eq(6)").find(":checkbox").removeAttr("checked");
+            tr.find("td:eq(3)").find(":checkbox").removeAttr("checked");
+            tr.find("td:eq(4)").find(":checkbox").removeAttr("checked");
+            tr.find("td:eq(5)").find(":checkbox").removeAttr("checked");
+        } else {
+            tr.find("td:eq(6)").find(":checkbox").prop("checked", "checked");
+            tr.find("td:eq(3)").find(":checkbox").prop("checked", "checked");
+            tr.find("td:eq(4)").find(":checkbox").prop("checked", "checked");
+            tr.find("td:eq(5)").find(":checkbox").prop("checked", "checked");
+        }
+    }
+
+    function formValidator() {
+        $("#Basic02_Modal01_Form").bootstrapValidator({
+            fields: {
+                Basic02_Modal01_txtGroup: {
+                    validators: {
+                        notEmpty: {
+                            message: "群組名稱不能為空"
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+<section class="content-header">
+    <h1>群組權限設定作業</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    <form id="from" class="form-horizontal" method="post" action="@Url.Action("Index", "Basic02")">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnSearch">
+                            <i class="fa fa-search" aria-hidden="true"></i> 查詢
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnNew" data-toggle="modal" data-target="#Basic02_Modal01">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i> 新增
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnModify">
+                            <i class="fa fa-edit" aria-hidden="true"></i> 修改
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="action" value="delete" id="btnDel">
+                            <i class="fa fa-times-circle" aria-hidden="true"></i> 刪除
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="action" value="export" id="btnExport">
+                            <i class="fa fa-file-excel-o" aria-hidden="true"></i> 匯出
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="control-label col-sm-5 col-md-3 col-lg-3" for="slGroup">群組名稱</label>
+                    <div class="col-sm-8 col-md-5 col-lg-5">
+                        <select id="slGroup" class="form-control" name="slGroup">
+                            <option value="">==請選擇==</option>
+                            @{
+                                var groups = (IEnumerable<Groups>)ViewData["AllGroup"];
+                                if (!string.IsNullOrEmpty(@ViewBag.Group))
+                                {
+                                    foreach (var group in groups)
+                                    {
+                                        if (@group.GroupId == @ViewBag.Group)
+                                        {
+                                            <option value="@group.GroupId" selected="selected">@group.GroupId</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@group.GroupId">@group.GroupId</option>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (var group in groups)
+                                    {
+                                        <option value="@group.GroupId">@group.GroupId</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="divGrid">
+                @{
+                    @*<input type="checkbox" id="chkAll" style="position: absolute; margin-left: 8px; margin-top: 13px;" />*@
+                var webGrid = new WebGrid(source: (IEnumerable<GroupsViewModel>)ViewData["DisplayData"], canPage: false, canSort: false, defaultSort: "SysFunctionsID", ajaxUpdateContainerId: "divGrid");
+                }
+                @webGrid.GetHtml(
+                    tableStyle: "table table-bordered table-responsive",
+                    headerStyle: "headerStyle",
+                    alternatingRowStyle: "alternatingRow",
+                    selectedRowStyle: "selectedRow",
+                    mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                    columns: webGrid.Columns(
+                        webGrid.Column(format:
+                        @<text>
+                            <input type="checkbox" id="chk" name="chk" value="@item.SysFunctionsID" />
+                        </text>, style: "chkStyle"),
+                        webGrid.Column(columnName: "SysFunctionsID", header: "程式代號"),
+                        webGrid.Column(columnName: "SysFunctionsName", header: "作業別"),
+                        webGrid.Column(columnName: "", header: "查詢", format:
+                        @<text>
+                            @{
+                                if (@item.Query != null && @item.Query)
+                                {
+                                    <input type="checkbox" checked="checked" id="chkQuery" disabled="disabled" />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="chkQuery" disabled="disabled" />
+                                }
+                            }
+                        </text>),
+                        webGrid.Column(columnName: "", header: "新增", format:
+                        @<text>
+                            @{
+                                if (@item.AD != null && @item.AD)
+                                {
+                                    <input type="checkbox" checked="checked" id="chkAD" disabled="disabled" />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="chkAD" disabled="disabled" />
+                                }
+                            }
+
+                        </text>),
+                        webGrid.Column(columnName: "", header: "修改", format:
+                        @<text>
+                            @{
+                                if (@item.Up != null && @item.Up)
+                                {
+                                    <input type="checkbox" checked="checked" id="chkUp" disabled="disabled" />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="chkUp" disabled="disabled" />
+                                }
+                            }
+                        </text>),
+                        webGrid.Column(columnName: "", header: "刪除", format:
+                        @<text>
+                            @{
+                                if (@item.De != null && @item.De)
+                                {
+                                    <input type="checkbox" checked="checked" id="chkDe" disabled="disabled" />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="chkDe" disabled="disabled" />
+                                }
+                            }
+                        </text>)
+                        )
+                    )
+            </div>
+        </div>
+        <input type="hidden" id="txtGroup" name="txtGroup" value="@ViewBag.GroupShow" />
+    </form>
+</section>
+@Html.Partial("PartialPage/_PartialPage_Basic02_Modal01")
+
+

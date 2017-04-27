@@ -1,0 +1,254 @@
+﻿@using MustardSeedMission.Models
+<div class="modal fade" id="Cuscomplait03_Modal01" tabindex="-1" role="dialog" aria-labelledby="Lable_Cuscomplait03_Modal01">
+    @using (Ajax.BeginForm("Index", "Cuscomplait03", new AjaxOptions { HttpMethod = "POST" }, new { id = "Cuscomplait03_Modal01_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Cuscomplait03_Modal01">客訴單查詢作業-查詢</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Cuscomplait03_Modal01_No" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">客訴單號：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Cuscomplait03_Modal01_No" name="Cuscomplait03_Modal01_No" value="@ViewBag.DocEntry" maxlength="14"/>
+                        </div>
+                        <label for="Cuscomplait03_Modal01_Type" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">類別：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Cuscomplait03_Modal01_Type" name="Cuscomplait03_Modal01_Type">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allCategory = (IEnumerable<Category>)ViewData["AllCategory"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Cuscomplait03_Modal01_Category))
+                                    {
+                                        foreach (var item in allCategory)
+                                        {
+                                            if (@item.Code.ToString() == @ViewBag.Cuscomplait03_Modal01_Category)
+                                            {
+                                                <option value="@item.Code" selected="selected">@item.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Code">@item.Name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in allCategory)
+                                        {
+                                            <option value="@item.Code">@item.Name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Cuscomplait02_Modal01_Link" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">聯誼區：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Cuscomplait02_Modal01_Link" name="Cuscomplait02_Modal01_Link">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allRegion = (IEnumerable<Region>)ViewData["AllRegion"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Cuscomplait03_Modal01_RegionCode))
+                                    {
+                                        foreach (var item in allRegion)
+                                        {
+                                            if (@item.Code.ToString() == @ViewBag.Cuscomplait03_Modal01_RegionCode)
+                                            {
+                                                <option value="@item.Code" selected="selected">@item.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Code">@item.Name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in allRegion)
+                                        {
+                                            <option value="@item.Code">@item.Name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <label for="Cuscomplait03_Modal01_Receiver" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">接案人：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Cuscomplait03_Modal01_Receiver" name="Cuscomplait03_Modal01_Receiver">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allCreator = (IEnumerable<Complaints>)ViewData["AllCreator"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Cuscomplait03_Modal01_Creator))
+                                    {
+                                        foreach (var item in allCreator)
+                                        {
+                                            if (!string.IsNullOrEmpty(@item.Creator))
+                                            {
+                                                if (@item.Creator == @ViewBag.Cuscomplait03_Modal01_Creator)
+                                                {
+                                                    <option value="@item.Creator" selected="selected">@item.Creator</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.Creator">@item.Creator</option>
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in allCreator)
+                                        {
+                                            if (!string.IsNullOrEmpty(@item.Creator))
+                                            {
+                                                <option value="@item.Creator">@item.Creator</option>
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Cuscomplait03_Modal01_SerArea" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">服務區：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Cuscomplait03_Modal01_SerArea" name="Cuscomplait03_Modal01_SerArea">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allZone = (IEnumerable<Zone>)ViewData["AllZone"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Cuscomplait03_Modal01_ZoneCode))
+                                    {
+                                        foreach (var item in allZone)
+                                        {
+                                            if (@item.Code.ToString() == @ViewBag.Cuscomplait03_Modal01_ZoneCode)
+                                            {
+                                                <option value="@item.Code" selected="selected">@item.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Code">@item.Name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in allZone)
+                                        {
+                                            <option value="@item.Code">@item.Name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <label for="Cuscomplait03_Modal01_Dealer" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">處理人員：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Cuscomplait03_Modal01_Dealer" name="Cuscomplait03_Modal01_Dealer">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allOperator = (IEnumerable<Complaints>)ViewData["AllOperator"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Cuscomplait03_Modal01_Operator))
+                                    {
+                                        foreach (var item in allOperator)
+                                        {
+                                            if (!string.IsNullOrEmpty(@item.Operator))
+                                            {
+                                                if (@item.Operator == @ViewBag.Cuscomplait03_Modal01_Operator)
+                                                {
+                                                    <option value="@item.Operator" selected="selected">@item.Operator</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.Operator">@item.Operator</option>
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in allOperator)
+                                        {
+                                            if (!string.IsNullOrEmpty(@item.Operator))
+                                            {
+                                                <option value="@item.Operator">@item.Operator</option>
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Cuscomplait03_Modal01_ShopId" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">店家代號：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Cuscomplait03_Modal01_ShopId" name="Cuscomplait03_Modal01_ShopId">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allStore = (IEnumerable<Store>)ViewData["AllStore"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Cuscomplait03_Modal01_Store))
+                                    {
+                                        foreach (var item in allStore)
+                                        {
+                                            if (@item.Code.ToString() == @ViewBag.Cuscomplait03_Modal01_Store)
+                                            {
+                                                <option value="@item.Code" selected="selected">@item.Code</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Code">@item.Code</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in allStore)
+                                        {
+                                            <option value="@item.Code">@item.Code</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 checkbox text-right">
+                            @if (string.IsNullOrEmpty(@ViewBag.chk))
+                            {
+                                <label><input type="checkbox" id="Cuscomplait03_Modal01_Date" name="Cuscomplait03_Modal01_Date" /><strong>日期：</strong></label>
+                            }
+                            else
+                            {
+                                <label><input type="checkbox" id="Cuscomplait03_Modal01_Date" name="Cuscomplait03_Modal01_Date" checked="checked"/><strong>日期：</strong></label>
+                            }
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3">
+                            <input type="text" class="form_datetime form-control" style="width: 100px;" id="Cuscomplait03_Modal01_DateStart" name="Cuscomplait03_Modal01_DateStart" value="@ViewBag.Cuscomplait03_Modal01_DateStart" readonly>
+                        </div>
+                        <span class="col-md-1 col-md-1 col-lg-1 text-right form-control-static">~</span>
+                        <div class="col-sm-3 col-md-3 col-lg-3" style="margin-left: -15px;">
+                            <input type="text" class="form_datetime form-control" style="width: 100px;" id="Cuscomplait03_Modal01_DateEnd" name="Cuscomplait03_Modal01_DateEnd" value="@ViewBag.Cuscomplait03_Modal01_DateEnd" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Cuscomplait03_Modal01_End" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">接案狀態：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            @Html.DropDownList("Cuscomplait03_Modal01_End", ViewData["Status"] as SelectList, new {id= "Cuscomplait03_Modal01_End",@class= "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="Cuscomplait03_Modal01_btnConfirm" value="Cuscomplait03_Modal01_btnConfirm" name="action" class="btn btn-primary"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                    <button type="submit" id="Cuscomplait03_Modal01_btnExport" value="Cuscomplait03_Modal01_btnExport" name="action"  class="btn btn-primary hide"><i class="fa fa-check-circle" aria-hidden="true"></i> 匯 出</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+
+

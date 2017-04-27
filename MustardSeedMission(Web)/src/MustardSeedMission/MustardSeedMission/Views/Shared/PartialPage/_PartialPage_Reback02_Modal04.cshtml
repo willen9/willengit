@@ -1,0 +1,78 @@
+﻿@using MustardSeedMission.Models
+<div class="modal fade" id="Reback02_Modal04" tabindex="-1" role="dialog" aria-labelledby="Lable_Reback02_Modal04">
+    <form class="form-horizontal" id="Reback02_Modal04_Form">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Reback02_Modal04">回收單建立作業-新增店家</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Reback02_Modal04_LinkArea" class="col-sm-7 col-md-6 col-lg-6 control-label">聯誼區：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <select class="form-control" id="Reback02_Modal04_LinkArea" name="Reback02_Modal04_LinkArea">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var Reback02_Modal04_Region = (IEnumerable<Region>)ViewData["AllRegion"];
+                                    foreach (var item in Reback02_Modal04_Region)
+                                    {
+                                        <option value="@item.Code">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Reback02_Modal04_SerArea" class="col-sm-7 col-md-6 col-lg-6 control-label">服務區：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <select class="form-control" id="Reback02_Modal04_SerArea" name="Reback02_Modal04_SerArea">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var Reback02_Modal04_Zone = (IEnumerable<Zone>)ViewData["AllZone"];
+                                    foreach (var item in Reback02_Modal04_Zone)
+                                    {
+                                        <option value="@item.Code">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Reback02_Modal04_ShopId" class="col-sm-7 col-md-6 col-lg-6 control-label">店家代碼：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <select class="form-control" id="Reback02_Modal04_ShopId" name="Reback02_Modal04_ShopId">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var Reback02_Modal04_Store = (IEnumerable<Store>)ViewData["AllStore"];
+                                    foreach (var item in Reback02_Modal04_Store)
+                                    {
+                                        <option value="@item.Code">@item.Code</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Reback02_Modal04_ShopName" class="col-sm-7 col-md-6 col-lg-6 control-label">店家名稱：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <select class="form-control" id="Reback02_Modal04_ShopName" name="Reback02_Modal04_ShopName">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    foreach (var item in Reback02_Modal04_Store)
+                                    {
+                                        <option value="@item.Code">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="Reback02_Modal04_btnConfirm" class="btn btn-primary" onclick="CheckForm()"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,279 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    @Styles.Render("~/content/basestyles")
+    <link rel="stylesheet" href="~/Content/AdminLTE.css" />
+    <link rel="stylesheet" href="~/Content/skins/skin-black-light.css" />
+    @RenderSection("Styles", false)
+    @Scripts.Render("~/basescripts")
+    @RenderSection("Javascripts", false)
+    <title>芥菜種會回收捐款管理系統</title>
+    <script>
+        $(document).ready(function () {
+            $(".form_datetime").datetimepicker({
+                format: 'yyyy/mm/dd',
+                autoclose: 1,
+                forceParse: 1,
+                startView: 2,
+                minView: 2,
+                todayBtn: 1,
+                todayHighlight: 1
+            });
+
+            $(".form_date").datetimepicker({
+                format: 'yyyy/mm/dd',
+                autoclose: 1,
+                forceParse: 1,
+                startView: 2,
+                minView: 2,
+                todayBtn: 1,
+                todayHighlight: 1
+            });
+
+            $(".form_dateMonth").datetimepicker({
+                format: 'yyyy/mm',
+                autoclose: 1,
+                forceParse: 1,
+                startView: 3,
+                minView: 3,
+                todayBtn: 1,
+                todayHighlight: 1
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetVisiableWork", "Base")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ workType: $("#txtWork").val() }),
+                success: function (data) {
+                     if (data.msg === "1") {
+                         alert("登錄人無權限群組");
+                         $(".treeview:not(.loginout)").hide();
+                         return;
+                     }
+                    if (data.WorkVisiable.length>0) {
+                        var workNo = data.WorkVisiable.split(",");
+                        for (var i = 0; i < workNo.length; i++) {
+                            $("a[id='"+workNo[i]+"']").hide();
+                        }
+                    }
+                    if ($("#txtWork").val() !== "") {
+                        $("#btnSearch").addClass("hide");
+                        $("#btnNew").addClass("hide");
+                        $("#btnModify").addClass("hide");
+                        $("#btnDel").addClass("hide");
+                        $("#btnExport").addClass("hide");
+                        if (data.msg === "0") {
+                            if (data.AD) {
+                                $("#btnNew").removeClass("hide");
+                            }
+                            if (data.De) {
+                                $("#btnDel").removeClass("hide");
+                            }
+                            if (data.Up) {
+                                $("#btnModify").removeClass("hide");
+                            }
+                            if (data.Query) {
+                                $("#btnSearch").removeClass("hide");
+                            }
+                            if (data.Ex) {
+                                $("#btnExport").removeClass("hide");
+                            }
+                        }
+                        else if (data.msg === "2") {
+                            alert("查無作業群組");
+                        } else {
+                            alert("其他異常");
+                        }
+                    }
+                },
+                error: function (message) {
+                    alert("獲取操作作業失敗,原因：" + message);
+                }
+            });
+
+            @*if ($("#txtWork").val() !== "") {
+                $.ajax({
+                    url: '@Url.Action("GetLimit", "Base")',
+                    type: "POST",
+                    datatype: "text",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ workType: $("#txtWork").val() }),
+                    success: function (data) {
+                        $("#btnSearch").addClass("hide");
+                        $("#btnNew").addClass("hide");
+                        $("#btnModify").addClass("hide");
+                        $("#btnDel").addClass("hide");
+                        $("#btnExport").addClass("hide");
+                        if (data.msg === "0") {
+                            if (data.AD) {
+                                $("#btnNew").removeClass("hide");
+                            }
+                            if (data.De) {
+                                $("#btnDel").removeClass("hide");
+                            }
+                            if (data.Up) {
+                                $("#btnModify").removeClass("hide");
+                            }
+                            if (data.Query) {
+                                $("#btnSearch").removeClass("hide");
+                            }
+                            if (data.Ex) {
+                                $("#btnExport").removeClass("hide");
+                            }
+                        }
+                        else if (data.msg === "1") {
+                            alert("登錄人無權限群組");
+                        }
+                        else if (data.msg === "2") {
+                            alert("查無作業群組");
+                        } else {
+                            alert("其他異常");
+                        }
+                    },
+                    error: function (message) {
+                        alert("獲取權限失敗,原因：" + message);
+                    }
+                });
+            }*@
+        });
+
+    </script>
+    <style type="text/css">
+        .headerStyle {
+            background-color: lightgray;
+            font-weight: bolder;
+        }
+
+        .alternatingRow {
+            background-color: lightblue;
+        }
+
+        .selectedRow {
+            background-color: #C7B3E5;
+        }
+
+        .rowStyle {
+            background-color: lightgreen;
+        }
+
+        .chkStyle {
+            text-align: center;
+            width: 40px;
+        }
+    </style>
+</head>
+<body class="hold-transition skin-black-light sidebar-mini layout-boxed">
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- logo for sidebar -->
+            <a href="/" class="logo" style="padding: 0px;">
+                <span class="logo-mini"><b></b></span>
+                <!-- logo for regular state and mobile devices -->
+                <img class="logo-lg" src="~/images/logo.png" alt="" />
+            </a>
+            <nav class="navbar navbar-static-top">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="~/images/avatar_140x140.png" alt="User Image" style="width: 16px; height: 16px;">
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        @*<a href="#" class="btn btn-default btn-flat">Profile</a>*@
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="@Url.Action("Logout", "Login")" class="btn btn-default btn-flat">登出</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <ul class="nav sidebar-menu">
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-list fa-fw"></i> <span>資料維護</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-down pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>@Html.ActionLink("人員基本資料維護", "Index", "Basic01",null,new {id="A001"})</li>
+                            <li>@Html.ActionLink("群組權限維護", "Index", "Basic02", null, new { id = "A002" })</li>
+                            <li>@Html.ActionLink("聯誼區主檔維護", "Index", "Basic03", null, new { id = "A003" })</li>
+                            <li>@Html.ActionLink("服務區主檔維護", "Index", "Basic04", null, new { id = "A004" })</li>
+                            <li>@Html.ActionLink("盒型主檔維護", "Index", "Basic05", null, new { id = "A005" })</li>
+                            <li>@Html.ActionLink("營業種類主檔維護", "Index", "Basic06", null, new { id = "A006" })</li>
+                            <li>@Html.ActionLink("異動原因主檔維護", "Index", "Basic07", null, new { id = "A007" })</li>
+                            <li>@Html.ActionLink("店家主檔維護", "Index", "Basic08", null, new { id = "A008" })</li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-random fa-fw"></i> <span>回收作業</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-down pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>@Html.ActionLink("工作計劃建立", "Index", "Reback01", null, new { id = "A009" })</li>
+                            <li>@Html.ActionLink("回收單建立", "Index", "Reback02", null, new { id = "A010" })</li>
+                            <li>@Html.ActionLink("登打作業", "Index", "Reback03", null, new { id = "A011" })</li>
+                            <li>@Html.ActionLink("核對作業", "Index", "Reback04", null, new { id = "A012" })</li>
+                            <li>@Html.ActionLink("查詢作業", "Index", "Reback05", null, new { id = "A013" })</li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-list-alt fa-fw"></i> <span>客訴管理</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-down pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>@Html.ActionLink("客訴單建立", "Index", "Cuscomplait01", null, new { id = "A014" })</li>
+                            <li>@Html.ActionLink("客訴單處理", "Index", "Cuscomplait02", null, new { id = "A015" })</li>
+                            <li>@Html.ActionLink("查詢作業", "Index", "Cuscomplait03", null, new { id = "A016" })</li>
+                            <li>@Html.ActionLink("客訴單類別主檔建立", "Index", "Cuscomplait04", null, new { id = "A017" })</li>
+                        </ul>
+                    </li>
+                    @*<li class="treeview">
+                            <a href="@Url.Action("Index", "Report01")">
+                                <i class="fa fa-area-chart"></i> <span>報表作業</span>
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "SetUp")">
+                                <i class="fa fa-cogs fa-fw"></i> <span>設定作業</span>
+                            </a>
+                        </li>*@
+                    <li class="treeview loginout">
+                        <a href="@Url.Action("Logout", "Login")" class="btn btn-default btn-block" role="button">登  出</a>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+    </div>
+    <input type="hidden" title="baseURL" value="@String.Format("{0}://{1}", Request.Url.Scheme, Request.Url.Authority)" />
+    <input type="hidden" title="virtualPath" value="@HttpRuntime.AppDomainAppVirtualPath" />
+    <input type="hidden" id="txtWork" name="txtWork" value="@ViewBag.WorkValue" />
+    <script src="~/Scripts/app.js"></script>
+</body>
+@*@Url.Action("Login", "Portal")*@
+</html>

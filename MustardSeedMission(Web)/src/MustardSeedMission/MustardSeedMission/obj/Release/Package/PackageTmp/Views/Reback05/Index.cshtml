@@ -1,0 +1,108 @@
+﻿@using MustardSeedMission.ViewModels
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DefaultLayoutPage.cshtml";
+}
+<section class="content-header">
+    <h1>查詢作業</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    <form id="from" class="form-horizontal" method="post" action="@Url.Action("Index", "Reback05")">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="action" value="btnSearch" id="btnSearch">
+                            <i class="fa fa-check-circle" aria-hidden="true"></i> 查詢
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="action" value="export" id="btnExport">
+                            <i class="fa fa-file-excel-o" aria-hidden="true"></i> 匯出
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="txtChecker" class="col-sm-5 col-md-3 col-lg-3 control-label">點收人員：</label>
+                    <div class="col-sm-8  col-md-5 col-lg-5">
+                        <input type="text" class="form-control" id="txtChecker" value="@ViewBag.Checker" name="txtChecker" maxlength="50"/>
+                    </div>
+                    <label for="txtReChecker" class="col-sm-5 col-md-3 col-lg-3 control-label">核對人員：</label>
+                    <div class="col-sm-8  col-md-5 col-lg-5">
+                        <input type="text" class="form-control" id="txtReChecker" value="@ViewBag.Rechecker" name="txtReChecker" maxlength="50"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="txtOperator" class="col-sm-5 col-md-3 col-lg-3 control-label">回收人員：</label>
+                    <div class="col-sm-8  col-md-5 col-lg-5">
+                        <input type="text" class="form-control" id="txtOperator" value="@ViewBag.Operator" name="txtOperator" maxlength="50"/>
+                    </div>
+                    <div class="col-sm-5 col-md-3 col-lg-3 checkbox">
+                        @if (string.IsNullOrEmpty(@ViewBag.Checkbox))
+                        {
+                            <label><input type="checkbox" id="chkBackDate" name="chkBackDate"/><strong>回收日期：</strong></label>
+                        }
+                        else
+                        {
+                            <label><input type="checkbox" id="chkBackDate" name="chkBackDate" checked="checked"/><strong>回收日期：</strong></label>
+                        }
+                    </div>
+                    <div class="col-sm-5 col-md-5 col-lg-5">
+                        <input type="text" class="form_datetime form-control" id="txtBackDateStart" name="txtBackDateStart" value="@ViewBag.OperationTimeStart" readonly>
+                    </div>
+                    <span class="col-sm-1 col-md-1 col-lg-1 form-control-static text-center">~</span>
+                    <div class="col-sm-5 col-md-5 col-lg-5">
+                        <input type="text" class="form_datetime form-control" id="txtBackDateEnd" name="txtBackDateEnd" value="@ViewBag.OperationTimeEnd" readonly>
+                    </div>
+                </div>
+            </div>
+            <div id="divGrid">
+                @{
+                    var webGrid = new WebGrid(source: (IEnumerable<DonationListViewModel>)ViewData["DisplayData"], canPage: false, canSort: false, defaultSort: "DocEntry", ajaxUpdateContainerId: "divGrid");
+                }
+                @webGrid.GetHtml(
+                    tableStyle: "table table-bordered table-responsive",
+                    headerStyle: "headerStyle",
+                    alternatingRowStyle: "alternatingRow",
+                    selectedRowStyle: "selectedRow",
+                    mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                    columns: webGrid.Columns(
+                        @*webGrid.Column(format:
+                        @<text>
+                            <input type="checkbox" id="chk" name="chk" value="@item.DocEntry" />
+                        </text>, style: "chkStyle"),*@
+                        webGrid.Column(columnName: "RegionName", header: "所屬聯誼區"),
+                        webGrid.Column(columnName: "ZoneName", header: "所屬服務區"),
+                        webGrid.Column(columnName: "StoreCode", header: "店家代碼"),
+                        webGrid.Column(columnName: "StoreName", header: "店家名稱"),
+                        webGrid.Column(columnName: "BusinessName", header: "營業種類代碼"),
+                        webGrid.Column(columnName: "ModificationName", header: "異動原因"),
+                        webGrid.Column(columnName: "ModificationDate", header: "異動年月", format:
+                            @<text>
+                                @{
+                                    if (@item.ModificationDate!=null)
+                                    {
+                                        @item.ModificationDate.ToString("yyyy/MM/dd")
+                                    }
+                                }
+                             </text>),
+                        webGrid.Column(columnName: "DevelopDate", header: "開發月份", format:
+                            @<text>
+                                @{
+                                    if (@item.DevelopDate != null)
+                                    {
+                                        @item.DevelopDate.ToString("yyyy/MM")
+                                    }
+                                }
+                             </text>)
+                        )
+                    )
+            </div>
+        </div>
+    </form>
+</section>
+

@@ -1,0 +1,97 @@
+﻿@using MustardSeedMission.Models
+<div class="modal fade" id="Reback02_Modal01" tabindex="-1" role="dialog" aria-labelledby="Lable_Reback02_Modal01">
+    @using (Ajax.BeginForm("Index", "Reback02", new AjaxOptions { HttpMethod = "POST" }, new { id = "Reback02_Modal01_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Reback02_Modal01">回收單建立作業-查詢</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Reback02_Modal01_SlAssiger" class="col-sm-7 col-md-6 col-lg-6 control-label">指派人員：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <select class="form-control" id="Reback02_Modal01_SlAssiger" name="Reback02_Modal01_SlAssiger">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var Reback02_Modal01_Users = (IEnumerable<Users>)ViewData["AllUser"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Reback02_Modal01_SlAssiger))
+                                    {
+                                        foreach (var item in Reback02_Modal01_Users)
+                                        {
+                                            if (@item.UserId == @ViewBag.Reback02_Modal01_SlAssiger)
+                                            {
+                                                <option value="@item.UserId" selected="selected">@item.UserName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.UserId">@item.UserName</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in Reback02_Modal01_Users)
+                                        {
+                                            <option value="@item.UserId">@item.UserName</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Reback02_Modal01_txtRebackDate" class="col-sm-7 col-md-6 col-lg-6 control-label">回收日期：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <div class="input-group date form_date">
+                                @*<input type="text" class="form-control" id="Reback02_Modal01_txtRebackDate" name="Reback02_Modal01_txtRebackDate" value="@ViewBag.Reback02_Modal01_RebackDate" maxlength="10"/>*@
+                                <input type="text" class="form-control" id="Reback02_Modal01_txtRebackDate" name="Reback02_Modal01_txtRebackDate" value="@ViewBag.Reback02_Modal01_RebackDate" readonly size="10">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Reback02_Modal01_SlPlan" class="col-sm-7 col-md-6 col-lg-6 control-label">計劃代碼：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <select class="form-control" id="Reback02_Modal01_SlPlan" name="Reback02_Modal01_SlPlan">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var Reback02_Modal01_PlanList = (IEnumerable<PlanList>)ViewData["AllPlanList"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Reback02_Modal01_SlPlan))
+                                    {
+                                        foreach (var item in Reback02_Modal01_PlanList)
+                                        {
+                                            if (@item.Code.ToString() == @ViewBag.Reback02_Modal01_SlPlan)
+                                            {
+                                                <option value="@item.Code" selected="selected">@item.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Code">@item.Name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in Reback02_Modal01_PlanList)
+                                        {
+                                            <option value="@item.Code">@item.Name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="Reback02_Modal01_btnConfirm" value="Reback02_Modal01_btnConfirm" name="action" class="btn btn-primary"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+

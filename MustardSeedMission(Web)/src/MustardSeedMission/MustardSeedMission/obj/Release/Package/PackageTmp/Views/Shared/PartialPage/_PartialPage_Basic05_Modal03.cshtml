@@ -1,0 +1,43 @@
+﻿@using MustardSeedMission.Models
+<div class="modal fade" id="Basic05_Modal03" tabindex="-1" role="dialog" aria-labelledby="Lable_Basic05_Modal03">
+    @using (Ajax.BeginForm("Index", "Basic05", new AjaxOptions { HttpMethod = "POST" }, new { id = "Basic05_Modal03_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Basic05_Modal03">盒型主檔維護作業-修改</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Basic05_Modal03_txtCode" class="col-sm-7 col-md-6 col-lg-6 control-label">盒型代碼：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <select class="form-control" id="Basic05_Modal03_txtCode" name="Basic05_Modal03_txtCode" disabled="disabled">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var groups = (IEnumerable<DonationBox>)ViewData["AllDonationBox"];
+                                    foreach (var group in groups)
+                                    {
+                                        <option value="@group.Code">@group.Code</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic05_Modal03_txtName" class="col-sm-7 col-md-6 col-lg-6 control-label">盒型名稱：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <input type="text" class="form-control" id="Basic05_Modal03_txtName" name="Basic05_Modal03_txtName" value="@ViewBag.Basic05_Modal03_Name" maxlength="20"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="Basic05_Modal03_btnConfirm" class="btn btn-primary"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+

@@ -1,0 +1,81 @@
+﻿@using MustardSeedMission.Models
+<div class="modal fade" id="Reback01_Modal02" tabindex="-1" role="dialog" aria-labelledby="Lable_Reback01_Modal02">
+    @using (Ajax.BeginForm("Index", "Reback01", new AjaxOptions { HttpMethod = "POST" }, new { id = "Reback01_Modal02_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Reback01_Modal02">工作計畫建立作業-新增</h4>
+                </div>
+                <div class="modal-body" id="Reback01_Modal02_Body">
+                    <div class="form-group">
+                        <label for="Reback01_Modal02_Plan" class="col-sm-7 col-md-6 col-lg-6 control-label">計劃名稱：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                          <input id="Reback01_Modal02_txtPlan" name="Reback01_Modal02_txtPlan" class="form-control" maxlength="30"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Reback01_Modal02_LinkArea" class="col-sm-7 col-md-6 col-lg-6 control-label">聯誼區：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <select class="form-control" id="Reback01_Modal02_LinkArea" name="Reback01_Modal02_LinkArea">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var Reback01_Modal02_Region = (IEnumerable<Region>)ViewData["AllRegion"];
+                                    foreach (var region in Reback01_Modal02_Region)
+                                    {
+                                        <option value="@region.Code">@region.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Reback01_Modal02_SerAreaUp" class="col-sm-7 col-md-6 col-lg-6 control-label">服務區：</label>
+                        <div class="col-sm-13 col-md-16 col-lg-16">
+                            <select class="form-control" id="Reback01_Modal02_SerAreaUp" name="Reback01_Modal02_SerAreaUp" onchange="Reback01_Modal02_SerArea_Change(this)">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var Reback01_Modal02_Zone = (IEnumerable<Zone>)ViewData["AllZone"];
+                                    foreach (var region in Reback01_Modal02_Zone)
+                                    {
+                                        <option value="@region.Code">@region.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-sm-2 col-md-1 col-lg-1" style="padding-left: 0">
+                            <button type="button" class="btn btn-default" style="width: 30px;" id="Reback01_Modal02_btnAdd">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="Reback01_Modal02_btnConfirm" class="btn btn-primary"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                </div>
+            </div>
+        </div>
+    }
+    <div id="Reback01_Modal02_AddPart" class="hide">
+        <div class="form-group Reback01_Modal02_DivAdd">
+            <label for="Reback01_Modal02_SerAreaDown" class="col-sm-7 col-md-6 col-lg-6 control-label sr-only">服務區：</label>
+            <div class="col-sm-13 col-md-16 col-lg-16">
+                <select class="form-control" id="Reback01_Modal02_SerAreaDown" name="Reback01_Modal02_SerAreaDown"  onchange="Reback01_Modal02_SerArea_Change(this)">
+                    <option value="">==請選擇==</option>
+                    @{
+                        var Reback01_Modal02_Zone_Add = (IEnumerable<Zone>)ViewData["AllZone"];
+                        foreach (var region in Reback01_Modal02_Zone_Add)
+                        {
+                            <option value="@region.Code">@region.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-sm-2 col-md-1 col-lg-1" style="padding-left: 0">
+                <button type="button" class="btn btn-default" style="width: 30px;" onclick="Reback01_Modal02_btnDeduce_click(this)">-</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,81 @@
+﻿@using MustardSeedMission.ViewModels
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DefaultLayoutPage.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $("#btnExport").click(function () {
+            if ($("#divGrid table tbody tr").length === 0) {
+                alert("無數據需要匯出");
+                return;
+            }
+            $("#Cuscomplait03_Modal01_btnExport").click();
+        });
+    });
+</script>
+<section class="content-header">
+    <h1>客訴單查詢作業</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    <form id="from" class="form-horizontal" method="post" action="@Url.Action("Index", "Cuscomplait03")">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnSearch" data-toggle="modal" data-target="#Cuscomplait03_Modal01">
+                            <i class="fa fa-search" aria-hidden="true"></i> 查詢
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnExport">
+                            <i class="fa fa-file-excel-o" aria-hidden="true"></i> 匯出
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="divGrid">
+                @{
+                    @*<input type="checkbox" id="chkAll" style="position: absolute; margin-left: 8px; margin-top: 13px;" />*@
+                var webGrid = new WebGrid(source: (IEnumerable<ComplaintsViewModel>)ViewData["DisplayData"], canPage: false, canSort: false, defaultSort: "DocEntry", ajaxUpdateContainerId: "divGrid");
+                }
+                @webGrid.GetHtml(
+                    tableStyle: "table table-bordered table-responsive",
+                    headerStyle: "headerStyle",
+                    alternatingRowStyle: "alternatingRow",
+                    selectedRowStyle: "selectedRow",
+                    mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                    columns: webGrid.Columns(
+                        @*webGrid.Column(format:
+                            @<text>
+                                <input type="checkbox" id="chk" name="chk" value='@item.DocEntry' />
+                            </text>, style: "chkStyle"),*@
+                        webGrid.Column(columnName: "DocEntry", header: "客訴單號"),
+                        webGrid.Column(columnName: "RegionName", header: "所屬聯誼區"),
+                        webGrid.Column(columnName: "ZoneName", header: "所屬服務區"),
+                        webGrid.Column(columnName: "StoreCode", header: "店家代號"),
+                        webGrid.Column(columnName: "StoreName", header: "店家名稱"),
+                        webGrid.Column(columnName: "Address", header: "地址"),
+                        webGrid.Column(columnName: "Tel", header: "連絡電話"),
+                        webGrid.Column(columnName: "EvenDate", header: "日期", format:
+                        @<text>
+                            @{
+                                if (@item.EvenDate != null)
+                                {
+                                    @item.EvenDate.ToString("yyyy/MM/dd")
+                                }
+                            }
+                        </text>)
+                        )
+                    )
+            </div>
+        </div>
+    </form>
+</section>
+@Html.Partial("PartialPage/_PartialPage_Cuscomplait03_Modal01")
+
+
+
+

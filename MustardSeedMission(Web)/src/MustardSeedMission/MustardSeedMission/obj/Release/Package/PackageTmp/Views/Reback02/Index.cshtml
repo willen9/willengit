@@ -1,0 +1,885 @@
+﻿@using MustardSeedMission.ViewModels
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DefaultLayoutPage.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $("#btnNew").click(function () {
+            try {
+                $("#Reback02_Modal02_Form").data('bootstrapValidator').destroy();
+                $('#Reback02_Modal02_Form').data('bootstrapValidator', null);
+                formValidator2();
+            }
+            catch (e) {
+
+            }
+            $("#Reback02_Modal02_Form .Reback02_Modal02_DivAdd").remove();
+            $("#Reback02_Modal02_Form")[0].reset();
+        });
+
+        $("#btnModify").click(function () {
+            var sel = $(".selectedRow");
+            if (sel.length === 0) {
+                alert("請選擇修改項");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("GetModifyData", "Reback02")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ docEntry: sel.find("td:eq(1)").text() }),
+                success: function (data) {
+                    var modals = eval(data);
+                    $("#Reback02_Modal03_Grid table tbody").empty();
+                    var serialNo = 0;
+                    for (var i = 0; i < modals.length; i++) {
+                        if (i % 2 === 0) {
+                            $("#Reback02_Modal03_Grid table tbody").append('<tr id=' + i + '>' +
+                                '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].Serialno + '</label><span class="sr-only">' + modals[i].Serialno + '</span></td>' +
+                                '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].DocEntry + '</label></td>' +
+                                '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].PlanCode + '</label></td>' +
+                                '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].PlanName + '</label></td>' +
+                                '<td>' + $("#Reback02_Modal03_Region_Hide").html() + '<span class="sr-only">' + (modals[i].RegionCode == null ? "" : modals[i].RegionCode) + '</span></td>' +
+                                '<td>' + $("#Reback02_Modal03_Zone_Hide").html() + '<span class="sr-only">' + (modals[i].ZoneCode === null ? "" : modals[i].ZoneCode) + '</span></td>' +
+                                '<td>' + $("#Reback02_Modal03_Store_Hide").html() + '<span class="sr-only">' + (modals[i].StoreCode == null ? "" : modals[i].StoreCode) + '</span></td>' +
+                                '<td>' + $("#Reback02_Modal03_StoreName_Hide").html() + '<span class="sr-only">' + (modals[i].StoreCode === null ? "" : modals[i].StoreCode) + '</span></td>' +
+                                '<td><button type="button" class="btn btn-primary" onclick="btnUpClick(this)"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></td>' +
+                                '<td><button type="button" class="btn btn-primary" onclick="btnDownClick(this)"><i class="fa fa-arrow-down" aria-hidden="true"></i></button></td>' +
+                                '</tr>');
+                        } else {
+                            $("#Reback02_Modal03_Grid table tbody").append('<tr class="alternatingRow" id=' + i + '>' +
+                                '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].Serialno + '</label><span class="sr-only">' + modals[i].Serialno + '</span></td>' +
+                                '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].DocEntry + '</label></td>' +
+                                '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].PlanCode + '</label></td>' +
+                                '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].PlanName + '</label></td>' +
+                                '<td>' + $("#Reback02_Modal03_Region_Hide").html() + '<span class="sr-only">' + (modals[i].RegionCode == null ? "" : modals[i].RegionCode) + '</span></td>' +
+                                '<td>' + $("#Reback02_Modal03_Zone_Hide").html() + '<span class="sr-only">' + (modals[i].ZoneCode === null ? "" : modals[i].ZoneCode) + '</span></td>' +
+                                '<td>' + $("#Reback02_Modal03_Store_Hide").html() + '<span class="sr-only">' + (modals[i].StoreCode == null ? "" : modals[i].StoreCode) + '</span></td>' +
+                                '<td>' + $("#Reback02_Modal03_StoreName_Hide").html() + '<span class="sr-only">' + (modals[i].StoreCode === null ? "" : modals[i].StoreCode) + '</span></td>' +
+                                '<td><button type="button" class="btn btn-primary" onclick="btnUpClick(this)"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></td>' +
+                                '<td><button type="button" class="btn btn-primary" onclick="btnDownClick(this)"><i class="fa fa-arrow-down" aria-hidden="true"></i></button></td>' +
+                                '</tr>');
+                        }
+                        if (i + 1 >= modals.length) {
+                            serialNo = modals[i].Serialno;
+                        }
+                    }
+                    var trs = $("#Reback02_Modal03_Grid table tbody tr");
+                    trs.each(function () {
+                        $(this).find("td").eq(4).find("select").val($(this).find("td").eq(4).find(".sr-only").text());
+                        $(this).find("td").eq(5).find("select").val($(this).find("td").eq(5).find(".sr-only").text());
+                        $(this).find("td").eq(6).find("select").val($(this).find("td").eq(6).find(".sr-only").text());
+                        $(this).find("td").eq(7).find("select").val($(this).find("td").eq(7).find(".sr-only").text());
+                    });
+                    $("#Reback02_Modal03_txtSerialno").val(serialNo);
+                    $("#Reback02_Modal03_txtDocEntry").val(sel.find("td:eq(1)").text());
+                    $("#Reback02_Modal03").modal("show");
+                },
+                error: function (message) {
+                    alert("修改查詢失敗,原因：" + message);
+                }
+            });
+        });
+
+        $("#Reback02_Modal02_btnConfirm").click(function () {
+            var bootstrapValidator = $("#Reback02_Modal02_Form").data('bootstrapValidator');
+            bootstrapValidator.validate();
+            if (!bootstrapValidator.isValid()) {
+                return;
+            } else {
+                var modal = new Array();
+                modal[0] = $("#Reback02_Modal02_PlanUp").val();
+                var plans = $("[name='Reback02_Modal02_PlanDown']");
+                var index = 1;
+                var isTwice = false;
+                plans.each(function () {
+                    if ($(this).val() !== "") {
+                        for (var i = 0; i < modal.length; i++) {
+                            if (modal[i] === $(this).val()) {
+                                isTwice = true;
+                                return;
+                            }
+                        }
+                        modal[index++] = $(this).val();
+                    }
+                });
+                if (isTwice) {
+                    alert("計劃代碼重複");
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("PostAdd", "Reback02")',
+                    type: "POST",
+                    datatype: "text",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ oper: $("#Reback02_Modal02_Assiger").val(), workDate: $("#Reback02_Modal02_RebackDate").val(), PlanList: modal }),
+                    success: function (data) {
+                        if (data === "OK") {
+                            alert("新增成功");
+                            $("#Reback02_Modal01_btnConfirm").click();
+                        } else {
+                            alert(data);
+                        }
+                    },
+                    error: function (message) {
+                        alert("新增失敗,原因：" + message);
+                    }
+                });
+            }
+        });
+
+        $("#Reback02_Modal03_btnConfirm").click(function () {
+            var tr = $("#Reback02_Modal03_Grid table tbody tr");
+            if (tr.length > 0) {
+                var modal = new Array();
+                for (var i = 0; i < tr.length; i++) {
+                    if (tr.eq(i).find("td").eq(4).find("select").val() === "" || tr.eq(i).find("td").eq(4).find("select").val() === null) {
+                        alert("所屬聯誼區不能為空");
+                        return;
+                    }
+                    if (tr.eq(i).find("td").eq(5).find("select").val() === "" || tr.eq(i).find("td").eq(5).find("select").val() === null) {
+                        alert("所屬服務區不能為空");
+                        return;
+                    }
+                    if (tr.eq(i).find("td").eq(6).find("select").val() === "" || tr.eq(i).find("td").eq(6).find("select").val() === null) {
+                        alert("店家代碼不能為空");
+                        return;
+                    }
+                    if (tr.eq(i).find("td").eq(7).find("select").val() === "" || tr.eq(i).find("td").eq(7).find("select").val() === null) {
+                        alert("店家名稱不能為空");
+                        return;
+                    }
+
+                    modal[i] = {
+                        DocEntry: tr.eq(i).find("td").eq(1).find("label").text(),
+                        Serialno: i + 1,
+                        StoreCode: tr.eq(i).find("td").eq(6).find("select").val(),
+                        PlanName: tr.eq(i).find("td").eq(3).find("label").text(),
+                        SerialnoOld: tr.eq(i).find("td").eq(0).find("label").text(),
+                        StoreCodeOld: tr.eq(i).find("td").eq(6).find("span").text()
+                    };
+                }
+                $.ajax({
+                    url: '@Url.Action("PostUpdate", "Reback02")',
+                    type: "POST",
+                    datatype: "text",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify(modal),
+                    success: function (data) {
+                        if (data === "OK") {
+                            alert("修改成功");
+                            $("#Reback02_Modal01_btnConfirm").click();
+                        } else {
+                            alert(data);
+                        }
+                    },
+                    error: function (message) {
+                        alert("修改失敗,原因：" + message);
+                    }
+                });
+            } else {
+                $("#Reback02_Modal01_btnConfirm").click();
+            }
+        });
+
+        $("#Reback02_Modal01_Form").bootstrapValidator({
+            fields: {
+                Reback02_Modal01_txtRebackDate: {
+                    validators: {
+                        date: {
+                            format: 'YYYY/MM/DD',
+                            message: '回收日期格式不正确(YYYY/MM/DD)'
+                        }
+                    }
+                }
+            }
+        });
+
+        $("#Reback02_Modal02_btnAdd").click(function () {
+            $("#Reback02_Modal02_Body").append($("#Reback02_Modal02_AddPart").html());
+        });
+
+        $("#btnDel").click(function () {
+            if ($(":checkbox:checked").length === 0) {
+                alert("請選擇要刪除的項");
+                return false;
+            }
+            if (!confirm("確定刪除選中項？")) {
+                return false;
+            }
+            return true;
+        });
+
+        $("#divGrid table tbody tr td").click(function () {
+            $(".selectedRow").removeClass("selectedRow");
+            $(this).closest("tr").addClass("selectedRow");
+            var docEntry = $(this).closest("tr").find("input").val();
+            $.ajax({
+                url: '@Url.Action("GetDetail", "Reback02")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ docEntry: docEntry }),
+                success: function (data) {
+                    var modals = eval(data);
+                    $("#divGridSnd table tbody").empty();
+                    for (var i = 0; i < modals.length; i++) {
+                        if (i % 2 === 0) {
+                            $("#divGridSnd table tbody").append('<tr>' +
+                                '<td>' + modals[i].PlanName + '</span></td>' +
+                                '<td>' + modals[i].RegionName + '</span></td>' +
+                                '<td>' + modals[i].ZoneName + '</span></td>' +
+                                '<td>' + modals[i].Serialno + '</span></td>' +
+                                '<td>' + modals[i].StoreCode + '</span></td>' +
+                                '<td>' + modals[i].StoreName + '</span></td>' +
+                                '</tr>');
+                        } else {
+                            $("#divGridSnd table tbody").append('<tr class="alternatingRow">' +
+                                '<td>' + modals[i].PlanName + '</span></td>' +
+                                '<td>' + modals[i].RegionName + '</span></td>' +
+                                '<td>' + modals[i].ZoneName + '</span></td>' +
+                                '<td>' + modals[i].Serialno + '</span></td>' +
+                                '<td>' + modals[i].StoreCode + '</span></td>' +
+                                '<td>' + modals[i].StoreName + '</span></td>' +
+                                '</tr>');
+                        }
+                    }
+                    $("#txtDocEntry").val(docEntry);
+                },
+                error: function (message) {
+                    alert("查詢明細失敗,原因：" + message);
+                }
+            });
+        });
+
+        $("#btnExport").click(function () {
+            if ($("#divGridSnd table tbody tr").length === 0) {
+                alert("請先查詢單身數據");
+                return false;
+            }
+            if ($("#txtDocEntry").val() === "") {
+                alert("請先選擇單頭項");
+                return false;
+            }
+            return true;
+        });
+
+        $("#Reback02_Modal04_LinkArea").change(function () {
+            $.ajax({
+                url: '@Url.Action("GetZoneByRegion2", "Reback02")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ region: $("#Reback02_Modal04_LinkArea").val() }),
+                success: function (data) {
+                    var modal = eval(data);
+                    var zoneModals = eval(modal.lstZones);
+                    var storeModals = eval(modal.lstStores);
+                    $("#Reback02_Modal04_SerArea").empty();
+                    $("#Reback02_Modal04_SerArea").append('<option value="">==請選擇==</option>');
+                    for (var i = 0; i < zoneModals.length; i++) {
+                        $("#Reback02_Modal04_SerArea").append('<option value="' + zoneModals[i].Code + '">' + zoneModals[i].Name + '</option>');
+                    }
+                    $("#Reback02_Modal04_ShopId").empty();
+                    $("#Reback02_Modal04_ShopName").empty();
+                    $("#Reback02_Modal04_ShopId").append('<option value="">==請選擇==</option>');
+                    $("#Reback02_Modal04_ShopName").append('<option value="">==請選擇==</option>');
+                    for (var i = 0; i < storeModals.length; i++) {
+                        $("#Reback02_Modal04_ShopId").append('<option value="' + storeModals[i].Code + '">' + storeModals[i].Code + '</option>');
+                        $("#Reback02_Modal04_ShopName").append('<option value="' + storeModals[i].Code + '">' + storeModals[i].Name + '</option>');
+                    }
+                    try {
+                        $("#Reback02_Modal04_Form").data('bootstrapValidator').destroy();
+                        $('#Reback02_Modal04_Form').data('bootstrapValidator', null);
+                    }
+                    catch (e) {
+
+                    }
+                },
+                error: function (message) {
+                    alert("獲取所屬服務區數據失敗,原因：" + message);
+                }
+            });
+        });
+
+        //修改模態框顯示數據服務區變更聯動數據
+        $("#Reback02_Modal04_SerArea").change(function () {
+            $.ajax({
+                url: '@Url.Action("GetStoreData2", "Reback02")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ region: $("#Reback02_Modal04_LinkArea").val(), zone: $("#Reback02_Modal04_SerArea").val() }),
+                success: function (data) {
+                    var modal = eval(data);
+                    var storeModal = modal.lstStores;
+                    $("#Reback02_Modal04_LinkArea").val(modal.regionValue);
+                    $("#Reback02_Modal04_SerArea").val(modal.zoneValue);
+                    $("#Reback02_Modal04_ShopId").empty();
+                    $("#Reback02_Modal04_ShopName").empty();
+                    $("#Reback02_Modal04_ShopId").append('<option value="">==請選擇==</option>');
+                    $("#Reback02_Modal04_ShopName").append('<option value="">==請選擇==</option>');
+                    for (var i = 0; i < storeModal.length; i++) {
+                        $("#Reback02_Modal04_ShopId").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Code + '</option>');
+                        $("#Reback02_Modal04_ShopName").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Name + '</option>');
+                    }
+                    try {
+                        $("#Reback02_Modal04_Form").data('bootstrapValidator').destroy();
+                        $('#Reback02_Modal04_Form').data('bootstrapValidator', null);
+                    }
+                    catch (e) {
+
+                    }
+                },
+                error: function (message) {
+                    alert("根據服務區獲取數據失敗,原因：" + message);
+                }
+            });
+        });
+
+        //修改模態框顯示數據店家代碼變更聯動數據
+        $("#Reback02_Modal04_ShopId").change(function () {
+            $("#Reback02_Modal04_ShopName").val($("#Reback02_Modal04_ShopId").val());
+            if ($("#Reback02_Modal04_ShopId").val() !== "") {
+                $.ajax({
+                    url: '@Url.Action("GetRegionAndZoneByStore2", "Reback02")',
+                    type: "POST",
+                    datatype: "text",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ store: $($("#Reback02_Modal04_ShopId")).val() }),
+                    success: function (data) {
+                        var modal = eval(data);
+                        var zoneModal = eval(modal.lstZones);
+                        var storeModal = eval(modal.lstStores);
+                        $("#Reback02_Modal04_SerArea").empty();
+                        $("#Reback02_Modal04_ShopId").empty();
+                        $("#Reback02_Modal04_ShopName").empty();
+                        $("#Reback02_Modal04_SerArea").append('<option value="">==請選擇==</option>');
+                        for (var i = 0; i < zoneModal.length; i++) {
+                            $("#Reback02_Modal04_SerArea").append('<option value="' + zoneModal[i].Code + '">' + zoneModal[i].Name + '</option>');
+                        }
+                        $("#Reback02_Modal04_ShopId").append('<option value="">==請選擇==</option>');
+                        $("#Reback02_Modal04_ShopName").append('<option value="">==請選擇==</option>');
+                        for (var i = 0; i < storeModal.length; i++) {
+                            $("#Reback02_Modal04_ShopId").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Code + '</option>');
+                            $("#Reback02_Modal04_ShopName").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Name + '</option>');
+                        }
+                        $("#Reback02_Modal04_LinkArea").val(modal.regionCode);
+                        $("#Reback02_Modal04_SerArea").val(modal.zoneCode);
+                        $("#Reback02_Modal04_ShopId").val(modal.storeCode);
+                        $("#Reback02_Modal04_ShopName").val(modal.storeCode);
+                        try {
+                            $("#Reback02_Modal04_Form").data('bootstrapValidator').destroy();
+                            $('#Reback02_Modal04_Form').data('bootstrapValidator', null);
+                        }
+                        catch (e) {
+
+                        }
+                    },
+                    error: function (message) {
+                        alert("根據店家獲取數據失敗,原因：" + message);
+                    }
+                });
+            }
+        });
+
+        //修改模態框顯示數據店家名稱變更聯動數據
+        $("#Reback02_Modal04_ShopName").change(function () {
+            $("#Reback02_Modal04_ShopId").val($("#Reback02_Modal04_ShopName").val());
+            $.ajax({
+                url: '@Url.Action("GetRegionAndZoneByStore2", "Reback02")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ store: $("#Reback02_Modal04_ShopName").val() }),
+                success: function (data) {
+                    var modal = eval(data);
+                    var zoneModal = eval(modal.lstZones);
+                    var storeModal = eval(modal.lstStores);
+                    $("#Reback02_Modal04_SerArea").empty();
+                    $("#Reback02_Modal04_ShopId").empty();
+                    $("#Reback02_Modal04_ShopName").empty();
+                    $("#Reback02_Modal04_SerArea").append('<option value="">==請選擇==</option>');
+                    for (var i = 0; i < zoneModal.length; i++) {
+                        $("#Reback02_Modal04_SerArea").append('<option value="' + zoneModal[i].Code + '">' + zoneModal[i].Name + '</option>');
+                    }
+                    $("#Reback02_Modal04_ShopId").append('<option value="">==請選擇==</option>');
+                    $("#Reback02_Modal04_ShopName").append('<option value="">==請選擇==</option>');
+                    for (var i = 0; i < storeModal.length; i++) {
+                        $("#Reback02_Modal04_ShopId").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Code + '</option>');
+                        $("#Reback02_Modal04_ShopName").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Name + '</option>');
+                    }
+                    $("#Reback02_Modal04_LinkArea").val(modal.regionCode);
+                    $("#Reback02_Modal04_SerArea").val(modal.zoneCode);
+                    $("#Reback02_Modal04_ShopId").val(modal.storeCode);
+                    $("#Reback02_Modal04_ShopName").val(modal.storeCode);
+                    try {
+                        $("#Reback02_Modal04_Form").data('bootstrapValidator').destroy();
+                        $('#Reback02_Modal04_Form').data('bootstrapValidator', null);
+                    }
+                    catch (e) {
+
+                    }
+                },
+                error: function (message) {
+                    alert("根據店家獲取數據失敗,原因：" + message);
+                }
+            });
+        });
+
+        formValidator2();
+    });
+
+    function Reback02_Modal02_btnDeduce_click(obj) {
+        $(obj).closest(".form-group").remove();
+    }
+
+    function btnUpClick(obj) {
+        var index = $(obj).closest("tr").attr("id");
+        if (parseInt(index) === 0) {
+            return;
+        }
+        var name = $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(2).find("input").val();
+        var region = $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(3).find("select").val();
+        var zone = $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(4).find("select").val();
+        var storeId = $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(5).find("select").val();
+        var storeName = $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(6).find("select").val();
+        var indexPrev = $(obj).closest("tr").prev().attr("id");
+        var nameN = $("#Reback02_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(2).find("input").val();
+        var regionN = $("#Reback02_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(3).find("select").val();
+        var zoneN = $("#Reback02_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(4).find("select").val();
+        var storeIdN = $("#Reback02_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(5).find("select").val();
+        var storeNameN = $("#Reback02_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(6).find("select").val();
+
+        var trIndex = $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").html();
+        var trPrev = $("#Reback02_Modal03_Grid table tbody tr[id=" + indexPrev + "]").html();
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").html(trPrev);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + indexPrev + "]").html(trIndex);
+
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(2).find("input").val(nameN);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(3).find("select").val(regionN);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(4).find("select").val(zoneN);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(5).find("select").val(storeIdN);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(6).find("select").val(storeNameN);
+
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(2).find("input").val(name);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(3).find("select").val(region);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(4).find("select").val(zone);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(5).find("select").val(storeId);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(6).find("select").val(storeName);
+    }
+
+    function btnDownClick(obj) {
+        var index = $(obj).closest("tr").attr("id");
+        if (parseInt(index) + 1 === $("#Reback02_Modal03_Grid table tbody tr").length) {
+            return;
+        }
+        var name = $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(2).find("input").val();
+        var region = $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(3).find("select").val();
+        var zone = $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(4).find("select").val();
+        var storeId = $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(5).find("select").val();
+        var storeName = $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(6).find("select").val();
+        var indexNext = $(obj).closest("tr").next().attr("id");
+        var nameN = $("#Reback02_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(2).find("input").val();
+        var regionN = $("#Reback02_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(3).find("select").val();
+        var zoneN = $("#Reback02_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(4).find("select").val();
+        var storeIdN = $("#Reback02_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(5).find("select").val();
+        var storeNameN = $("#Reback02_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(6).find("select").val();
+        var trIndex = $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").html();
+        var trPrev = $("#Reback02_Modal03_Grid table tbody tr[id=" + indexNext + "]").html();
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").html(trPrev);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + indexNext + "]").html(trIndex);
+
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(2).find("input").val(nameN);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(3).find("select").val(regionN);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(4).find("select").val(zoneN);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(5).find("select").val(storeIdN);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(6).find("select").val(storeNameN);
+
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(2).find("input").val(name);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(3).find("select").val(region);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(4).find("select").val(zone);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(5).find("select").val(storeId);
+        $("#Reback02_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(6).find("select").val(storeName);
+    }
+
+    function Reback02_Modal03_LinkArea_change(obj) {
+        $.ajax({
+            url: '@Url.Action("GetZoneByRegion", "Reback02")',
+            type: "POST",
+            datatype: "text",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ region: $(obj).val() }),
+            success: function (data) {
+                var modal = eval(data);
+                $(obj).closest("tr").find("td:eq(5)").find("select").empty();
+                for (var i = 0; i < modal.length; i++) {
+                    $(obj).closest("tr").find("td:eq(5)").find("select").append('<option value="' + modal[i].Code + '">' + modal[i].Name + '</option>');
+                }
+                var zone = $(obj).closest("tr").find("td:eq(5)").find("select").val();
+                if (zone === null) {
+                    $(obj).closest("tr").find("td:eq(6)").find("select").empty();
+                    $(obj).closest("tr").find("td:eq(7)").find("select").empty();
+                } else {
+                    $.ajax({
+                        url: '@Url.Action("GetStoreData", "Reback02")',
+                        type: "POST",
+                        datatype: "text",
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify({ zone: zone }),
+                        success: function (data) {
+                            var modal = eval(data);
+                            var storeModal = eval(modal.lstStores);
+                            $(obj).closest("tr").find("td:eq(6)").find("select").empty();
+                            $(obj).closest("tr").find("td:eq(7)").find("select").empty();
+                            for (var i = 0; i < storeModal.length; i++) {
+                                $(obj).closest("tr").find("td:eq(6)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Code + '</option>');
+                                $(obj).closest("tr").find("td:eq(7)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Name + '</option>');
+                            }
+                        },
+                        error: function (message) {
+                            alert("獲取店家數據失敗,原因：" + message);
+                        }
+                    });
+                }
+            },
+            error: function (message) {
+                alert("獲取所屬服務區數據失敗,原因：" + message);
+            }
+        });
+    }
+
+    //修改模態框顯示數據服務區變更聯動數據
+    function Reback02_Modal03_SerArea_change(obj) {
+        $.ajax({
+            url: '@Url.Action("GetStoreData", "Reback02")',
+            type: "POST",
+            datatype: "text",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ zone: $(obj).val() }),
+            success: function (data) {
+                var modal = eval(data);
+                var storeModal = modal.lstStores;
+                $(obj).closest("tr").find("td:eq(4)").find("select").val(modal.regionCode);
+                $(obj).closest("tr").find("td:eq(5)").find("select").val(modal.zoneCode);
+                $(obj).closest("tr").find("td:eq(6)").find("select").empty();
+                $(obj).closest("tr").find("td:eq(7)").find("select").empty();
+                for (var i = 0; i < storeModal.length; i++) {
+                    $(obj).closest("tr").find("td:eq(6)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Code + '</option>');
+                    $(obj).closest("tr").find("td:eq(7)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Name + '</option>');
+                }
+            },
+            error: function (message) {
+                alert("根據服務區獲取數據失敗,原因：" + message);
+            }
+        });
+    }
+
+    //修改模態框顯示數據店家代碼變更聯動數據
+    function Reback02_Modal03_SlStore_change(obj) {
+        $(obj).closest("tr").find("td:eq(7)").find("[name='Reback02_Modal03_SlStoreName']").val($(obj).val());
+        $.ajax({
+            url: '@Url.Action("GetRegionAndZoneByStore", "Reback02")',
+            type: "POST",
+            datatype: "text",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ store: $(obj).val() }),
+            success: function (data) {
+                var modal = eval(data);
+                var zoneModal = eval(modal.lstZones);
+                var storeModal = eval(modal.lstStores);
+                $(obj).closest("tr").find("td:eq(5)").find("select").empty();
+                $(obj).closest("tr").find("td:eq(6)").find("select").empty();
+                $(obj).closest("tr").find("td:eq(7)").find("select").empty();
+                for (var i = 0; i < zoneModal.length; i++) {
+                    $(obj).closest("tr").find("td:eq(5)").find("select").append('<option value="' + zoneModal[i].Code + '">' + zoneModal[i].Name + '</option>');
+                }
+                for (var i = 0; i < storeModal.length; i++) {
+                    $(obj).closest("tr").find("td:eq(6)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Code + '</option>');
+                    $(obj).closest("tr").find("td:eq(7)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Name + '</option>');
+                }
+                $(obj).closest("tr").find("td:eq(4)").find("select").val(modal.regionCode);
+                $(obj).closest("tr").find("td:eq(5)").find("select").val(modal.zoneCode);
+                $(obj).closest("tr").find("td:eq(6)").find("select").val(modal.storeCode);
+                $(obj).closest("tr").find("td:eq(7)").find("select").val(modal.storeCode);
+            },
+            error: function (message) {
+                alert("根據店家獲取數據失敗,原因：" + message);
+            }
+        });
+    }
+
+    //修改模態框顯示數據店家名稱變更聯動數據
+    function Reback02_Modal03_SlStoreName_change(obj) {
+        $(obj).closest("tr").find("td:eq(6)").find("[name='Reback02_Modal03_SlStore']").val($(obj).val());
+        $.ajax({
+            url: '@Url.Action("GetRegionAndZoneByStore", "Reback02")',
+            type: "POST",
+            datatype: "text",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ store: $(obj).val() }),
+            success: function (data) {
+                var modal = eval(data);
+                var zoneModal = eval(modal.lstZones);
+                var storeModal = eval(modal.lstStores);
+                $(obj).closest("tr").find("td:eq(5)").find("select").empty();
+                $(obj).closest("tr").find("td:eq(6)").find("select").empty();
+                $(obj).closest("tr").find("td:eq(7)").find("select").empty();
+                for (var i = 0; i < zoneModal.length; i++) {
+                    $(obj).closest("tr").find("td:eq(5)").find("select").append('<option value="' + zoneModal[i].Code + '">' + zoneModal[i].Name + '</option>');
+                }
+                for (var i = 0; i < storeModal.length; i++) {
+                    $(obj).closest("tr").find("td:eq(6)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Code + '</option>');
+                    $(obj).closest("tr").find("td:eq(7)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Name + '</option>');
+                }
+                $(obj).closest("tr").find("td:eq(4)").find("select").val(modal.regionCode);
+                $(obj).closest("tr").find("td:eq(5)").find("select").val(modal.zoneCode);
+                $(obj).closest("tr").find("td:eq(6)").find("select").val(modal.storeCode);
+                $(obj).closest("tr").find("td:eq(7)").find("select").val(modal.storeCode);
+            },
+            error: function (message) {
+                alert("根據店家獲取數據失敗,原因：" + message);
+            }
+        });
+    }
+</script>
+<script>
+    function CheckForm() {
+        CheckAddStore();
+        var bootstrapValidator = $("#Reback02_Modal04_Form").data('bootstrapValidator');
+        bootstrapValidator.validate();
+        if (!bootstrapValidator.isValid()) {
+            return;
+        } else {
+            var i = $("#Reback02_Modal03_Grid table tbody tr").length;
+            var serialNo = parseInt($("#Reback02_Modal03_txtSerialno").val()) + 1;
+            if (i % 2 === 0) {
+                $("#Reback02_Modal03_Grid table tbody").append('<tr id=' + i + '>' +
+                    '<td><label class="form-control-static"  style="font-weight: normal">' + serialNo + '</label></td>' +
+                    '<td><label class="form-control-static"  style="font-weight: normal">' + $("#Reback02_Modal03_txtDocEntry").val() + '</label></td>' +
+                    '<td><label class="form-control-static"  style="font-weight: normal"></label></td>' +
+                    '<td><label class="form-control-static"  style="font-weight: normal"></label></td>' +
+                    '<td>' + $("#Reback02_Modal03_Region_Hide").html() + '<span class="sr-only">' + $("#Reback02_Modal04_LinkArea").val() + '</span></td>' +
+                    '<td>' + $("#Reback02_Modal03_Zone_Hide").html() + '<span class="sr-only">' + $("#Reback02_Modal04_SerArea").val() + '</span></td>' +
+                    '<td>' + $("#Reback02_Modal03_Store_Hide").html() + '<span class="sr-only">' + $("#Reback02_Modal04_ShopId").val() + '</span></td>' +
+                    '<td>' + $("#Reback02_Modal03_StoreName_Hide").html() + '<span class="sr-only">' + $("#Reback02_Modal04_ShopId").val() + '</span></td>' +
+                    '<td><button type="button" class="btn btn-primary" onclick="btnUpClick(this)"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></td>' +
+                    '<td><button type="button" class="btn btn-primary" onclick="btnDownClick(this)"><i class="fa fa-arrow-down" aria-hidden="true"></i></button></td>' +
+                    '</tr>');
+            } else {
+                $("#Reback02_Modal03_Grid table tbody").append('<tr class="alternatingRow" id=' + i + '>' +
+                    '<td><label class="form-control-static"  style="font-weight: normal">' + serialNo + '</label></td>' +
+                    '<td><label class="form-control-static"  style="font-weight: normal">' + $("#Reback02_Modal03_txtDocEntry").val() + '</label></td>' +
+                    '<td><label class="form-control-static"  style="font-weight: normal"></label></td>' +
+                    '<td><label class="form-control-static"  style="font-weight: normal"></label></td>' +
+                    '<td>' + $("#Reback02_Modal03_Region_Hide").html() + '<span class="sr-only">' + $("#Reback02_Modal04_LinkArea").val() + '</span></td>' +
+                    '<td>' + $("#Reback02_Modal03_Zone_Hide").html() + '<span class="sr-only">' + $("#Reback02_Modal04_SerArea").val() + '</span></td>' +
+                    '<td>' + $("#Reback02_Modal03_Store_Hide").html() + '<span class="sr-only">' + $("#Reback02_Modal04_ShopId").val() + '</span></td>' +
+                    '<td>' + $("#Reback02_Modal03_StoreName_Hide").html() + '<span class="sr-only">' + $("#Reback02_Modal04_ShopId").val() + '</span></td>' +
+                    '<td><button type="button" class="btn btn-primary" onclick="btnUpClick(this)"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></td>' +
+                    '<td><button type="button" class="btn btn-primary" onclick="btnDownClick(this)"><i class="fa fa-arrow-down" aria-hidden="true"></i></button></td>' +
+                    '</tr>');
+            }
+            var tr = $("#Reback02_Modal03_Grid table tbody tr[id='" + i + "']");
+
+            tr.find("td").eq(4).find("select").val(tr.find("td").eq(4).find(".sr-only").text());
+            tr.find("td").eq(5).find("select").val(tr.find("td").eq(5).find(".sr-only").text());
+            tr.find("td").eq(6).find("select").val(tr.find("td").eq(6).find(".sr-only").text());
+            tr.find("td").eq(7).find("select").val(tr.find("td").eq(7).find(".sr-only").text());
+            $("#Reback02_Modal03_txtSerialno").val(serialNo);
+            $("#Reback02_Modal04").modal("hide");
+        }
+    }
+    function CheckAddStore() {
+        $("#Reback02_Modal04_Form").bootstrapValidator({
+            fields: {
+                Reback02_Modal04_LinkArea: {
+                    validators: {
+                        notEmpty: {
+                            message: "聯誼區不能為空"
+                        }
+                    }
+                },
+                Reback02_Modal04_SerArea: {
+                    validators: {
+                        notEmpty: {
+                            message: "服務區不能為空"
+                        }
+                    }
+                },
+                Reback02_Modal04_ShopId: {
+                    validators: {
+                        notEmpty: {
+                            message: "店家代碼不能為空"
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function formValidator2() {
+        $("#Reback02_Modal02_Form").bootstrapValidator({
+            fields: {
+                Reback02_Modal02_Assiger: {
+                    validators: {
+                        notEmpty: {
+                            message: "指派人員不能為空"
+                        }
+                    }
+                },
+                Reback02_Modal02_RebackDate: {
+                    validators: {
+                        notEmpty: {
+                            message: "回收日期不能為空"
+                        },
+                        date: {
+                            format: 'YYYY/MM/DD',
+                            message: '回收日期格式不正确(YYYY/MM/DD)'
+                        }
+                    }
+                },
+                Reback02_Modal02_PlanUp: {
+                    validators: {
+                        notEmpty: {
+                            message: "第一個計劃代碼不能為空"
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+<section class="content-header">
+    <h1>回收單建立作業</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    <form id="from" class="form-horizontal" method="post" action="@Url.Action("Index", "Reback02")">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnSearch" data-toggle="modal" data-target="#Reback02_Modal01">
+                            <i class="fa fa-search" aria-hidden="true"></i> 查詢
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnNew" data-toggle="modal" data-target="#Reback02_Modal02">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i> 新增
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnModify">
+                            <i class="fa fa-edit" aria-hidden="true"></i> 修改
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="action" value="delete" id="btnDel">
+                            <i class="fa fa-times-circle" aria-hidden="true"></i> 刪除
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="action" value="export" id="btnExport">
+                            <i class="fa fa-file-excel-o" aria-hidden="true"></i> 匯出
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="divGrid" style="height: 350px; overflow-y: auto;">
+                @{
+                    @*<input type="checkbox" id="chkAll" style="position: absolute; margin-left: 8px; margin-top: 13px;" />*@
+                var webGrid = new WebGrid(source: (IEnumerable<DonationHeadViewModel>)ViewData["DisplayData"], canPage: false, canSort: false, defaultSort: "DocEntry", ajaxUpdateContainerId: "divGrid");
+                }
+                @webGrid.GetHtml(
+                    tableStyle: "table table-bordered table-responsive",
+                    headerStyle: "headerStyle",
+                    alternatingRowStyle: "alternatingRow",
+                    selectedRowStyle: "selectedRow",
+                    mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                    columns: webGrid.Columns(
+                        webGrid.Column(format:
+                        @<text>
+                            <input type="checkbox" id="chk" name="chk" value="@item.DocEntry" />
+                        </text>, style: "chkStyle"),
+                        webGrid.Column(columnName: "DocEntry", header: "回收單號"),
+                        webGrid.Column(columnName: "OperatorName", header: "指派人員"),
+                        webGrid.Column(columnName: "PlanName", header: "計劃代碼"),
+                        webGrid.Column(columnName: "WorkDay", header: "回收日期", format:
+                        @<text>
+                            @{
+                                if (@item.WorkDay != null)
+                                {
+                                    @item.WorkDay.ToString("yyyy/MM/dd")
+                                }
+                            }
+                        </text>),
+                        webGrid.Column(columnName: "CreatorName", header: "建立人員"),
+                        webGrid.Column(columnName: "CreateTime", header: "建立時間", format:
+                        @<text>
+                            @{
+                                if (@item.CreateTime != null)
+                                {
+                                    @item.CreateTime.ToString("yyyy/MM/dd")
+                                }
+                            }
+                        </text>),
+                        webGrid.Column(columnName: "UpdaterName", header: "修改人員"),
+                        webGrid.Column(columnName: "updateTime", header: "修改時間", format:
+                        @<text>
+                            @{
+                                if (@item.updateTime != null)
+                                {
+                                    @item.updateTime.ToString("yyyy/MM/dd")
+                                }
+                            }
+                        </text>)
+                        )
+                    )
+            </div>
+            <div id="divGridSnd">
+                <table class="table table-bordered table-responsive" data-swhgajax="true" data-swhgcontainer="divGridSnd" data-swhgcallback="">
+                    <thead>
+                        <tr class="headerStyle">
+                            <th scope="col">
+                                計劃代碼
+                            </th>
+                            <th scope="col">
+                                所屬聯誼區
+                            </th>
+                            <th scope="col">
+                                所屬服務區
+                            </th>
+                            <th scope="col">
+                                回收序號
+                            </th>
+                            <th scope="col">
+                                店家代號
+                            </th>
+                            <th scope="col">
+                                店家名稱
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <input type="hidden" id="txtOperator" name="txtOperator" value="@ViewBag.Reback02_Modal01_SlAssiger" />
+        <input type="hidden" id="txtWorkDate" name="txtWorkDate" value="@ViewBag.Reback02_Modal01_RebackDate" />
+        <input type="hidden" id="txtPlanCode" name="txtPlanCode" value="@ViewBag.Reback02_Modal01_SlPlan" />
+        <input type="hidden" id="txtDocEntry" name="txtDocEntry" value="@ViewBag.DocEntry" />
+    </form>
+</section>
+@Html.Partial("PartialPage/_PartialPage_Reback02_Modal01")
+@Html.Partial("PartialPage/_PartialPage_Reback02_Modal02")
+@Html.Partial("PartialPage/_PartialPage_Reback02_Modal03")
+
+
+
+
+
+

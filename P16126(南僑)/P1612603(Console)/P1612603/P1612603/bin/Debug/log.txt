@@ -1,0 +1,32 @@
+2017-03-16 14:47:53 Message:Transaction failed. The server response was: 5.7.1 <chengwm@regalcan.com.tw>: Relay access denied
+2017-03-16 14:51:38 Message:Transaction failed. The server response was: 5.7.1 <chengwm@regalcan.com.tw>: Relay access denied
+2017-03-16 14:54:39 Message:Transaction failed. The server response was: 5.7.1 <chengwm@regalcan.com.tw>: Relay access denied
+2017-03-16 15:05:20 Message:Transaction failed. The server response was: 5.7.1 <chengwm@regalcan.com.tw>: Relay access denied
+2017-03-16 15:16:17 Message:Transaction failed. The server response was: 5.7.1 <chengwm@regalcan.com.tw>: Relay access denied
+2017-03-16 15:23:17 Message:The SMTP server requires a secure connection or the client was not authenticated. The server response was: Authentication required
+2017-03-16 15:27:18 Message:接近 '=' 之處的語法不正確。
+2017-03-16 15:43:06 Message:必須宣告純量變數 "@TransferNo"。
+必須宣告純量變數 "@TransferNo"。
+2017-03-16 15:44:39 Message:Could not find a part of the path 'E:\WorkSpaces\MyWork\P16126(南僑)\P1212603(Console)\P1612603\P1612603\bin\Debug\DifExport\20170316\A008'.
+2017-03-16 15:46:22 Message:Could not find a part of the path 'E:\WorkSpaces\MyWork\P16126(南僑)\P1212603(Console)\P1612603\P1612603\bin\Debug\DifExport\20170316\A008'.
+2017-03-16 15:47:20 Message:Could not find a part of the path 'E:\WorkSpaces\MyWork\P16126(南僑)\P1212603(Console)\P1612603\P1612603\bin\Debug\DifExport\20170316\A008'.
+2017-03-16 15:54:20 Message:Mailbox unavailable. The server response was: Sender frequency limited.
+2017-03-17 09:05:42 Message:An invalid character was found in the mail header: ';'.
+2017-03-17 09:08:24 Message:An invalid character was found in the mail header: ';'.
+2017-03-17 09:15:49 Message:An invalid character was found in the mail header: ';'.
+2017-03-17 09:26:33 Message:Transaction failed. The server response was: 5.7.1 <chengwm@regalcan.com.tw>: Relay access denied
+2017-03-17 09:29:09 Message:An invalid character was found in the mail header: ';'.
+2017-03-17 09:30:15 Message:An invalid character was found in the mail header: ';'.
+2017-03-17 09:52:54 Message:Transaction failed. The server response was: 5.7.1 <chengwm@regalcan.com.tw>: Relay access denied
+2017-03-17 09:53:14 Message:Transaction failed. The server response was: 5.7.1 <chengwm@regalcan.com.tw>: Relay access denied
+2017-03-17 09:58:20 Message:Transaction failed. The server response was: 5.7.1 <shuicheng9@sina.com>: Relay access denied
+2017-03-17 10:03:08 Message:Transaction failed. The server response was: 5.7.1 <shuicheng9@sina.com>: Relay access denied
+2017-03-17 10:03:27 Message:Transaction failed. The server response was: 5.7.1 <shuicheng9@sina.com>: Relay access denied
+2017-03-17 10:05:04 Message:Transaction failed. The server response was: 5.7.1 <shuicheng9@sina.com>: Relay access denied
+2017-03-17 10:08:25 Message:Mailbox name not allowed. The server response was: Envolope sender mismatch with login user..
+2017-03-24 14:20:13 Message:The parameter 'addresses' cannot be an empty string.
+Parameter name: addresses
+2017-03-24 14:20:50 Message:The parameter 'addresses' cannot be an empty string.
+Parameter name: addresses
+2017-03-24 14:59:22 Message:Mailbox unavailable. The server response was: 5.7.1 Unable to relay
+2017-03-27 11:03:55 Message:Unable to send to all recipients.

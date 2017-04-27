@@ -1,0 +1,16 @@
+E:\WorkSpaces\MyWork\P16126(南僑)\P1212603(Console)\P1612603\P1612603\bin\Debug\P1612603.exe.config
+E:\WorkSpaces\MyWork\P16126(南僑)\P1212603(Console)\P1612603\P1612603\bin\Debug\P1612603.exe
+E:\WorkSpaces\MyWork\P16126(南僑)\P1212603(Console)\P1612603\P1612603\bin\Debug\P1612603.pdb
+E:\WorkSpaces\MyWork\P16126(南僑)\P1212603(Console)\P1612603\P1612603\obj\Debug\P1612603.exe
+E:\WorkSpaces\MyWork\P16126(南僑)\P1212603(Console)\P1612603\P1612603\obj\Debug\P1612603.pdb
+E:\WorkSpaces\MyWork\P16126(南僑)\P1212603(Console)\P1612603\P1612603\bin\Debug\Aspose.Cells.dll
+E:\WorkSpaces\MyWork\P16126(南僑)\P1212603(Console)\P1612603\P1612603\bin\Debug\DataAccess.dll
+E:\WorkSpaces\MyWork\P16126(南僑)\P1212603(Console)\P1612603\P1612603\obj\Debug\P1612603.csprojResolveAssemblyReference.cache
+E:\WorkSpaces\MyWork\P16126(南僑)\P1612603(Console)\P1612603\P1612603\bin\Debug\P1612603.exe.config
+E:\WorkSpaces\MyWork\P16126(南僑)\P1612603(Console)\P1612603\P1612603\obj\Debug\P1612603.exe
+E:\WorkSpaces\MyWork\P16126(南僑)\P1612603(Console)\P1612603\P1612603\obj\Debug\P1612603.pdb
+E:\WorkSpaces\MyWork\P16126(南僑)\P1612603(Console)\P1612603\P1612603\bin\Debug\P1612603.exe
+E:\WorkSpaces\MyWork\P16126(南僑)\P1612603(Console)\P1612603\P1612603\bin\Debug\P1612603.pdb
+E:\WorkSpaces\MyWork\P16126(南僑)\P1612603(Console)\P1612603\P1612603\bin\Debug\Aspose.Cells.dll
+E:\WorkSpaces\MyWork\P16126(南僑)\P1612603(Console)\P1612603\P1612603\bin\Debug\DataAccess.dll
+E:\WorkSpaces\MyWork\P16126(南僑)\P1612603(Console)\P1612603\P1612603\obj\Debug\P1612603.csprojResolveAssemblyReference.cache

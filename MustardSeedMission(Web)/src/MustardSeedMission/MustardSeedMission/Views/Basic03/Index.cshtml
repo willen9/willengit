@@ -1,0 +1,239 @@
+﻿@using MustardSeedMission.Models
+@using MustardSeedMission.ViewModels
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DefaultLayoutPage.cshtml";
+}
+<script>
+    $(document).ready(function() {
+        $("#btnNew").click(function () {
+            try {
+                $("#Basic03_Modal02_Form").data('bootstrapValidator').destroy();
+                $('#Basic03_Modal02_Form').data('bootstrapValidator', null);
+            }
+            catch (e) {
+
+            }
+            formValidator2();
+            $("#Basic03_Modal02 input").val("");
+        });
+
+        $("#btnModify").click(function() {
+            var sel = $(".selectedRow");
+            if (sel.length === 0) {
+                alert("請選擇修改項");
+                return;
+            }
+            try {
+                $("#Basic03_Modal03_Form").data('bootstrapValidator').destroy();
+                $('#Basic03_Modal03_Form').data('bootstrapValidator', null);
+            }
+            catch (e) {
+
+            }
+            formValidator3();
+            $("#Basic03_Modal03_Code").val(sel.find("td:eq(1)").text());
+            $("#Basic03_Modal03_Name").val(sel.find("td:eq(2)").text());
+            $("#Basic03_Modal03").modal("show");
+        });
+
+        $("#Basic03_Modal02_btnConfirm").click(function() {
+            var bootstrapValidator = $("#Basic03_Modal02_Form").data('bootstrapValidator');
+            bootstrapValidator.validate();
+            if (!bootstrapValidator.isValid()) {
+                return;
+            } else {
+                $.ajax({
+                    url: '@Url.Action("PostAdd", "Basic03")',
+                    type: "POST",
+                    datatype: "text",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ name: $("#Basic03_Modal02_txtName").val() }),
+                    success: function(data) {
+                        if (data === "OK") {
+                            alert("新增成功");
+                            $("#Basic03_Modal01_btnConfirm").click();
+                        } else {
+                            alert(data);
+                        }
+                    },
+                    error: function(message) {
+                        alert("新增失敗,原因：" + message);
+                    }
+                });
+            }
+        });
+
+        $("#Basic03_Modal03_btnConfirm").click(function() {
+            var bootstrapValidator = $("#Basic03_Modal03_Form").data('bootstrapValidator');
+            bootstrapValidator.validate();
+            if (!bootstrapValidator.isValid()) {
+                return;
+            } else {
+                var model = {
+                    Code: $("#Basic03_Modal03_Code").val(),
+                    Name: $("#Basic03_Modal03_Name").val()
+                };
+                $.ajax({
+                    url: '@Url.Action("PostUpdate", "Basic03")',
+                    type: "POST",
+                    datatype: "text",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify(model),
+                    success: function(data) {
+                        if (data === "OK") {
+                            alert("修改成功");
+                            $("#Basic03_Modal01_btnConfirm").click();
+                        } else {
+                            alert(data);
+                        }
+                    },
+                    error: function(message) {
+                        alert("修改失敗,原因：" + message);
+                    }
+                });
+            }
+        });
+
+        $("#btnDel").click(function() {
+            if ($(":checkbox:checked").length === 0) {
+                alert("請選擇要刪除的項");
+                return false;
+            }
+            if (!confirm("確定刪除選中項？")) {
+                return false;
+            }
+            return true;
+        });
+
+        $("table tbody tr").click(function() {
+            $(".selectedRow").removeClass("selectedRow");
+            $(this).addClass("selectedRow");
+        });
+
+        $("#btnExport").click(function() {
+            if ($("table tbody tr").length === 0) {
+                alert("請先查詢數據");
+                return false;
+            }
+            return true;
+        });
+
+        formValidator2();
+
+        formValidator3();
+    })
+</script>
+<script>
+    function formValidator2() {
+        $("#Basic03_Modal02_Form").bootstrapValidator({
+            fields: {
+                Basic03_Modal02_txtName: {
+                    validators: {
+                        notEmpty: {
+                            message: "聯誼區名稱不能為空"
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function formValidator3() {
+        $("#Basic03_Modal03_Form").bootstrapValidator({
+            fields: {
+                Basic03_Modal03_Name: {
+                    validators: {
+                        notEmpty: {
+                            message: "聯誼區名稱不能為空"
+                        }
+                    }
+                },
+                Basic03_Modal03_Code: {
+                    validators: {
+                        callback: {
+                            message: "聯誼區代碼不能為空",
+                            callback: function (value, validator) {
+                                if ($("#Basic03_Modal03_Code").val() === "") {
+                                    return false;
+                                }
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+<section class="content-header">
+    <h1>聯誼區主檔維護作業</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    <form id="from" class="form-horizontal" method="post" action="@Url.Action("Index", "Basic03")">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnSearch" data-toggle="modal" data-target="#Basic03_Modal01">
+                            <i class="fa fa-search" aria-hidden="true"></i> 查詢
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnNew" data-toggle="modal" data-target="#Basic03_Modal02">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i> 新增
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnModify">
+                            <i class="fa fa-edit" aria-hidden="true"></i> 修改
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="action" value="del" id="btnDel">
+                            <i class="fa fa-times-circle" aria-hidden="true"></i> 刪除
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="action" value="export" id="btnExport">
+                            <i class="fa fa-file-excel-o" aria-hidden="true"></i> 匯出
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="divGrid">
+                @{
+                    @*<input type="checkbox" id="chkAll" style="position: absolute; margin-left: 8px; margin-top: 13px;" />*@
+                    var webGrid = new WebGrid(source: (IEnumerable<Region>) ViewData["DisplayData"], canPage: false, canSort: false, defaultSort: "Code", ajaxUpdateContainerId: "divGrid");
+                }
+                @webGrid.GetHtml(
+                    tableStyle: "table table-bordered table-responsive",
+                    headerStyle: "headerStyle",
+                    alternatingRowStyle: "alternatingRow",
+                    selectedRowStyle: "selectedRow",
+                    mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                    columns: webGrid.Columns(
+                        webGrid.Column(
+                            format:
+                                @<text>
+                                    <input type="checkbox" id="chk" name="chk" value="@item.Code"/>
+                                 </text>, style: "chkStyle"),
+                        webGrid.Column(columnName: "Code", header: "聯誼區代號"),
+                        webGrid.Column(columnName: "Name", header: "聯誼區名稱")
+                        )
+                    )
+            </div>
+        </div>
+        <input type="hidden" id="txtCode" name="txtCode" value="@ViewBag.Basic03_Modal01_Code" />
+        <input type="hidden" id="txtSlName" name="txtSlName" value="@ViewBag.Basic03_Modal01_SlName" />
+    </form>
+</section>
+@Html.Partial("PartialPage/_PartialPage_Basic03_Modal01")
+@Html.Partial("PartialPage/_PartialPage_Basic03_Modal02")
+@Html.Partial("PartialPage/_PartialPage_Basic03_Modal03")
+
+
+
+

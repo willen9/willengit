@@ -1,0 +1,363 @@
+﻿@using MustardSeedMission.Models
+<div class="modal fade" id="Basic08_Modal01" tabindex="-1" role="dialog" aria-labelledby="Lable_Basic08_Modal01">
+    @using (Ajax.BeginForm("Index", "Basic08", new AjaxOptions { HttpMethod = "POST" }, new { id = "Basic08_Modal01_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Basic08_Modal01">店家主檔維護作業-查詢</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Basic08_Modal01_Region" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">所屬聯誼區：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal01_Region" name="Basic08_Modal01_Region">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allRegion = (IEnumerable<Region>)ViewData["AllRegion"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Basic08_Modal01_RegionCode))
+                                    {
+                                        foreach (var item in allRegion)
+                                        {
+                                            if (@item.Code.ToString() == @ViewBag.Basic08_Modal01_RegionCode)
+                                            {
+                                                <option value="@item.Code" selected="selected">@item.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Code">@item.Name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in allRegion)
+                                        {
+                                            <option value="@item.Code">@item.Name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <label for="Basic08_Modal01_BoxName" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">盒型名稱：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal01_BoxName" name="Basic08_Modal01_BoxName">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allDonationBox = (IEnumerable<DonationBox>)ViewData["AllDonationBox"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Basic08_Modal01_DonationBoxCode))
+                                    {
+                                        foreach (var item in allDonationBox)
+                                        {
+                                            if (@item.Code.ToString() == @ViewBag.Basic08_Modal01_DonationBoxCode)
+                                            {
+                                                <option value="@item.Code" selected="selected">@item.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Code">@item.Name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in allDonationBox)
+                                        {
+                                            <option value="@item.Code">@item.Name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal01_SerArea" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">所屬服務區：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal01_SerArea" name="Basic08_Modal01_SerArea">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allZone = (IEnumerable<Zone>)ViewData["AllZone"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Basic08_Modal01_ZoneCode))
+                                    {
+                                        foreach (var item in allZone)
+                                        {
+                                            if (@item.Code.ToString() == @ViewBag.Basic08_Modal01_ZoneCode)
+                                            {
+                                                <option value="@item.Code" selected="selected">@item.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Code">@item.Name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in allZone)
+                                        {
+                                            <option value="@item.Code">@item.Name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <label for="Basic08_Modal01_Status" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">狀態：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            @Html.DropDownList("Basic08_Modal01_Status", ViewData["Status"] as SelectList, new { id = "Basic08_Modal01_Status", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal01_ShopId" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">店家代碼：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal01_ShopId" name="Basic08_Modal01_ShopId" value="@ViewBag.Basic08_Modal01_ShopId" maxlength="9"/>
+                        </div>
+                        <label for="Basic08_Modal01_Level" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">等級：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal01_Level" name="Basic08_Modal01_Level" value="@ViewBag.Basic08_Modal01_Level" maxlength="9"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal01_ShopName" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">店家名稱：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal01_ShopName" name="Basic08_Modal01_ShopName" value="@ViewBag.Basic08_Modal01_ShopName" maxlength="50"/>
+                        </div>
+                        <label for="Basic08_Modal01_Address" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">地址：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal01_Address" name="Basic08_Modal01_Address" value="@ViewBag.Basic08_Modal01_Address" maxlength="50"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal01_BusinessCategory" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">營業種類名稱：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal01_BusinessCategory" name="Basic08_Modal01_BusinessCategory">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allBusinessCategory = (IEnumerable<BusinessCategory>)ViewData["AllBusinessCategory"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Basic08_Modal01_BusinessCategoryCode))
+                                    {
+                                        foreach (var item in allBusinessCategory)
+                                        {
+                                            if (@item.Code.ToString() == @ViewBag.Basic08_Modal01_BusinessCategoryCode)
+                                            {
+                                                <option value="@item.Code" selected="selected">@item.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Code">@item.Name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in allBusinessCategory)
+                                        {
+                                            <option value="@item.Code">@item.Name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <label for="Basic08_Modal01_Tel" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">電話：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal01_Tel" name="Basic08_Modal01_Tel" value="@ViewBag.Basic08_Modal01_Tel" maxlength="20"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal01_Reason" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">異動原因：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <select class="form-control" id="Basic08_Modal01_Reason" name="Basic08_Modal01_Reason">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var allModification = (IEnumerable<Modification>)ViewData["AllModification"];
+                                    if (!string.IsNullOrEmpty(@ViewBag.Basic08_Modal01_ModificationCode))
+                                    {
+                                        foreach (var item in allModification)
+                                        {
+                                            if (@item.Code.ToString() == @ViewBag.Basic08_Modal01_ModificationCode)
+                                            {
+                                                <option value="@item.Code" selected="selected">@item.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Code">@item.Name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in allModification)
+                                        {
+                                            <option value="@item.Code">@item.Name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 checkbox text-right">
+                            @if (@ViewBag.Basic08_Modal01_YM == "on")
+                            {
+                                <label><input type="checkbox" id="Basic08_Modal01_YM" name="Basic08_Modal01_YM" checked="checked" />異動年月：</label>
+                            }
+                            else
+                            {
+                                <label><input type="checkbox" id="Basic08_Modal01_YM" name="Basic08_Modal01_YM" />異動年月：</label>
+                            }
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3">
+                            <input type="text" class="form_datetime form-control" style="width: 100px;" id="Basic08_Modal01_YMStart" name="Basic08_Modal01_YMStart" value="@ViewBag.Basic08_Modal01_YMStart" readonly>
+                        </div>
+                        <span class="col-sm-1 col-md-1 col-lg-1 text-right form-control-static">~</span>
+                        <div class="col-sm-3 col-md-3 col-lg-3" style="margin-left: -15px;">
+                            <input type="text" class="form_datetime form-control" style="width: 100px;" id="Basic08_Modal01_YMEnd" name="Basic08_Modal01_YMEnd" value="@ViewBag.Basic08_Modal01_YMEnd" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal01_Month" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">開發月份：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            @*<input type="text" class="form-control" id="Basic08_Modal01_Month" name="Basic08_Modal01_Month" value="@ViewBag.Basic08_Modal01_Month" maxlength="7"/>*@
+                            <div class="input-group date form_dateMonth">
+                                <input type="text" class="form-control" id="Basic08_Modal01_Month" name="Basic08_Modal01_Month" value="@ViewBag.Basic08_Modal01_Month" readonly size="7">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 checkbox text-right">
+                            @if (@ViewBag.Basic08_Modal01_BackYM == "on")
+                            {
+                                <label><input type="checkbox" id="Basic08_Modal01_BackYM" name="Basic08_Modal01_BackYM" checked="checked" />最後回收日期：</label>
+                            }
+                            else
+                            {
+                                <label><input type="checkbox" id="Basic08_Modal01_BackYM" name="Basic08_Modal01_BackYM" />最後回收日期：</label>
+                            }
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3">
+                            <input type="text" class="form_datetime form-control" style="width: 100px;" id="Basic08_Modal01_BackYMStart" name="Basic08_Modal01_BackYMStart" value="@ViewBag.Basic08_Modal01_BackYMStart" readonly>
+                        </div>
+                        <span class="col-md-1 col-md-1 col-lg-1 text-right form-control-static">~</span>
+                        <div class="col-sm-3 col-md-3 col-lg-3" style="margin-left: -15px;">
+                            <input type="text" class="form_datetime form-control" style="width: 100px;" id="Basic08_Modal01_BackYMEnd" name="Basic08_Modal01_BackYMEnd" value="@ViewBag.Basic08_Modal01_BackYMEnd" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal01_Creator" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">建立人員：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal01_Creator" name="Basic08_Modal01_Creator" value="@ViewBag.Basic08_Modal01_Creator" maxlength="20"/>
+                        </div>
+                        <div class="col-sm-11 col-md-11 col-lg-11 col-md-offset-1 col-lg-offset-1">
+                            <label class="control-label form-control-static text-left">可回收日期：</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal01_Changer" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">異動人員：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal01_Changer" name="Basic08_Modal01_Changer" value="@ViewBag.Basic08_Modal01_Changer" maxlength="20"/>
+                        </div>
+                        <div class="col-sm-11 col-md-11 col-lg-11 col-md-offset-1 col-lg-offset-1">
+                            <label class="checkbox-inline">
+                                @if (@ViewBag.Basic08_Modal01_Monday == "on")
+                                {
+                                    <input type="checkbox" id="Basic08_Modal01_chk1" name="Basic08_Modal01_Monday" checked="checked">
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="Basic08_Modal01_chk1" name="Basic08_Modal01_Monday">
+                                }
+                                星期一
+                            </label>
+                            <label class="checkbox-inline">
+                                @if (@ViewBag.Basic08_Modal01_Tuesday == "on")
+                                {
+                                    <input type="checkbox" id="Basic08_Modal01_chk2" name="Basic08_Modal01_Tuesday" checked="checked">
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="Basic08_Modal01_chk2" name="Basic08_Modal01_Tuesday">
+                                }
+                                星期二
+                            </label>
+                            <label class="checkbox-inline">
+                                @if (@ViewBag.Basic08_Modal01_Wednesday == "on")
+                                {
+                                    <input type="checkbox" id="Basic08_Modal01_chk3" name="Basic08_Modal01_Wednesday" checked="checked">
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="Basic08_Modal01_chk3" name="Basic08_Modal01_Wednesday">
+                                }
+                                星期三
+                            </label>
+                            <label class="checkbox-inline">
+                                @if (@ViewBag.Basic08_Modal01_Thursday == "on")
+                                {
+                                    <input type="checkbox" id="Basic08_Modal01_chk4" name="Basic08_Modal01_Thursday" checked="checked">
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="Basic08_Modal01_chk4" name="Basic08_Modal01_Thursday">
+                                }
+                                星期四
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal01_Developer" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">開發人員：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal01_Developer" name="Basic08_Modal01_Developer" value="@ViewBag.Basic08_Modal01_Developer" maxlength="50"/>
+                        </div>
+                        <div class="col-sm-11 col-md-11 col-lg-11 col-md-offset-1 col-lg-offset-1">
+                            <label class="checkbox-inline">
+                                @if (@ViewBag.Basic08_Modal01_Friday == "on")
+                                {
+                                    <input type="checkbox" id="Basic08_Modal01_chk5" name="Basic08_Modal01_Friday" checked="checked">
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="Basic08_Modal01_chk5" name="Basic08_Modal01_Friday">
+                                }
+                                星期五
+                            </label>
+                            <label class="checkbox-inline">
+                                @if (@ViewBag.Basic08_Modal01_Saturday == "on")
+                                {
+                                    <input type="checkbox" id="Basic08_Modal01_chk6" name="Basic08_Modal01_Saturday" checked="checked">
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="Basic08_Modal01_chk6" name="Basic08_Modal01_Saturday">
+                                }
+                                星期六
+                            </label>
+                            <label class="checkbox-inline">
+                                @if (@ViewBag.Basic08_Modal01_Sunday == "on")
+                                {
+                                    <input type="checkbox" id="Basic08_Modal01_chk7" name="Basic08_Modal01_Sunday" checked="checked">
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="Basic08_Modal01_chk7" name="Basic08_Modal01_Sunday">
+                                }
+                                星期日
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic08_Modal01_Remark" class="col-sm-5 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 control-label">備註：</label>
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <input type="text" class="form-control" id="Basic08_Modal01_Remark" name="Basic08_Modal01_Remark" value="@ViewBag.Basic08_Modal01_Remark" maxlength="200"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="Basic08_Modal01_btnConfirm" value="Basic08_Modal01_btnConfirm" name="action" class="btn btn-primary" onclick="return Basic08_Modal01_btnConfirmClick()"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="submit" id="Basic08_Modal01_btnConfirm2" value="Basic08_Modal01_btnConfirm" name="action" class="btn btn-primary sr-only" ><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="submit" id="Basic08_Modal01_btnExport" value="Basic08_Modal01_btnExport" name="action" class="btn btn-primary sr-only"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 匯 出</button>
+                    <button type="submit" id="Basic08_Modal01_btnDel" value="Basic08_Modal01_btnDel" name="action" class="btn btn-primary sr-only"><i class="fa fa-times-circle" aria-hidden="true"></i> 刪 除</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                    <input type="hidden" id="Basic08_Modal01_Del_Chk" name="Basic08_Modal01_Del_Chk" />
+                </div>
+            </div>
+        </div>
+                                    }
+</div>

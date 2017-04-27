@@ -1,0 +1,32 @@
+﻿<div class="modal fade" id="Basic05_Modal01" tabindex="-1" role="dialog" aria-labelledby="Lable_Basic05_Modal01">
+    @using (Ajax.BeginForm("Index", "Basic05", new AjaxOptions { HttpMethod = "POST" }, new { id = "Basic05_Modal01_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Basic05_Modal01">盒型主檔維護作業-查詢</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Basic05_Modal01_txtCode" class="col-sm-7 col-md-6 col-lg-6 control-label">盒型代號：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <input type="text" class="form-control" id="Basic05_Modal01_txtCode" name="Basic05_Modal01_txtCode" value="@ViewBag.Basic05_Modal01_Code" maxlength="9"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Basic05_Modal01_txtName" class="col-sm-7 col-md-6 col-lg-6 control-label">盒型名稱：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <input type="text" class="form-control" id="Basic05_Modal01_txtName" name="Basic05_Modal01_txtName" value="@ViewBag.Basic05_Modal01_Name" maxlength="20"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="Basic05_Modal01_btnConfirm" value="Basic05_Modal01_btnConfirm" name="action" class="btn btn-primary"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

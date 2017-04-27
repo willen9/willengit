@@ -1,0 +1,87 @@
+﻿@using MustardSeedMission.Models
+<div class="modal fade" id="Reback02_Modal02" tabindex="-1" role="dialog" aria-labelledby="Lable_Reback02_Modal02">
+    @using (Ajax.BeginForm("Index", "Reback02", new AjaxOptions { HttpMethod = "POST" }, new { id = "Reback02_Modal02_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Reback02_Modal02">回收單建立作業-新增</h4>
+                </div>
+                <div class="modal-body" id="Reback02_Modal02_Body">
+                    <div class="form-group">
+                        <label for="Reback02_Modal02_Assiger" class="col-sm-7 col-md-6 col-lg-6 control-label">指派人員：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <select class="form-control" id="Reback02_Modal02_Assiger" name="Reback02_Modal02_Assiger">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var Reback02_Modal02_Users = (IEnumerable<Users>)ViewData["AllUser"];
+                                        foreach (var item in Reback02_Modal02_Users)
+                                        {
+                                            <option value="@item.UserId">@item.UserName</option>
+                                        }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Reback02_Modal02_RebackDate" class="col-sm-7 col-md-6 col-lg-6 control-label">回收日期：</label>
+                        <div class="col-sm-15 col-md-16 col-lg-16">
+                            <div class="input-group date form_date">
+                                @*<input type="text" class="form-control" id="Reback02_Modal02_RebackDate" name="Reback02_Modal02_RebackDate" maxlength="10" />*@
+                                <input type="text" class="form-control" id="Reback02_Modal02_RebackDate" name="Reback02_Modal02_RebackDate" readonly size="10">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Reback02_Modal02_PlanUp" class="col-sm-7 col-md-6 col-lg-6 control-label">計劃代碼：</label>
+                        <div class="col-sm-13 col-md-16 col-lg-16">
+                            <select class="form-control" id="Reback02_Modal02_PlanUp" name="Reback02_Modal02_PlanUp">
+                                <option value="">==請選擇==</option>
+                                @{
+                                    var Reback02_Modal02_PlanListUp = (IEnumerable<PlanList>)ViewData["AllPlanList"];
+                                    foreach (var item in Reback02_Modal02_PlanListUp)
+                                    {
+                                        <option value="@item.Code">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-sm-2 col-md-1 col-lg-1" style="padding-left: 0">
+                            <button type="button" class="btn btn-default" style="width: 30px;" id="Reback02_Modal02_btnAdd">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="Reback02_Modal02_btnConfirm" class="btn btn-primary"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                </div>
+            </div>
+        </div>
+    }
+    <div id="Reback02_Modal02_AddPart" class="hide">
+        <div class="form-group Reback02_Modal02_DivAdd">
+            <label for="Reback02_Modal02_PlanDown" class="col-sm-7 col-md-6 col-lg-6 control-label sr-only">計劃代碼：</label>
+            <div class="col-sm-13 col-md-16 col-lg-16">
+                <select class="form-control" id="Reback02_Modal02_PlanDown" name="Reback02_Modal02_PlanDown">
+                    <option value="">==請選擇==</option>
+                    @{
+                        var Reback02_Modal02_PlanList = (IEnumerable<PlanList>)ViewData["AllPlanList"];
+                        foreach (var item in Reback02_Modal02_PlanList)
+                        {
+                            <option value="@item.Code">@item.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-sm-2 col-md-1 col-lg-1" style="padding-left: 0">
+                <button type="button" class="btn btn-default" style="width: 30px;" onclick="Reback02_Modal02_btnDeduce_click(this)">-</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

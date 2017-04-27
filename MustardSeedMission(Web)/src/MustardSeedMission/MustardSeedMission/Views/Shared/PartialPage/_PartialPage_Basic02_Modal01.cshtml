@@ -1,0 +1,55 @@
+﻿<div class="modal fade" id="Basic02_Modal01" tabindex="-1" role="dialog" aria-labelledby="Lable_Basic02_Modal01">
+    @using (Ajax.BeginForm("Index", "Basic02", new AjaxOptions { HttpMethod = "POST" }, new { id = "Basic02_Modal01_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Basic02_Modal01"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Basic02_Modal01_txtGroup" class="col-sm-5 col-md-3 col-lg-3 control-label">群組名稱：</label>
+                        <div class="col-sm-9 col-md-7 col-lg-7">
+                            <input type="text" class="form-control" id="Basic02_Modal01_txtGroup" name="Basic02_Modal01_txtGroup" value="@ViewBag.Basic02_Modal01_GroupName" maxlength="50"/>
+                        </div>
+                    </div>
+                    <div id="Basic02_Modal01_Grid">
+                        <table class="table table-bordered table-responsive" data-swhgajax="true" data-swhgcontainer="Basic02_Modal01_Grid" data-swhgcallback="">
+                            <thead>
+                                <tr class="headerStyle">
+                                    <th scope="col">
+                                    </th>
+                                    <th scope="col">
+                                        程式代號
+                                    </th>
+                                    <th scope="col">
+                                        作業別
+                                    </th>
+                                    <th scope="col">
+                                        查詢
+                                    </th>
+                                    <th scope="col">
+                                        新增
+                                    </th>
+                                    <th scope="col">
+                                        修改
+                                    </th>
+                                    <th scope="col">
+                                        刪除
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="Basic02_Modal01_btnConfirm" class="btn btn-primary"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                    <input type="hidden" id="mode" name="mode" value="@ViewBag.Mode" />
+                </div>
+            </div>
+        </div>
+    }
+</div>

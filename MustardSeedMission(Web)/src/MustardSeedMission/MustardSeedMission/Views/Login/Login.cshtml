@@ -1,0 +1,79 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登入</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrapValidator.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrapValidator.js"></script>
+    <script>
+        $(document).ready(function () {
+            var height = window.innerHeight;
+            var rowheight = $("#form").css("height").replace("px", "");
+            $("#form").css("margin-top", parseInt(height / 2 - (rowheight / 2)) - 100 + "px");
+        });
+
+        function Check() {
+            $("#form").bootstrapValidator({
+                fields: {
+                    txtUid: {
+                        validators: {
+                            notEmpty: {
+                                message: "帳號不能為空"
+                            }
+                        }
+                    },
+                    txtPwd: {
+                        validators: {
+                            notEmpty: {
+                                message: "密碼不能為空"
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body  style="background-color: lightgray">
+    @Html.Raw(ViewBag.js)
+    <div class="container">
+        <form id="form" method="post" action="@Url.Action("Login", "Login")" class="form-horizontal" role="form">
+            <div class="form-group text-center">
+                <span style="font-size: 30px;">
+                    <strong>芥菜種會回收捐款管理系統</strong>
+                </span>
+            </div>
+            <div class="form-group">
+                <label for="txtUid" class="col-sm-4 col-md-3 col-lg-2 col-sm-offset-6 col-md-offset-7 col-lg-offset-8 control-label">帳號：</label>
+                <div class="col-sm-7  col-md-6 col-lg-6">
+                    <input type="text" class="form-control" id="txtUid" name="txtUid" placeholder="帳號" value="@ViewBag.Uid" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="txtPwd" class="col-sm-4 col-md-3 col-lg-2 col-sm-offset-6 col-md-offset-7 col-lg-offset-8 control-label">密碼：</label>
+                <div class="col-sm-7  col-md-6 col-lg-6">
+                    <input type="password" class="form-control" id="txtPwd" name="txtPwd" placeholder="密碼" value="@ViewBag.Pwd" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-6 col-md-6 col-lg-6 col-sm-offset-11 col-md-offset-10 col-md-offset-10">
+                    <div class="pull-right">
+                        <button type="submit" class="btn btn-primary" onclick="return Check()" style="width: 100px;">登入</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

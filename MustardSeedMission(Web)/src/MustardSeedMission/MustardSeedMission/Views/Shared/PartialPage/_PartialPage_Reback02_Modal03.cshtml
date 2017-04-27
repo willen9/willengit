@@ -1,0 +1,148 @@
+﻿@using MustardSeedMission.Models
+<script>
+    $(document).ready(function () {
+        $("#Reback02_Modal03_AddShop").click(function () {
+            try {
+                $("#Reback02_Modal04_Form").data('bootstrapValidator').destroy();
+                $('#Reback02_Modal04_Form').data('bootstrapValidator', null);
+                CheckAddStore();
+            }
+            catch (e) {
+
+            }
+            $("#Reback02_Modal03").css("z-index", "1040");
+
+            $("#Reback02_Modal04_SerArea").empty();
+            $("#Reback02_Modal04_ShopId").empty();
+            $("#Reback02_Modal04_ShopName").empty();
+            $("#Reback02_Modal04_SerArea").append('<option value="">==請選擇==</option>');
+            $("#Reback02_Modal04_SerArea").append($("#Reback02_Modal03_Zone_Hide select").html());
+            $("#Reback02_Modal04_ShopId").append('<option value="">==請選擇==</option>');
+            $("#Reback02_Modal04_ShopId").append($("#Reback02_Modal03_Store_Hide select").html());
+            $("#Reback02_Modal04_ShopName").append('<option value="">==請選擇==</option>');
+            $("#Reback02_Modal04_ShopName").append($("#Reback02_Modal03_StoreName_Hide select").html());
+            $("#Reback02_Modal04_Form")[0].reset();
+        });
+
+        $("#Reback02_Modal04").on('hide.bs.modal', function () {
+            $("#Reback02_Modal03").css("z-index", "1041");
+        });
+    });
+</script>
+<div class="modal fade" id="Reback02_Modal03" tabindex="-1" role="dialog" aria-labelledby="Lable_Reback02_Modal03">
+    @using (Ajax.BeginForm("Index", "Reback02", new AjaxOptions {HttpMethod = "POST"}, new {id = "Reback02_Modal03_Form", @class = "form-horizontal"}))
+    {
+        <div class="modal-dialog" role="document" style="width: 1100px;">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Reback02_Modal03">回收單建立作業-修改</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="col-sm-7 col-md-6 col-lg-6">
+                            <button type="button" class="btn btn-default" id="Reback02_Modal03_AddShop" data-toggle="modal" data-target="#Reback02_Modal04">新增店家</button>
+                        </div>
+                    </div>
+                    <div id="Reback02_Modal03_Grid">
+                        <table class="table table-bordered table-responsive" data-swhgajax="true" data-swhgcontainer="Reback02_Modal03_Grid" data-swhgcallback="">
+                            <thead>
+                                <tr class="headerStyle">
+                                    <th scope="col">
+                                        序號
+                                    </th>
+                                    <th scope="col">
+                                        回收單號
+                                    </th>
+                                    <th scope="col">
+                                        計劃代碼
+                                    </th>
+                                    <th scope="col">
+                                        計劃名稱
+                                    </th>
+                                    <th scope="col">
+                                        所屬聯誼區
+                                    </th>
+                                    <th scope="col">
+                                        所屬服務區
+                                    </th>
+                                    <th scope="col">
+                                        店家代號
+                                    </th>
+                                    <th scope="col">
+                                        店家名稱
+                                    </th>
+                                    <th scope="col">
+                                        排序增
+                                    </th>
+                                    <th scope="col">
+                                        排序減
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="Reback02_Modal03_btnConfirm" class="btn btn-primary"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                    <input type="hidden" id="Reback02_Modal03_txtSerialno" name="Reback02_Modal03_txtSerialno"/>
+                    <input type="hidden" id="Reback02_Modal03_txtDocEntry" name="Reback02_Modal03_txtDocEntry" />
+                </div>
+            </div>
+        </div>
+    }
+    <div id="Reback02_Modal03_Region_Hide" class="hide">
+        <select class="form-control" id="Reback02_Modal03_LinkArea" name="Reback02_Modal03_LinkArea" onchange="Reback02_Modal03_LinkArea_change(this)">
+            @*<option value="">==請選擇==</option>*@
+            @{
+                var Reback02_Modal03_Region = (IEnumerable<Region>)ViewData["AllRegion"];
+                foreach (var item in Reback02_Modal03_Region)
+                {
+                    <option value="@item.Code">@item.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div id="Reback02_Modal03_Zone_Hide" class="hide">
+        <select class="form-control" id="Reback02_Modal03_SerArea" name="Reback02_Modal03_SerArea" onchange="Reback02_Modal03_SerArea_change(this)">
+            @*<option value="">==請選擇==</option>*@
+            @{
+                var Reback02_Modal03_Zone = (IEnumerable<Zone>)ViewData["AllZone"];
+                foreach (var item in Reback02_Modal03_Zone)
+                {
+                    <option value="@item.Code">@item.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div id="Reback02_Modal03_Store_Hide" class="hide">
+        <select class="form-control" id="Reback02_Modal03_SlStore" name="Reback02_Modal03_SlStore" onchange="Reback02_Modal03_SlStore_change(this)">
+            @*<option value="">==請選擇==</option>*@
+            @{
+                var Reback02_Modal03_Store = (IEnumerable<Store>)ViewData["AllStore"];
+                foreach (var item in Reback02_Modal03_Store)
+                {
+                    <option value="@item.Code">@item.Code</option>
+                }
+            }
+        </select>
+    </div>
+    <div id="Reback02_Modal03_StoreName_Hide" class="hide">
+        <select class="form-control" id="Reback02_Modal03_SlStoreName" name="Reback02_Modal03_SlStoreName" onchange="Reback02_Modal03_SlStoreName_change(this)">
+            @*<option value="">==請選擇==</option>*@
+            @{
+                foreach (var item in Reback02_Modal03_Store)
+                {
+                    <option value="@item.Code">@item.Name</option>
+                }
+            }
+        </select>
+    </div>
+</div>
+@Html.Partial("PartialPage/_PartialPage_Reback02_Modal04")
+
+
+
+

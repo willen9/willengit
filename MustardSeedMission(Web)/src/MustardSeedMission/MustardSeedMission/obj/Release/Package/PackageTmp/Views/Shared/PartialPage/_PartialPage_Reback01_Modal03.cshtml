@@ -1,0 +1,110 @@
+﻿@using MustardSeedMission.ViewModels
+@using MustardSeedMission.Models
+<div class="modal fade" id="Reback01_Modal03" tabindex="-1" role="dialog" aria-labelledby="Lable_Reback01_Modal03">
+    @using (Ajax.BeginForm("Index", "Reback01", new AjaxOptions { HttpMethod = "POST" }, new { id = "Reback01_Modal03_Form", @class = "form-horizontal" }))
+    {
+        <div class="modal-dialog" role="document" style="width: 1100px;">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="Lable_Reback01_Modal03">工作計畫建立作業-修改</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="Reback01_Modal03_Grid">
+                        <table class="table table-bordered table-responsive" id="Reback01_Modal03_Grid_Table" data-swhgajax="true" data-swhgcontainer="Reback01_Modal03_Grid" data-swhgcallback="">
+                            <thead>
+                                <tr class="headerStyle">
+                                    <th scope="col">
+                                        序號
+                                    </th>
+                                    <th scope="col">
+                                        計劃代碼
+                                    </th>
+                                    <th scope="col">
+                                        計劃名稱
+                                    </th>
+                                    <th scope="col">
+                                        所屬聯誼區
+                                    </th>
+                                    <th scope="col">
+                                        所屬服務區
+                                    </th>
+                                    <th scope="col">
+                                        店家代碼
+                                    </th>
+                                    <th scope="col">
+                                        店家名稱
+                                    </th>
+                                    <th scope="col">
+                                        排序增
+                                    </th>
+                                    <th scope="col">
+                                        排序減
+                                    </th>
+                                    <th scope="col">
+                                        刪除
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="Reback01_Modal03_btnConfirm" class="btn btn-primary"><i class="fa fa-check-circle" aria-hidden="true"></i> 確 定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo" aria-hidden="true"></i> 取 消</button>
+                </div>
+            </div>
+        </div>
+    }
+    <div id="Reback01_Modal03_Region_Hide" class="hide">
+        <select class="form-control" id="Reback01_Modal03_LinkArea" name="Reback01_Modal03_LinkArea" onchange="Reback01_Modal03_LinkArea_change(this)">
+            @*<option value="">==請選擇==</option>*@
+            @{
+                var Reback01_Modal03_Region = (IEnumerable<Region>) ViewData["AllRegion"];
+                foreach (var item in Reback01_Modal03_Region)
+                {
+                    <option value="@item.Code">@item.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div id="Reback01_Modal03_Zone_Hide" class="hide">
+        <select class="form-control" id="Reback01_Modal03_SerArea" name="Reback01_Modal03_SerArea" onchange="Reback01_Modal03_SerArea_change(this)">
+            @*<option value="">==請選擇==</option>*@
+            @{
+                var Reback01_Modal03_Zone = (IEnumerable<Zone>) ViewData["AllZone"];
+                foreach (var item in Reback01_Modal03_Zone)
+                {
+                    <option value="@item.Code">@item.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div id="Reback01_Modal03_Store_Hide" class="hide">
+        <select class="form-control" id="Reback01_Modal03_SlStore" name="Reback01_Modal03_SlStore" onchange="Reback01_Modal03_SlStore_change(this)">
+            @*<option value="">==請選擇==</option>*@
+            @{
+                var Reback01_Modal03_Store = (IEnumerable<Store>) ViewData["AllStore"];
+                foreach (var item in Reback01_Modal03_Store)
+                {
+                    <option value="@item.Code">@item.Code</option>
+                }
+            }
+        </select>
+    </div>
+    <div id="Reback01_Modal03_StoreName_Hide" class="hide">
+        <select class="form-control" id="Reback01_Modal03_SlStoreName" name="Reback01_Modal03_SlStoreName" onchange="Reback01_Modal03_SlStoreName_change(this)">
+            @*<option value="">==請選擇==</option>*@
+            @{
+                foreach (var item in Reback01_Modal03_Store)
+                {
+                    <option value="@item.Code">@item.Name</option>
+                }
+            }
+        </select>
+    </div>
+</div>
+
+
+

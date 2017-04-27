@@ -1,0 +1,309 @@
+﻿@using MustardSeedMission.Models
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DefaultLayoutPage.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $("#btnCancel").click(function () {
+            try {
+                $("#defaultform").data('bootstrapValidator').destroy();
+                $('#defaultform').data('bootstrapValidator', null);
+                formValidator();
+            }
+            catch (e) {
+
+            }
+           
+            $("input").val("");
+            $("select").val("");
+            $("#slLinkArea").change();
+        });
+
+        $("#slLinkArea").change(function () {
+            $.ajax({
+                url: '@Url.Action("GetZoneByRegion", "Cuscomplait01")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ region: $("#slLinkArea").val() }),
+                success: function (data) {
+                    var modals = eval(data);
+
+                    $("#slSerArea").empty();
+                    var zones = eval(modals.lstZones);
+                    $("#slSerArea").append('<option value="">==請選擇==</option>');
+                    for (var i = 0; i < zones.length; i++) {
+                        $("#slSerArea").append('<option value="' + zones[i].Code + '">' + zones[i].Name + '</option>');
+                    }
+
+                    $("#slShopId").empty();
+                    var stores = eval(modals.lstStores);
+                    $("#slShopId").append('<option value="">==請選擇==</option>');
+                    for (var i = 0; i < stores.length; i++) {
+                        $("#slShopId").append('<option value="' + stores[i].Code + '">' + stores[i].Code + '</option>');
+                    }
+
+                    $("#txtShopName").val("");
+                    $("#txtAddress").val("");
+                    $("#txtTel").val("");
+                    try {
+                        $("#defaultform").data('bootstrapValidator').destroy();
+                        $('#defaultform').data('bootstrapValidator', null);
+                        formValidator();
+                    }
+                    catch (e) {
+
+                    }
+                },
+                error: function (message) {
+                    alert("獲取所屬服務區失敗,原因：" + message);
+                }
+            });
+        });
+
+        $("#slSerArea").change(function () {
+            $.ajax({
+                url: '@Url.Action("GetStoreByZone", "Cuscomplait01")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ zone: $("#slSerArea").val(), region: $("#slLinkArea").val() }),
+                success: function (data) {
+                    var modals = eval(data);
+                    if (modals.regionCode.toString() === "-999") {
+                        $("#slLinkArea").val("");
+                    } else {
+                        $("#slLinkArea").val(modals.regionCode);
+                    }
+                    $("#slShopId").empty();
+                    var stores = eval(modals.lstStores);
+                    $("#slShopId").append('<option value="">==請選擇==</option>');
+                    for (var i = 0; i < stores.length; i++) {
+                        $("#slShopId").append('<option value="' + stores[i].Code + '">' + stores[i].Code + '</option>');
+                    }
+
+                    $("#txtShopName").val("");
+                    $("#txtAddress").val("");
+                    $("#txtTel").val("");
+                    try {
+                        $("#defaultform").data('bootstrapValidator').destroy();
+                        $('#defaultform').data('bootstrapValidator', null);
+                        formValidator();
+                    }
+                    catch (e) {
+
+                    }
+                },
+                error: function (message) {
+                    alert("獲取店家代碼失敗,原因：" + message);
+                }
+            });
+        });
+
+        $("#slShopId").change(function () {
+            if ($("#slShopId").val() === "") {
+                $("#txtShopName").val("");
+                $("#txtAddress").val("");
+                $("#txtTel").val("");
+            } else {
+                $.ajax({
+                    url: '@Url.Action("GetDataByStore", "Cuscomplait01")',
+                    type: "POST",
+                    datatype: "text",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ storeId: $("#slShopId").val() }),
+                    success: function (data) {
+                        var modal = eval(data);
+                        $("#slLinkArea").val(modal.RegionCode);
+                        $("#slSerArea").val(modal.ZoneCode);
+                        $("#txtShopName").val(modal.Name);
+                        $("#txtAddress").val(modal.Address);
+                        $("#txtTel").val(modal.Tel);
+                        try {
+                            $("#defaultform").data('bootstrapValidator').destroy();
+                            $('#defaultform').data('bootstrapValidator', null);
+                            formValidator();
+                        }
+                        catch (e) {
+
+                        }
+                    },
+                    error: function (message) {
+                        alert("獲取店家數據失敗,原因：" + message);
+                    }
+                });
+            }
+        });
+
+        formValidator();
+    });
+</script>
+<script>
+    function formValidator() {
+        $("#defaultform").bootstrapValidator({
+            fields: {
+                slLinkArea: {
+                    validators: {
+                        notEmpty: {
+                            message: "聯誼區不能為空"
+                        }
+                    }
+                },
+                slSerArea: {
+                    validators: {
+                        notEmpty: {
+                            message: "服務區不能為空"
+                        }
+                    }
+                },
+                txtType: {
+                    validators: {
+                        remote: {
+                            url: '@Url.Action("GetCheckType", "Cuscomplait01")',
+                            type: "post",
+                            message: "類別不存在",
+                            delay:2000,
+                            data:function(validator) {
+                                 return {"type": $("#txtType").val()}
+                            }
+                        }
+                    }
+                },
+                slShopId: {
+                    validators: {
+                        notEmpty: {
+                            message: "店家代碼不能為空"
+                        }
+                    }
+                },
+                txtShopName: {
+                    validators: {
+                        notEmpty: {
+                            message: "店家名稱不能為空"
+                        }
+                    }
+                },
+                txtEvent: {
+                    validators: {
+                        notEmpty: {
+                            message: "事由不能為空"
+                        }
+                    }
+                }
+            }
+        });
+    };
+</script>
+<section class="content-header">
+    <h1>客訴單建立作業</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    <form id="defaultform" class="form-horizontal" method="post" action="@Url.Action("Index", "Cuscomplait01")">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="action" value="btnConfirm" id="btnConfirm" >
+                            <i class="fa fa-check-circle" aria-hidden="true"></i> 確定
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnCancel">
+                            <i class="fa fa-undo" aria-hidden="true"></i> 取消
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-5 col-md-4 col-lg-4 control-label" for="slLinkArea">聯誼區：</label>
+                    <div class="col-sm-7 col-md-6 col-lg-6">
+                        <select class="form-control" id="slLinkArea" name="slLinkArea">
+                            <option value="">==請選擇==</option>
+                            @{
+                                var allRegion = (IEnumerable<Region>)ViewData["AllRegion"];
+                                foreach (var item in allRegion)
+                                {
+                                    <option value="@item.Code">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <label class="col-sm-5 col-md-4 col-lg-4 control-label" for="txtCreator">接案人：</label>
+                    <div class="col-sm-7 col-md-6 col-lg-6">
+                        <input type="text" class="form-control" id="txtCreator" name="txtCreator" maxlength="50"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 col-md-4 col-lg-4 control-label" for="slSerArea">服務區：</label>
+                    <div class="col-sm-7 col-md-6 col-lg-6">
+                        <select class="form-control" id="slSerArea" name="slSerArea">
+                            <option value="">==請選擇==</option>
+                            @{
+                                var allZone = (IEnumerable<Zone>)ViewData["AllZone"];
+                                foreach (var item in allZone)
+                                {
+                                    <option value="@item.Code">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <label class="col-sm-5 col-md-4 col-lg-4 control-label" for="txtType">類別：</label>
+                    <div class="col-sm-7 col-md-6 col-lg-6">
+                        <input type="text" class="form-control" id="txtType" name="txtType" maxlength="9"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 col-md-4 col-lg-4 control-label" for="slShopId">店家代碼：</label>
+                    <div class="col-sm-7 col-md-6 col-lg-6">
+                        <select class="form-control" id="slShopId" name="slShopId">
+                            <option value="">==請選擇==</option>
+                            @{
+                                var allStore = (IEnumerable<Store>)ViewData["AllStore"];
+                                foreach (var item in allStore)
+                                {
+                                    <option value="@item.Code">@item.Code</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <label class="col-sm-5 col-md-4 col-lg-4 control-label" for="txtEvent">事由：</label>
+                    <div class="col-sm-7 col-md-6 col-lg-6">
+                        <input type="text" class="form-control" id="txtEvent" name="txtEvent" maxlength="200"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 col-md-4 col-lg-4 control-label" for="txtShopName">店家名稱：</label>
+                    <div class="col-sm-7 col-md-6 col-lg-6">
+                        <input type="text" class="form-control" id="txtShopName" name="txtShopName" maxlength="50"/>
+                    </div>
+                    <label class="col-sm-5 col-md-4 col-lg-4 control-label" for="txtReason">原因：</label>
+                    <div class="col-sm-7 col-md-6 col-lg-6">
+                        <input type="text" class="form-control" id="txtReason" name="txtReason" maxlength="200"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 col-md-4 col-lg-4 control-label" for="txtAddress">地址：</label>
+                    <div class="col-sm-7 col-md-6 col-lg-6">
+                        <input type="text" class="form-control" id="txtAddress" name="txtAddress" maxlength="50"/>
+                    </div>
+                    <label class="col-sm-5 col-md-4 col-lg-4 control-label" for="txtRemark">備註：</label>
+                    <div class="col-sm-7 col-md-6 col-lg-6">
+                        <input type="text" class="form-control" id="txtRemark" name="txtRemark" maxlength="200"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 col-md-4 col-lg-4 control-label" for="txtTel">電話：</label>
+                    <div class="col-sm-7 col-md-6 col-lg-6">
+                        <input type="text" class="form-control" id="txtTel" name="txtTel" maxlength="20"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+
+

@@ -1,0 +1,637 @@
+﻿@using System.ServiceModel.Channels
+@using MustardSeedMission.Models
+@using MustardSeedMission.ViewModels
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DefaultLayoutPage.cshtml";
+}
+<script>
+    $(document).ready(function() {
+        $("#btnNew").click(function() {
+            $("#Reback01_Modal02_Form .Reback01_Modal02_DivAdd").remove();
+            $("#Reback01_Modal02_Form")[0].reset();
+            Reback01_Modal02_LinkArea_Change(null, "");
+        });
+
+        $("#btnModify").click(function() {
+            var sel = $(".selectedRow");
+            if (sel.length === 0) {
+                alert("請選擇修改項");
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("GetModifyData", "Reback01")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data:JSON.stringify({ code: sel.find("td:eq(4)").text() }),
+                success: function(data) {
+                    var modals = eval(data);
+                    $("#Reback01_Modal03_Grid table tbody").empty();
+                    for (var i = 0; i < modals.length; i++) {
+                        if (i % 2 === 0) {
+                            $("#Reback01_Modal03_Grid table tbody").append('<tr id=' + i + '>' +
+                                '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].Number + '</label><span class="sr-only">' + modals[i].Number + '</span></td>' +
+                                '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].Code + '</label></td>' +
+                                '<td><input type="text" id="txtName" class="form-control" value="' + modals[i].Name + '"  onchange="inputchange(this)" maxlength="30" /></td>' +
+                                '<td>' + $("#Reback01_Modal03_Region_Hide").html() + '<span class="sr-only">' + (modals[i].RegionCode == null ? "" : modals[i].RegionCode) + '</span></td>' +
+                                '<td>' + $("#Reback01_Modal03_Zone_Hide").html() + '<span class="sr-only">' + (modals[i].ZoneCode === null ? "" : modals[i].ZoneCode) + '</span></td>' +
+                                '<td>' + $("#Reback01_Modal03_Store_Hide").html() + '<span class="sr-only">' + (modals[i].StoreCode == null ? "" : modals[i].StoreCode) + '</span></td>' +
+                                '<td>' + $("#Reback01_Modal03_StoreName_Hide").html() + '<span class="sr-only">' + (modals[i].StoreCode === null ? "" : modals[i].StoreCode) + '</span></td>' +
+                                '<td><button type="button" class="btn btn-primary" onclick="btnUpClick(this)"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></td>' +
+                                '<td><button type="button" class="btn btn-primary" onclick="btnDownClick(this)"><i class="fa fa-arrow-down" aria-hidden="true"></i></button></td>' +
+                                '<td><button type="button" class="btn btn-primary" onclick="btnDelClick(this)">刪除</button><span class="sr-only" id="spancode">' + modals[i].Code + '</span><span class="sr-only" id="spannumber">' + modals[i].Number + '</span><span class="sr-only" id="spanstorecode">' + modals[i].StoreCode + '</span></td>' +
+                                '</tr>');
+                        } else {
+                            $("#Reback01_Modal03_Grid table tbody").append('<tr class="alternatingRow" id=' + i + '>' +
+                                '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].Number + '</label><span class="sr-only">' + modals[i].Number + '</span></td>' +
+                                '<td><label class="form-control-static"  style="font-weight: normal">' + modals[i].Code + '</label></td>' +
+                                '<td><input type="text" id="txtName" class="form-control" value="' + modals[i].Name + '" onchange="inputchange(this)" maxlength="30" /></td>' +
+                                '<td>' + $("#Reback01_Modal03_Region_Hide").html() + '<span class="sr-only">' + (modals[i].RegionCode == null ? "" : modals[i].RegionCode) + '</span></td>' +
+                                '<td>' + $("#Reback01_Modal03_Zone_Hide").html() + '<span class="sr-only">' + (modals[i].ZoneCode === null ? "" : modals[i].ZoneCode) + '</span></td>' +
+                                '<td>' + $("#Reback01_Modal03_Store_Hide").html() + '<span class="sr-only">' + (modals[i].StoreCode == null ? "" : modals[i].StoreCode) + '</span></td>' +
+                                '<td>' + $("#Reback01_Modal03_StoreName_Hide").html() + '<span class="sr-only">' + (modals[i].StoreCode === null ? "" : modals[i].StoreCode) + '</span></td>' +
+                                '<td><button type="button" class="btn btn-primary" onclick="btnUpClick(this)"><i class="fa fa-arrow-up" aria-hidden="true"></i></button></td>' +
+                                '<td><button type="button" class="btn btn-primary" onclick="btnDownClick(this)"><i class="fa fa-arrow-down" aria-hidden="true"></i></button></td>' +
+                                '<td><button type="button" class="btn btn-primary" onclick="btnDelClick(this)">刪除</button><span class="sr-only" id="spancode">' + modals[i].Code + '</span><span class="sr-only" id="spannumber">' + modals[i].Number + '</span><span class="sr-only" id="spanstorecode">' + modals[i].StoreCode + '</span></td>' +
+                                '</tr>');
+                        }
+                    }
+                    var trs = $("#Reback01_Modal03_Grid table tbody tr");
+                    trs.each(function() {
+                        $(this).find("td").eq(3).find("select").val($(this).find("td").eq(3).find(".sr-only").text());
+                        $(this).find("td").eq(4).find("select").val($(this).find("td").eq(4).find(".sr-only").text());
+                        $(this).find("td").eq(5).find("select").val($(this).find("td").eq(5).find(".sr-only").text());
+                        $(this).find("td").eq(6).find("select").val($(this).find("td").eq(6).find(".sr-only").text());
+                    });
+                    $("#Reback01_Modal03").modal("show");
+                },
+                error: function(message) {
+                    alert("修改查詢失敗,原因：" + message);
+                }
+            });
+        });
+
+        $("#Reback01_Modal02_btnConfirm").click(function() {
+            var bootstrapValidator = $("#Reback01_Modal02_Form").data('bootstrapValidator');
+            bootstrapValidator.validate();
+            if (!bootstrapValidator.isValid()) {
+                return;
+            } else {
+                var modal = new Array();
+                modal[0] = $("#Reback01_Modal02_SerAreaUp").val();
+                var zones = $("[name='Reback01_Modal02_SerAreaDown']");
+                var index = 1;
+                var isTwice = false;
+                zones.each(function () {
+                    if ($(this).val() !== "") {
+                        for (var i = 0; i < modal.length; i++) {
+                            if (modal[i] === $(this).val()) {
+                                isTwice = true;
+                                return;
+                            }
+                        }
+                        modal[index++] = $(this).val();
+                    }
+                });
+                if (isTwice) {
+                    alert("服務區重複");
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("PostAdd", "Reback01")',
+                    type: "POST",
+                    datatype: "text",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ name: $("#Reback01_Modal02_txtPlan").val(), region: $("#Reback01_Modal02_LinkArea").val(), Modal: modal }),
+                    success: function(data) {
+                        if (data === "OK") {
+                            alert("新增成功");
+                            $("#Reback01_Modal01_btnConfirm").click();
+                        } else {
+                            alert(data);
+                        }
+                    },
+                    error: function(message) {
+                        alert("新增失敗,原因：" + message);
+                    }
+                });
+            }
+        });
+
+        $("#Reback01_Modal03_btnConfirm").click(function() {
+            var tr = $("#Reback01_Modal03_Grid table tbody tr");
+            if (tr.length > 0) {
+                var name = tr.eq(0).find("td").eq(2).find("input").val();
+                if (name === "") {
+                    alert("計劃名稱不能為空");
+                    return;
+                }
+                var modal = new Array();
+                for (var i = 0; i < tr.length; i++) {
+                    if (tr.eq(i).find("td").eq(2).find("input").val() !== name) {
+                        alert("存在不同計劃名稱");
+                        return;
+                    }
+                    if (tr.eq(i).find("td").eq(3).find("select").val() === "" || tr.eq(i).find("td").eq(3).find("select").val() === null) {
+                        alert("所屬聯誼區不能為空");
+                        return;
+                    }
+                    if (tr.eq(i).find("td").eq(4).find("select").val() === "" || tr.eq(i).find("td").eq(4).find("select").val() === null) {
+                        alert("所屬服務區不能為空");
+                        return;
+                    }
+                    if (tr.eq(i).find("td").eq(5).find("select").val() === "" || tr.eq(i).find("td").eq(5).find("select").val() === null) {
+                        alert("店家代碼不能為空");
+                        return;
+                    }
+                    if (tr.eq(i).find("td").eq(6).find("select").val() === "" || tr.eq(i).find("td").eq(6).find("select").val() === null) {
+                        alert("店家名稱不能為空");
+                        return;
+                    }
+                    modal[i] = {
+                        Code: tr.eq(i).find("td").eq(1).find("label").text(),
+                        Name: tr.eq(i).find("td").eq(2).find("input").val(),
+                        Number: i + 1,
+                        StoreCode: tr.eq(i).find("td").eq(5).find("select").val(),
+                        NumberOld: tr.eq(i).find("td").eq(0).find("label").text(),
+                        StoreCodeOld: tr.eq(i).find("td").eq(5).find("span").text()
+                    };
+                }
+                $.ajax({
+                    url: '@Url.Action("PostUpdate", "Reback01")',
+                    type: "POST",
+                    datatype: "text",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify(modal),
+                    success: function(data) {
+                        if (data === "OK") {
+                            alert("修改成功");
+                            $("#Reback01_Modal01_btnConfirm").click();
+                        } else {
+                            alert(data);
+                        }
+                    },
+                    error: function(message) {
+                        alert("修改失敗,原因：" + message);
+                    }
+                });
+            } else {
+                $("#Reback01_Modal01_btnConfirm").click();
+            }
+        });
+
+      
+
+        $("#Reback01_Modal02_btnAdd").click(function() {
+            $("#Reback01_Modal02_Body").append($("#Reback01_Modal02_AddPart").html());
+        });
+
+        $("#btnDel").click(function () {
+            if ($(":checkbox:checked").length === 0) {
+                alert("請選擇要刪除的項");
+                return false;
+            }
+            if (!confirm("確定刪除選中項？")) {
+                return false;
+            }
+            return true;
+        });
+
+        $("#divGrid table tbody tr").click(function() {
+            $(".selectedRow").removeClass("selectedRow");
+            $(this).addClass("selectedRow");
+        });
+
+        $("#btnExport").click(function() {
+            if ($("#divGrid table tbody tr").length === 0) {
+                alert("請先查詢數據");
+                return false;
+            }
+            return true;
+        });
+
+        $("#Reback01_Modal02_LinkArea").change(function() {
+            Reback01_Modal02_LinkArea_Change(null, "");
+        });
+
+        $('#Reback01_Modal03').on('hide.bs.modal', function () {
+            $("#Reback01_Modal01_btnConfirm").click();
+        });
+
+        formValiad();
+    });
+
+    function inputchange(obj) {
+        $("#Reback01_Modal03_Grid table tbody input").not(obj).val($(obj).val());
+    }
+
+    function Reback01_Modal02_btnDeduce_click(obj) {
+        $(obj).closest(".form-group").remove();
+    }
+
+    function btnUpClick(obj) {
+        var index = $(obj).closest("tr").attr("id");
+        if (parseInt(index) === 0) {
+            return;
+        }
+        var name = $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(2).find("input").val();
+        var region = $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(3).find("select").val();
+        var zone = $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(4).find("select").val();
+        var storeId = $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(5).find("select").val();
+        var storeName = $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(6).find("select").val();
+        var indexPrev = $(obj).closest("tr").prev().attr("id");
+        var nameN = $("#Reback01_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(2).find("input").val();
+        var regionN = $("#Reback01_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(3).find("select").val();
+        var zoneN = $("#Reback01_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(4).find("select").val();
+        var storeIdN = $("#Reback01_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(5).find("select").val();
+        var storeNameN = $("#Reback01_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(6).find("select").val();
+
+        var trIndex = $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").html();
+        var trPrev = $("#Reback01_Modal03_Grid table tbody tr[id=" + indexPrev + "]").html();
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").html(trPrev);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + indexPrev + "]").html(trIndex);
+
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(2).find("input").val(nameN);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(3).find("select").val(regionN);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(4).find("select").val(zoneN);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(5).find("select").val(storeIdN);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(6).find("select").val(storeNameN);
+
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(2).find("input").val(name);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(3).find("select").val(region);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(4).find("select").val(zone);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(5).find("select").val(storeId);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + indexPrev + "]").find("td").eq(6).find("select").val(storeName);
+    }
+
+    function btnDownClick(obj) {
+        var index = $(obj).closest("tr").attr("id");
+        if (parseInt(index) + 1 === $("#Reback01_Modal03_Grid table tbody tr").length) {
+            return;
+        }
+        var name = $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(2).find("input").val();
+        var region = $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(3).find("select").val();
+        var zone = $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(4).find("select").val();
+        var storeId = $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(5).find("select").val();
+        var storeName = $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(6).find("select").val();
+        var indexNext = $(obj).closest("tr").next().attr("id");
+        var nameN = $("#Reback01_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(2).find("input").val();
+        var regionN = $("#Reback01_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(3).find("select").val();
+        var zoneN = $("#Reback01_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(4).find("select").val();
+        var storeIdN = $("#Reback01_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(5).find("select").val();
+        var storeNameN = $("#Reback01_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(6).find("select").val();
+        var trIndex = $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").html();
+        var trPrev = $("#Reback01_Modal03_Grid table tbody tr[id=" + indexNext + "]").html();
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").html(trPrev);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + indexNext + "]").html(trIndex);
+
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(2).find("input").val(nameN);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(3).find("select").val(regionN);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(4).find("select").val(zoneN);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(5).find("select").val(storeIdN);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + index + "]").find("td").eq(6).find("select").val(storeNameN);
+
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(2).find("input").val(name);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(3).find("select").val(region);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(4).find("select").val(zone);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(5).find("select").val(storeId);
+        $("#Reback01_Modal03_Grid table tbody tr[id=" + indexNext + "]").find("td").eq(6).find("select").val(storeName);
+    }
+
+    function btnDelClick(obj) {
+        if (!confirm("確定刪除此項？")) {
+            return;
+        }
+        $.ajax({
+            url: '@Url.Action("PostDelete", "Reback01")',
+            type: "POST",
+            datatype: "text",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ code: $(obj).closest("td").find("#spancode").text(), number: $(obj).closest("td").find("#spannumber").text(), storeCode: $(obj).closest("td").find("#spanstorecode").text() }),
+            success: function(data) {
+                if (data === "OK") {
+                    $(obj).closest("tr").remove();
+                    $("#Reback01_Modal03_Grid table tbody tr").removeClass("alternatingRow");
+                    var trs = $("#Reback01_Modal03_Grid table tbody tr");
+                    for (var i = 0; i < trs.length; i++) {
+                        trs.eq(i).attr("id", i);
+                        if (i % 2 !== 0) {
+                            trs.eq(i).addClass("alternatingRow");
+                        }
+                    }
+                }
+            },
+            error: function(message) {
+                alert("刪除失敗,原因：" + message);
+            }
+        });
+    }
+
+    function Reback01_Modal03_LinkArea_change(obj) {
+        $.ajax({
+            url: '@Url.Action("GetZoneByRegion", "Reback01")',
+            type: "POST",
+            datatype: "text",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ region: $(obj).val() }),
+            success: function(data) {
+                var modal = eval(data);
+                $(obj).closest("tr").find("td:eq(4)").find("select").empty();
+                for (var i = 0; i < modal.length; i++) {
+                    $(obj).closest("tr").find("td:eq(4)").find("select").append('<option value="' + modal[i].Code + '">' + modal[i].Name + '</option>');
+                }
+                var zone = $(obj).closest("tr").find("td:eq(4)").find("select").val();
+                if (zone === null)
+                {
+                    $(obj).closest("tr").find("td:eq(5)").find("select").empty();
+                    $(obj).closest("tr").find("td:eq(6)").find("select").empty();
+                }
+                else
+                {
+                    $.ajax({
+                        url: '@Url.Action("GetStoreData", "Reback01")',
+                        type: "POST",
+                        datatype: "text",
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify({ zone: zone }),
+                        success: function (data) {
+                            var modal = eval(data);
+                            var storeModal = eval(modal.lstStores);
+                            $(obj).closest("tr").find("td:eq(5)").find("select").empty();
+                            $(obj).closest("tr").find("td:eq(6)").find("select").empty();
+                            for (var i = 0; i < storeModal.length; i++) {
+                                $(obj).closest("tr").find("td:eq(5)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Code + '</option>');
+                                $(obj).closest("tr").find("td:eq(6)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Name + '</option>');
+                            }
+                        },
+                        error: function(message) {
+                            alert("獲取店家數據失敗,原因：" + message);
+                        }
+                    });
+                }
+            },
+            error: function(message) {
+                alert("獲取所屬服務區數據失敗,原因：" + message);
+            }
+        });
+    }
+
+    //修改模態框顯示數據服務區變更聯動數據
+    function Reback01_Modal03_SerArea_change(obj) {
+        $.ajax({
+            url: '@Url.Action("GetStoreData", "Reback01")',
+            type: "POST",
+            datatype: "text",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ zone: $(obj).val() }),
+            success: function(data) {
+                var modal = eval(data);
+                var storeModal = modal.lstStores;
+                $(obj).closest("tr").find("td:eq(3)").find("select").val(modal.regionCode);
+                $(obj).closest("tr").find("td:eq(4)").find("select").val(modal.zoneCode);
+                $(obj).closest("tr").find("td:eq(5)").find("select").empty();
+                $(obj).closest("tr").find("td:eq(6)").find("select").empty();
+                for (var i = 0; i < storeModal.length; i++) {
+                    $(obj).closest("tr").find("td:eq(5)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Code + '</option>');
+                    $(obj).closest("tr").find("td:eq(6)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Name + '</option>');
+                }
+            },
+            error: function(message) {
+                alert("根據服務區獲取數據失敗,原因：" + message);
+            }
+        });
+    }
+
+    //修改模態框顯示數據店家代碼變更聯動數據
+    function Reback01_Modal03_SlStore_change(obj) {
+        $(obj).closest("tr").find("td:eq(6)").find("[name='Reback01_Modal03_SlStoreName']").val($(obj).val());
+        $.ajax({
+            url: '@Url.Action("GetRegionAndZoneByStore", "Reback01")',
+            type: "POST",
+            datatype: "text",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ store: $(obj).val() }),
+            success: function (data) {
+                var modal = eval(data);
+                var zoneModal = eval(modal.lstZones);
+                var storeModal = eval(modal.lstStores);
+                $(obj).closest("tr").find("td:eq(4)").find("select").empty();
+                $(obj).closest("tr").find("td:eq(5)").find("select").empty();
+                $(obj).closest("tr").find("td:eq(6)").find("select").empty();
+                for (var i = 0; i < zoneModal.length; i++) {
+                    $(obj).closest("tr").find("td:eq(4)").find("select").append('<option value="' + zoneModal[i].Code + '">' + zoneModal[i].Name + '</option>');
+                }
+                for (var i = 0; i < storeModal.length; i++) {
+                    $(obj).closest("tr").find("td:eq(5)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Code + '</option>');
+                    $(obj).closest("tr").find("td:eq(6)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Name + '</option>');
+                }
+                $(obj).closest("tr").find("td:eq(3)").find("select").val(modal.regionCode);
+                $(obj).closest("tr").find("td:eq(4)").find("select").val(modal.zoneCode);
+                $(obj).closest("tr").find("td:eq(5)").find("select").val(modal.storeCode);
+                $(obj).closest("tr").find("td:eq(6)").find("select").val(modal.storeCode);
+            },
+            error: function (message) {
+                alert("根據店家獲取數據失敗,原因：" + message);
+            }
+        });
+    }
+
+    //修改模態框顯示數據店家名稱變更聯動數據
+    function Reback01_Modal03_SlStoreName_change(obj) {
+        $(obj).closest("tr").find("td:eq(5)").find("[name='Reback01_Modal03_SlStore']").val($(obj).val());
+        $.ajax({
+            url: '@Url.Action("GetRegionAndZoneByStore", "Reback01")',
+            type: "POST",
+            datatype: "text",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ store: $(obj).val() }),
+            success: function (data) {
+                var modal = eval(data);
+                var zoneModal = eval(modal.lstZones);
+                var storeModal = eval(modal.lstStores);
+                $(obj).closest("tr").find("td:eq(4)").find("select").empty();
+                $(obj).closest("tr").find("td:eq(5)").find("select").empty();
+                $(obj).closest("tr").find("td:eq(6)").find("select").empty();
+                for (var i = 0; i < zoneModal.length; i++) {
+                    $(obj).closest("tr").find("td:eq(4)").find("select").append('<option value="' + zoneModal[i].Code + '">' + zoneModal[i].Name + '</option>');
+                }
+                for (var i = 0; i < storeModal.length; i++) {
+                    $(obj).closest("tr").find("td:eq(5)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Code + '</option>');
+                    $(obj).closest("tr").find("td:eq(6)").find("select").append('<option value="' + storeModal[i].Code + '">' + storeModal[i].Name + '</option>');
+                }
+                $(obj).closest("tr").find("td:eq(3)").find("select").val(modal.regionCode);
+                $(obj).closest("tr").find("td:eq(4)").find("select").val(modal.zoneCode);
+                $(obj).closest("tr").find("td:eq(5)").find("select").val(modal.storeCode);
+                $(obj).closest("tr").find("td:eq(6)").find("select").val(modal.storeCode);
+            },
+            error: function (message) {
+                alert("根據店家獲取數據失敗,原因：" + message);
+            }
+        });
+    }
+
+    function Reback01_Modal02_SerArea_Change(obj) {
+        if ($("#Reback01_Modal02_LinkArea").val() === "") {
+            var zone = $(obj).val();
+            $.ajax({
+                url: '@Url.Action("GetRegionValue", "Reback01")',
+                type: "POST",
+                datatype: "text",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({ zone: zone }),
+                success: function(data) {
+                    $("#Reback01_Modal02_LinkArea").val(data);
+                    Reback01_Modal02_LinkArea_Change(obj, zone);
+                },
+                error: function(message) {
+                    alert("獲取聯誼區選中值失敗,原因：" + message);
+                }
+            });
+        }
+    }
+
+    function Reback01_Modal02_LinkArea_Change(obj, value) {
+        $.ajax({
+            url: '@Url.Action("GetZoneByRegion", "Reback01")',
+            type: "POST",
+            datatype: "text",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ region: $("#Reback01_Modal02_LinkArea").val() }),
+            success: function(data) {
+                var modal = eval(data);
+                $("#Reback01_Modal02 select").not("[id='Reback01_Modal02_LinkArea']").empty();
+                $("#Reback01_Modal02 select").not("[id='Reback01_Modal02_LinkArea']").append('<option value="">==請選擇==</option>');
+                for (var i = 0; i < modal.length; i++) {
+                    $("#Reback01_Modal02 select").not("[id='Reback01_Modal02_LinkArea']").append('<option value="' + modal[i].Code + '">' + modal[i].Name + '</option>');
+                }
+                if (value !== "") {
+                    $(obj).val(value);
+                }
+                try {
+                    $("#Reback01_Modal02_Form").data('bootstrapValidator').destroy();
+                    $('#Reback01_Modal02_Form').data('bootstrapValidator', null);
+                    formValiad();
+                }
+                catch (e) {
+
+                }
+            },
+            error: function(message) {
+                alert("獲取所屬服務區數據失敗,原因：" + message);
+            }
+        });
+    }
+
+    function formValiad() {
+        $("#Reback01_Modal02_Form").bootstrapValidator({
+            fields: {
+                Reback01_Modal02_txtPlan: {
+                    validators: {
+                        notEmpty: {
+                            message: "計劃代碼不能為空"
+                        }
+                    }
+                },
+                Reback01_Modal02_LinkArea: {
+                    validators: {
+                        notEmpty: {
+                            message: "聯誼區不能為空"
+                        }
+                    }
+                },
+                Reback01_Modal02_SerAreaUp: {
+                    validators: {
+                        notEmpty: {
+                            message: "第一個服務區不能為空"
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+<section class="content-header">
+    <h1>工作計畫建立作業</h1>
+</section>
+<section class="content">
+    @Html.Raw(ViewBag.js)
+    <form id="from" class="form-horizontal" method="post" action="@Url.Action("Index", "Reback01")">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnSearch" data-toggle="modal" data-target="#Reback01_Modal01">
+                            <i class="fa fa-search" aria-hidden="true"></i> 查詢
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnNew" data-toggle="modal" data-target="#Reback01_Modal02">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i> 新增
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" id="btnModify">
+                            <i class="fa fa-edit" aria-hidden="true"></i> 修改
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="action" value="delete" id="btnDel">
+                            <i class="fa fa-times-circle" aria-hidden="true"></i> 刪除
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" name="action" value="export" id="btnExport">
+                            <i class="fa fa-file-excel-o" aria-hidden="true"></i> 匯出
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="divGrid">
+                @{
+                    @*<input type="checkbox" id="chkAll" style="position: absolute; margin-left: 8px; margin-top: 13px;" />*@
+                var webGrid = new WebGrid(source: (IEnumerable<PlanListViewModel>)ViewData["DisplayData"], canPage: false, canSort: false, defaultSort: "Code", ajaxUpdateContainerId: "divGrid");
+                }
+                @webGrid.GetHtml(
+                    tableStyle: "table table-bordered table-responsive",
+                    headerStyle: "headerStyle",
+                    alternatingRowStyle: "alternatingRow",
+                    selectedRowStyle: "selectedRow",
+                    mode: WebGridPagerModes.All, firstText: "第一頁", previousText: "上一頁", nextText: "下一頁", lastText: "最後一頁", numericLinksCount: 10,
+                    columns: webGrid.Columns(
+                        webGrid.Column(format:
+                        @<text>
+                            <input type="checkbox" id="chk" name="chk" value='@item.Code-@item.Number-@item.StoreCode' />
+                        </text>, style: "chkStyle"),
+                        webGrid.Column(columnName: "Number", header: "序號"),
+                        webGrid.Column(columnName: "", header: "所屬聯誼區", format:
+                        @<text>
+                            <span>@item.RegionName</span>
+                            <span class="sr-only">@item.RegionCode</span>
+                        </text>),
+                        webGrid.Column(columnName: "Name", header: "所屬服務區", format:
+                        @<text>
+                            <span>@item.ZoneName</span>
+                            <span class="sr-only">@item.ZoneCode</span>
+                        </text>),
+                        webGrid.Column(columnName: "Code", header: "計劃代碼"),
+                        webGrid.Column(columnName: "Name", header: "計劃名稱"),
+                        webGrid.Column(columnName: "StoreCode", header: "店家代號"),
+                        webGrid.Column(columnName: "StoreName", header: "店家名稱")
+                        )
+                    )
+            </div>
+        </div>
+        <input type="hidden" id="txtCode" name="txtCode" value="@ViewBag.Reback01_Modal01_SlPlanList" />
+        <input type="hidden" id="txtRegion" name="txtRegion" value="@ViewBag.Reback01_Modal01_SlRegion" />
+        <input type="hidden" id="txtZone" name="txtZone" value="@ViewBag.Reback01_Modal01_SlZone" />
+    </form>
+</section>
+@Html.Partial("PartialPage/_PartialPage_Reback01_Modal01")
+@Html.Partial("PartialPage/_PartialPage_Reback01_Modal02")
+@Html.Partial("PartialPage/_PartialPage_Reback01_Modal03")
+
+
+
+
